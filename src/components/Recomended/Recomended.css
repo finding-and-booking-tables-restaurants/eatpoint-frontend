@@ -1,0 +1,47 @@
+.recomended {
+	padding-bottom: 24px;
+}
+
+.recomended_type_default {
+	background: linear-gradient(white 30%, #fff3c8 30% 100%);
+}
+
+.recomended_type_nearest {
+	background: linear-gradient(white 30%, #d5ede4 30% 100%);
+}
+
+.recomended__heading {
+	display: inline-flex;
+	justify-content: space-between;
+	align-items: center;
+	width: calc(100% - 32px);
+	margin-top: 28px;
+	margin-bottom: 16px;
+	margin-left: 16px;
+	margin-right: 16px;
+}
+
+.recomended__title {
+	color: #000;
+	font-size: 26px;
+	font-style: normal;
+	font-weight: 400;
+	line-height: 32px;
+	margin: 0;
+}
+
+.recomended__button {
+	color: #05887b;
+	font-size: 14px;
+	font-style: normal;
+	font-weight: 500;
+	line-height: 20px;
+	letter-spacing: 0.1px;
+	text-decoration: none;
+	display: inline-flex;
+	gap: 8px;
+}
+
+.recomended__button p {
+	margin: 0;
+}
