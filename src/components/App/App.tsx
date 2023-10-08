@@ -1,11 +1,22 @@
-import './App.css';
+
+import React from 'react';
+import Header from '../Header/Header';
+import Footer from '../Footer/Footer';
+
+import Recomended from '../Recomended/Recomended';
+
 
 import SearchResults from '../SearchResults/SearchResults';
 
 function App() {
 	return (
 		<div className="App">
-			<SearchResults />
+			<Header />
+      <SearchResults />
+			<Recomended nearest={false} link="Все" title="Рекомендации" />
+			<Recomended nearest link="На карте" title="Ближайшие" />
+			<Footer />
+
 		</div>
 	);
 }
