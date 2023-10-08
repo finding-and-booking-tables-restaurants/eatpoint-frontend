@@ -1,0 +1,41 @@
+.header {
+	display: inline-flex;
+	width: 94%;
+	margin: 4px 12px;
+	gap: 16px;
+	align-items: center;
+	justify-content: space-between;
+}
+
+.header__logo {
+}
+
+.header__location-btn {
+	display: inline-flex;
+	gap: 8px;
+}
+
+.header__srch-btn {
+	background: transparent url(../../images/search-icon.svg) center no-repeat;
+	background-size: cover;
+	width: 24px;
+	height: 24px;
+	border: none;
+}
+
+.header__location {
+	color: #05887b;
+	font-size: 14px;
+	font-style: normal;
+	font-weight: 500;
+	line-height: 20px;
+	letter-spacing: 0.1px;
+}
+
+.header__nav-btn {
+	background: transparent url(../../images/bm-icon.svg) center no-repeat;
+	background-size: cover;
+	width: 24px;
+	height: 24px;
+	border: none;
+}
