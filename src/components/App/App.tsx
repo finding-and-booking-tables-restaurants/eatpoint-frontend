@@ -1,10 +1,11 @@
-import React from 'react';
 import './App.css';
+
+import SearchResults from '../SearchResults/SearchResults';
 
 function App() {
 	return (
 		<div className="App">
-			<p>Hello world!</p>
+			<SearchResults />
 		</div>
 	);
 }
