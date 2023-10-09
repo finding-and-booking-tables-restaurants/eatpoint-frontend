@@ -1,13 +1,10 @@
 .header {
 	display: inline-flex;
 	width: 94%;
-	margin: 4px 12px;
+	margin: 12px 12px;
 	gap: 16px;
 	align-items: center;
 	justify-content: space-between;
-}
-
-.header__logo {
 }
 
 .header__location-btn {
