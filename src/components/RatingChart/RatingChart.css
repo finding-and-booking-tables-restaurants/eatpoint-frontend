@@ -1,0 +1,21 @@
+.rating-chart {
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	max-width: 192px;
+	max-height: 44px;
+	margin: auto 0;
+	gap: 6px;
+}
+
+.bar {
+	height: 4px;
+	background-color: #f5f0dd;
+	position: relative;
+	width: 192px;
+}
+
+.fill {
+	height: 100%;
+	background-color: '#C41A68';
+}

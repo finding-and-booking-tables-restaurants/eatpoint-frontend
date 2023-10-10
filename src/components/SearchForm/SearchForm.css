@@ -1,0 +1,7 @@
+.search-form {
+	max-width: 360px;
+	display: flex;
+	flex-direction: column;
+	gap: 16px;
+	padding-top: 32px;
+}
