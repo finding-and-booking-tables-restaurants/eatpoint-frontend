@@ -54,7 +54,7 @@
 	font-weight: 500;
 	line-height: 20px;
 	letter-spacing: 0.1px;
-	color: #05887b;
+	color: #49454f;
 }
 
 .restaurant-page__reviews-container {
@@ -92,7 +92,7 @@
 }
 
 .restaurant-page__average-check {
-	color: #05887b;
+	color: #49454f;
 }
 
 .restaurant-page__address-container {
@@ -200,10 +200,15 @@
 .restaurant-page__zone-container {
 	display: flex;
 	flex-direction: row;
-	border-bottom: 1px solid #cac4d0;
 	margin: 0 auto;
 	align-items: center;
-	gap: 18px;
+	gap: 15px;
+	max-width: 89%;
+}
+
+.restaurant-page__about-line {
+	border-bottom: 1px solid #cac4d0;
+	margin: 13px 0 11px;
 }
 
 .restaurant-page__zone-info {
@@ -225,11 +230,15 @@
 }
 
 .restaurant-page__zone-item {
+	max-width: 100%;
 	font-size: 14px;
 	font-weight: 400;
 	line-height: 20px;
 	letter-spacing: 0.25px;
 	margin: 0;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
 }
 
 .restaurant-page__time-container {
@@ -238,6 +247,8 @@
 	align-items: flex-start;
 	margin-top: 25px;
 	margin-left: 2px;
+	max-width: 89%;
+	margin: 0 auto;
 }
 
 .restaurant-page__time-info {

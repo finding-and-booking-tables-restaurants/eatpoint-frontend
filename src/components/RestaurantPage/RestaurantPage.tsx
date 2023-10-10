@@ -96,7 +96,7 @@ export default function RestaurantPage() {
 						<p className="restaurant-page__phone">+{restaurant.phone}</p>
 					</div>
 					<div className="restaurant-page__map-icon">
-						<MapOutlinedIcon fontSize="medium" />
+						<MapOutlinedIcon fontSize="medium" style={{ color: '#05887B' }} />
 					</div>
 				</div>
 				<div className="restaurant-page__features-container">
@@ -148,6 +148,7 @@ export default function RestaurantPage() {
 						</div>
 					</div>
 				</div>
+				<div className="restaurant-page__about-line"></div>
 				<div className="restaurant-page__time-container">
 					<AccessTimeOutlinedIcon fontSize="medium" />
 					<div className="restaurant-page__time-info">
@@ -162,6 +163,7 @@ export default function RestaurantPage() {
 						</p>
 					</div>
 				</div>
+				<div className="restaurant-page__about-line"></div>
 			</div>
 		</main>
 	);
