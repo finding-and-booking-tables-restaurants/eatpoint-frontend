@@ -10,6 +10,7 @@ import DeckOutlinedIcon from '@mui/icons-material/DeckOutlined';
 import MapOutlinedIcon from '@mui/icons-material/MapOutlined';
 import AccessTimeOutlinedIcon from '@mui/icons-material/AccessTimeOutlined';
 import { useState } from 'react';
+import RatingAndReviews from '../RatingAndReviews/RatingAndReviews';
 
 export default function RestaurantPage() {
 	const restaurant = restaurants[0];
@@ -165,6 +166,7 @@ export default function RestaurantPage() {
 				</div>
 				<div className="restaurant-page__about-line"></div>
 			</div>
+			<RatingAndReviews rating={restaurant.rating} />
 		</main>
 	);
 }
