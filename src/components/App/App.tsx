@@ -3,7 +3,6 @@ import Header from '../Header/Header';
 import Footer from '../Footer/Footer';
 import Recomended from '../Recomended/Recomended';
 import SearchResults from '../SearchResults/SearchResults';
-import NotFoundPage from '../NotFoundPage/NotFoundPage';
 
 function App() {
 	return (
