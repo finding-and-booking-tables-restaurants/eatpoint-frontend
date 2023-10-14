@@ -1,18 +1,16 @@
 import React from 'react';
 import Header from '../Header/Header';
 import Footer from '../Footer/Footer';
-// import Recomended from '../Recomended/Recomended';
-// import SearchResults from '../SearchResults/SearchResults';
-import Profile from '../Profile/Profile';
+import Recomended from '../Recomended/Recomended';
+import SearchResults from '../SearchResults/SearchResults';
 
 function App() {
 	return (
 		<div className="App">
 			<Header />
-			<Profile />
-			{/* <SearchResults />
+			<SearchResults />
 			<Recomended nearest={false} link="Все" title="Рекомендации" />
-			<Recomended nearest link="На карте" title="Ближайшие" /> */}
+			<Recomended nearest link="На карте" title="Ближайшие" />
 			<Footer />
 		</div>
 	);
