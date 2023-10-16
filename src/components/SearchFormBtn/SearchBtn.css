@@ -1,15 +1,13 @@
 .search-form__btn {
 	align-items: center;
 	max-width: 328px;
-	height: 40px;
+	height: 48px;
 	color: white;
 	border: 1px solid rgb(180, 177, 177);
-	border-radius: 4px;
-	background: url('../../images/search-form__btn_white.svg') no-repeat;
-	background-color: #c41a68;
-	background-position: 60px;
+	border-radius: 30px;
+	background-color: #05887b;
 	font-family: Roboto;
-	font-size: 14px;
+	font-size: 16px;
 	font-weight: 500;
 	line-height: 20px;
 	letter-spacing: 0.10000000149011612px;

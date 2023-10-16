@@ -1,3 +1,28 @@
+export const availableKitchen = [
+	'Азиатская',
+	'Русская',
+	'Европейская',
+	'Мексиканская',
+	'Итальянская',
+	'Грузинская',
+];
+
+export const availableType = [
+	'Бар',
+	'Ресторан',
+	'Кофейня',
+	'Пиццерия',
+	'Фаст-фуд',
+	'Караоке',
+	'Кондитерская',
+];
+
+export const availableService = [
+	'Парковка',
+	'Терасса',
+	'Wi-Fi',
+	'Детская комната',
+];
 interface Restaurant {
 	id: number;
 	name: string;
