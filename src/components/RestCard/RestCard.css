@@ -29,8 +29,7 @@
 }
 
 .card_type_search {
-	width: 328px;
-	height: 328px;
+	max-width: 328px;
 }
 
 .card__info-container {
