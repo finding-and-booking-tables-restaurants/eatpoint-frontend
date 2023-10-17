@@ -1,0 +1,14 @@
+.profile__cancel-btn {
+	color: #05887b;
+	border-radius: 4px;
+	border: 1px solid #006c60;
+	background-color: transparent;
+	font-size: 14px;
+	font-style: normal;
+	font-weight: 500;
+	line-height: 20px;
+	letter-spacing: 0.1px;
+	text-decoration: none;
+	width: 328px;
+	height: 40px;
+}
