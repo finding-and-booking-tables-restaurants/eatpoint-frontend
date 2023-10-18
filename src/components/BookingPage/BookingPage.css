@@ -1,0 +1,54 @@
+.booking-page {
+	max-width: 92%;
+	margin: auto;
+}
+
+.restaurant-page__address-container-booking {
+	margin: 16px 0 0 0;
+}
+
+.booking-page__heading {
+	display: inline-flex;
+	gap: 10px;
+	align-items: center;
+	justify-content: center;
+}
+
+.booking-page__title {
+	font-family: 'Ubuntu';
+	font-size: 30px;
+	font-style: normal;
+	font-weight: 400;
+	line-height: 36px;
+}
+
+.booking-page__back-btn {
+	border: none;
+	background: none;
+	background-position: center;
+	width: 24px;
+	height: 24px;
+	padding: 0;
+}
+
+.booking-page__comment {
+	font-size: 12px;
+	font-style: normal;
+	font-weight: 400;
+	line-height: 16px;
+}
+
+.checkbox-container {
+	display: flex;
+	flex-direction: row;
+	gap: 7;
+	align-items: center;
+}
+
+.checkbox-text {
+	font-size: 12px;
+	font-style: normal;
+	font-weight: 400;
+	line-height: 16px;
+	max-width: 264px;
+}

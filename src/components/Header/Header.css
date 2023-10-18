@@ -1,7 +1,7 @@
 .header {
 	display: inline-flex;
 	width: 92%;
-	margin: 4px 12px;
+	margin: 14px 12px;
 	gap: 16px;
 	align-items: center;
 	justify-content: space-between;
@@ -10,6 +10,7 @@
 .header__location-btn {
 	display: inline-flex;
 	gap: 8px;
+	cursor: pointer;
 }
 
 .header__srch-btn {
@@ -18,6 +19,7 @@
 	width: 24px;
 	height: 24px;
 	border: none;
+	cursor: pointer;
 }
 
 .header__location {
@@ -27,6 +29,7 @@
 	font-weight: 500;
 	line-height: 20px;
 	letter-spacing: 0.1px;
+	cursor: pointer;
 }
 
 .header__nav-btn {
@@ -35,4 +38,9 @@
 	width: 24px;
 	height: 24px;
 	border: none;
+	cursor: pointer;
+}
+
+.header__logo {
+	cursor: pointer;
 }

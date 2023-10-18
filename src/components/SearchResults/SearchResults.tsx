@@ -126,7 +126,7 @@ function SearchResults() {
 	return (
 		<section className="search-results">
 			<div className="search-results__bg-box">
-				<SearchForm>
+				<SearchForm onSubmit={(event) => console.log(event)}>
 					<div className="search-results__flex-box">
 						<DatePickerValue />
 						<TimePickerValue />
@@ -163,6 +163,7 @@ function SearchResults() {
 						img={restaurant.image[0].image}
 						search={true}
 						address={restaurant.address}
+						id={restaurant.id}
 					/>
 				))}
 			</ul>
