@@ -89,3 +89,31 @@ export const zoneLang: Record<string, string> = {
 	terrace: 'Терраса',
 	banquetHall: 'Банкетный зал',
 };
+
+const EMAIL_REGEX = '^[a-zA-Z0-9+_.\\-]+@[a-zA-Z0-9]+\\.[a-zA-Z0-9]{2,4}$';
+const NAME_REGEX = '^[a-zA-Z\u0430-\u044f\u0410-\u042f]+$';
+const PHONE_NUMBER_REGEX =
+	'/^(+?d{1,4}[s-]?)?(()?(d{1,4})(?(2)))?[s-]?d{1,4}[s-]?d{1,9}$/';
+
+const ERROR = 'Ошибка';
+const ERROR_400 = 400;
+const ERROR_401 = 401;
+const ERROR_409 = 409;
+
+const EMAIL_ALREADY_REGISTERED_MESSAGE =
+	'Пользователь с таким email уже существует.';
+const INCORRECT_ADD_USER_DATA = 'Переданы некорректные данные при регистрации';
+const REG_ERROR_MESSAGE = 'При регистрации пользователя произошла ошибка.';
+
+export {
+	EMAIL_REGEX,
+	NAME_REGEX,
+	ERROR,
+	ERROR_400,
+	ERROR_401,
+	ERROR_409,
+	EMAIL_ALREADY_REGISTERED_MESSAGE,
+	INCORRECT_ADD_USER_DATA,
+	REG_ERROR_MESSAGE,
+	PHONE_NUMBER_REGEX,
+};
