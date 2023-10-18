@@ -5,12 +5,12 @@ interface ImageData {
 
 interface RestCardProps {
 	img: string;
-	// img: ImageData;
 	name: string;
 	address: string;
 	rating: number;
 	reviews?: number;
 	search: boolean;
+	id: number;
 }
 
 export default RestCardProps;

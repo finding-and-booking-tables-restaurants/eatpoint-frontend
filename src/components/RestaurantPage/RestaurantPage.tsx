@@ -1,5 +1,11 @@
 import './RestaurantPage.css';
-import { restaurants, featuresLang, zoneLang } from '../../utils/constants';
+import {
+	featuresLang,
+	zoneLang,
+	Restaurant,
+	getDayAbbreviation,
+	fetchRestaurantData,
+} from '../../utils/constants';
 import Checkbox from '@mui/material/Checkbox';
 import FavoriteBorder from '@mui/icons-material/FavoriteBorder';
 import Favorite from '@mui/icons-material/Favorite';
@@ -9,12 +15,29 @@ import ChatBubbleOutlineOutlinedIcon from '@mui/icons-material/ChatBubbleOutline
 import DeckOutlinedIcon from '@mui/icons-material/DeckOutlined';
 import MapOutlinedIcon from '@mui/icons-material/MapOutlined';
 import AccessTimeOutlinedIcon from '@mui/icons-material/AccessTimeOutlined';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import RatingAndReviews from '../RatingAndReviews/RatingAndReviews';
+import BookingForm from '../BookingForm/BookingForm';
+import TodayIcon from '@mui/icons-material/Today';
+import { useNavigate } from 'react-router';
 
-export default function RestaurantPage() {
-	const restaurant = restaurants[0];
-	const reviewsCount = restaurant.reviews.length;
+export default function RestaurantPage({ id }: { id: number }) {
+	const [currentRestaurant, setcurrentRestaurant] = useState<Restaurant>();
+
+	useEffect(() => {
+		const fetchData = async () => {
+			try {
+				const data = await fetchRestaurantData(id);
+				setcurrentRestaurant(data);
+			} catch (error) {
+				console.error('Error fetching data:', error);
+			}
+		};
+
+		fetchData();
+	}, [id, setcurrentRestaurant]);
+
+	const reviewsCount = 45;
 	const [showFullDescription, setShowFullDescription] = useState(false);
 
 	const toggleDescription = () => {
@@ -29,8 +52,8 @@ export default function RestaurantPage() {
 	}));
 
 	const descriptionToShow = showFullDescription
-		? restaurant.description
-		: restaurant.description.slice(0, 253);
+		? currentRestaurant?.description || ''
+		: (currentRestaurant?.description || '').slice(0, 253);
 
 	function pluralizeReviews(count: number) {
 		if (count === 0) {
@@ -48,12 +71,19 @@ export default function RestaurantPage() {
 		}
 	}
 
+	const navigate = useNavigate();
+
+	const handleBookBtnClick = (event: React.FormEvent<HTMLFormElement>) => {
+		event.preventDefault();
+		navigate(`/booking/${id}`, { replace: true });
+	};
+
 	return (
 		<main className="restaurant-page">
 			<div className="restaurant-page__photo-container">
 				<img
 					className="restaurant-page__photo"
-					src={restaurant.photos[0]}
+					src={currentRestaurant?.poster}
 					alt="Ресторан"
 				/>
 				<div className="restaurant-page__favorite">
@@ -71,12 +101,12 @@ export default function RestaurantPage() {
 			</div>
 			<div className="restaurant-page__info-container">
 				<div>
-					<h2 className="restaurant-page__name">{restaurant.name}</h2>
+					<h2 className="restaurant-page__name">{currentRestaurant?.name}</h2>
 				</div>
 				<div className="restaurant-page__info">
 					<p className="restaurant-page__rating">
 						<span className="restaurant-page__rating-star">&#9733;</span>{' '}
-						{restaurant.rating}
+						{currentRestaurant?.rating}
 					</p>
 					<div className="restaurant-page__reviews-container">
 						<ChatBubbleOutlineOutlinedIcon fontSize="small" />
@@ -84,32 +114,38 @@ export default function RestaurantPage() {
 							{pluralizeReviews(reviewsCount)}
 						</p>
 					</div>
-					<span className="restaurant-page__average-check">
-						{restaurant.check ? `${restaurant.check} ₽` : '₽₽₽'}
-					</span>
+					<span className="restaurant-page__average-check">{'₽₽₽'}</span>
 				</div>
 				<div className="restaurant-page__address-container">
 					<div>
 						<p className="restaurant-page__address-text">Адрес</p>
 						<p className="restaurant-page__address">
-							{restaurant.city}, {restaurant.address}
+							{currentRestaurant?.cities}, {currentRestaurant?.address}
 						</p>
-						<p className="restaurant-page__phone">+{restaurant.phone}</p>
+						<p className="restaurant-page__phone">
+							+{currentRestaurant?.telephone}
+						</p>
 					</div>
 					<div className="restaurant-page__map-icon">
 						<MapOutlinedIcon fontSize="medium" style={{ color: '#05887B' }} />
 					</div>
 				</div>
 				<div className="restaurant-page__features-container">
-					<p className="restaurant-page__feature">{restaurant.cuisine}</p>
-					{Object.entries(restaurant.features).map(
-						([feature, hasFeature]) =>
-							hasFeature && (
-								<p className="restaurant-page__feature" key={feature}>
-									{featuresLang[feature]}
-								</p>
-							)
-					)}
+					{currentRestaurant?.kitchens.map((kitchen) => (
+						<p className="restaurant-page__feature" key={kitchen.id}>
+							{kitchen.name}
+						</p>
+					))}
+					{currentRestaurant?.types.map((type) => (
+						<p className="restaurant-page__feature" key={type.id}>
+							{type.name}
+						</p>
+					))}
+					{currentRestaurant?.services.map((service) => (
+						<p className="restaurant-page__feature" key={service.id}>
+							{service.name}
+						</p>
+					))}
 				</div>
 				<div className="restaurant-page__description">
 					<p className="restaurant-page__description-text">
@@ -126,7 +162,14 @@ export default function RestaurantPage() {
 					)}
 				</div>
 			</div>
-
+			<BookingForm
+				onSubmit={handleBookBtnClick}
+				children={
+					<button className="search-form__btn">
+						{<TodayIcon />} Забронировать{' '}
+					</button>
+				}
+			/>
 			{/* подробнее о ресторане */}
 			<div className="restaurant-page__about-container">
 				<h3 className="restaurant-page__about-title">Подробнее о ресторане</h3>
@@ -135,17 +178,13 @@ export default function RestaurantPage() {
 					<div className="restaurant-page__zone-info">
 						<h4 className="restaurant-page__zone-title">Зонирование</h4>
 						<div className="restaurant-page__zones">
-							<p className="restaurant-page__zone-item">
-								{Object.entries(restaurant.zone)
-									.filter(([zone, hasZone]) => hasZone)
-									.map(([zone]) => zoneLang[zone])
-									.join(', ')
-									.replace(
-										/^(.)(.*)/,
-										(_, firstLetter, rest) =>
-											firstLetter.toUpperCase() + rest.toLowerCase()
-									)}
-							</p>
+							{currentRestaurant?.zones
+								.filter((zone) => zone.available_seats > 0)
+								.map((zone) => (
+									<p className="restaurant-page__zone-item" key={zone.id}>
+										{zone.zone}
+									</p>
+								))}
 						</div>
 					</div>
 				</div>
@@ -154,19 +193,25 @@ export default function RestaurantPage() {
 					<AccessTimeOutlinedIcon fontSize="medium" />
 					<div className="restaurant-page__time-info">
 						<h4 className="restaurant-page__time-title">Рабочее время</h4>
-						<p className="restaurant-page__time">
-							Пн-Чт с {restaurant.openingHoursWeekday.opens} до{' '}
-							{restaurant.openingHoursWeekday.closes},
-						</p>
-						<p className="restaurant-page__time">
-							Пт-Вс с {restaurant.openingHoursWeekends.opens} до{' '}
-							{restaurant.openingHoursWeekends.closes}
-						</p>
+						{currentRestaurant?.worked.map((day) => {
+							const { day: dayOfWeek, start, end, day_off } = day;
+
+							const dayAbbreviation = getDayAbbreviation(dayOfWeek);
+							const displayText = day_off
+								? `${dayAbbreviation} - выходной`
+								: `${dayAbbreviation} с ${start} до ${end}`;
+
+							return (
+								<p className="restaurant-page__time" key={day.day}>
+									{displayText}
+								</p>
+							);
+						})}
 					</div>
 				</div>
 				<div className="restaurant-page__about-line"></div>
 			</div>
-			<RatingAndReviews rating={restaurant.rating} />
+			<RatingAndReviews rating={4.5} />
 		</main>
 	);
 }

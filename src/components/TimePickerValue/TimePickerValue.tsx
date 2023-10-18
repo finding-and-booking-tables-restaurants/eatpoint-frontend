@@ -14,6 +14,7 @@ function MyTimePicker() {
 		<TextField
 			label="Время"
 			type="time"
+			name="start_time_reservation"
 			value={time ? time.format('HH:mm') : ''}
 			onChange={handleTimeChange}
 			InputLabelProps={{

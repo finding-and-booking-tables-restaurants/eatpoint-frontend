@@ -35,7 +35,7 @@ function FilterMenu({
 					onClick={handleCloseBtn}
 				></button>
 				<h2 className="filter-menu__title">Фильтры</h2>
-				<SearchForm>
+				<SearchForm onSubmit={(event) => console.log(event)}>
 					<div className="search-results__flex-box">
 						<DatePickerValue />
 						<TimePickerValue />

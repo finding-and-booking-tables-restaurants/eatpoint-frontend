@@ -5,6 +5,7 @@ import starIcon from '../../images/star-icon.svg';
 import plusIcon from '../../images/plus-icon.svg';
 import calenderIcon from '../../images/calender-icon.svg';
 import messageIcon from '../../images/message-icon.svg';
+import { useNavigate } from 'react-router';
 
 const RestCard: React.FC<RestCardProps> = ({
 	img,
@@ -13,10 +14,17 @@ const RestCard: React.FC<RestCardProps> = ({
 	rating,
 	reviews,
 	search,
+	id,
 }) => {
+	const navigate = useNavigate();
+
 	const handleLikeBtnClick = () => {};
-	const handleBookBtnClick = () => {};
+
 	const handeReviewsClick = () => {};
+
+	const handleBookBtnClick = () => {
+		navigate(`/booking/${id}`, { replace: true });
+	};
 
 	const bookButton: JSX.Element = (
 		<button
@@ -30,6 +38,10 @@ const RestCard: React.FC<RestCardProps> = ({
 		</button>
 	);
 
+	const handleCardClick = () => {
+		navigate(`/establishment/${id}`, { replace: true });
+	};
+
 	return (
 		<div
 			className={`card ${
@@ -38,12 +50,13 @@ const RestCard: React.FC<RestCardProps> = ({
 		>
 			<button onClick={handleLikeBtnClick} className="card__like-btn" />
 			<img
+				onClick={handleCardClick}
 				className="card__img card__img_type_recomended"
 				src={img}
 				alt="фото ресторана"
 			/>
 			<div className="card__info-container">
-				<div className="card__text-container">
+				<div onClick={handleCardClick} className="card__text-container">
 					<p className="card__title">{name}</p>
 					<p className="card__adress">{address}</p>
 				</div>

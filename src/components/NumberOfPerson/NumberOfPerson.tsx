@@ -5,16 +5,20 @@ import { ThemeProvider } from '@emotion/react';
 
 const currencies = [
 	{
-		value: '2',
+		value: '1',
 		label: '2 человек',
 	},
 	{
+		value: '2',
+		label: '2 человека',
+	},
+	{
 		value: '3',
-		label: '3 человек',
+		label: '3 человека',
 	},
 	{
 		value: '4',
-		label: '4 человек',
+		label: '4 человека',
 	},
 	{
 		value: '5',
