@@ -1,16 +1,19 @@
-import Header from '../Header/Header';
-import Footer from '../Footer/Footer';
-import Recomended from '../Recomended/Recomended';
+import { Routes, Route } from 'react-router-dom';
+import Main from '../Main/Main';
 import SearchResults from '../SearchResults/SearchResults';
+import PageNotFound from '../NotFoundPage/NotFoundPage';
+import AddRestaurant from '../AddRestaurant/AddRestaurant';
 
 function App() {
 	return (
 		<div className="App">
-			<Header />
-			<SearchResults />
-			<Recomended nearest={false} link="Все" title="Рекомендации" />
-			<Recomended nearest link="На карте" title="Ближайшие" />
-			<Footer />
+			<AddRestaurant />
+			{/* <SearchResults /> */}
+			{/* <Routes>
+				<Route path="/" element={<Main />} />
+				<Route path="/search" element={<SearchResults />} />
+				<Route path="*" element={<PageNotFound />} />
+			</Routes> */}
 		</div>
 	);
 }

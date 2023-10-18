@@ -1,16 +1,18 @@
+import { useState } from 'react';
 import './SearchResults.css';
 import { MouseEvent, useEffect } from 'react';
 import SearchForm from '../SearchForm/SearchForm';
 import TimePickerValue from '../TimePickerValue/TimePickerValue';
-import DatePickerValue from '../DatePicker/DatePickerValue';
+import DatePickerValue from '../DatePickerValue/DatePickerValue';
 import NumberOfPerson from '../NumberOfPerson/NumberOfPerson';
 import SearchInput from '../SearchFormInput/SearchInput';
 import SearchBtn from '../SearchFormBtn/SearchBtn';
-import { useState } from 'react';
 import RestCard from '../RestCard/RestCard';
 import FilterMenu from '../FilterMenu/FilterMenu';
 import fakeFilterData from '../../fakeFilterData/fakeFilterData';
 import { Restaurant } from '../../models/data/RestData';
+import Header from '../Header/Header';
+import Footer from '../Footer/Footer';
 
 function SearchResults() {
 	const [isOpen, setIsOpen] = useState(false);
@@ -124,49 +126,53 @@ function SearchResults() {
 	};
 
 	return (
-		<section className="search-results">
-			<div className="search-results__bg-box">
-				<SearchForm>
-					<div className="search-results__flex-box">
-						<DatePickerValue />
-						<TimePickerValue />
-					</div>
-					<NumberOfPerson />
-					<SearchInput handleFilterClick={handleToggleFilterBtn} />
-					<SearchBtn />
-				</SearchForm>
-				<FilterMenu
-					isOpen={isOpen}
-					setIsOpen={setIsOpen}
-					handleFilterKitchenClick={handleFilterClick}
-					handleTypeFilterClick={handleTypeFilterClick}
-					handleCheckFilterClick={handleCheckFilterClick}
-					handleServiceFilterClick={handleServiceFilterClick}
-					selectedKitchenFilters={selectedKitchenFilters}
-					selectedTypeFilters={selectedTypeFilters}
-					selectedCheckFilters={selectedCheckFilters}
-					selectedServiceFilters={selectedServiceFilters}
-				/>
-			</div>
-			<h2 id="search-results" className="search-results__title">
-				Результаты поиска
-			</h2>
-			<p className="search-results__find-items">
-				Найдено {mainArr.length} заведений
-			</p>
-			<ul className="search-results__list">
-				{mainArr.map((restaurant: Restaurant, index: number) => (
-					<RestCard
-						key={index}
-						name={restaurant.name}
-						rating={restaurant.rating}
-						img={restaurant.image[0].image}
-						search={true}
-						address={restaurant.address}
+		<>
+			<Header />
+			<section className="search-results">
+				<div className="search-results__bg-box">
+					<SearchForm>
+						<div className="search-results__flex-box">
+							<DatePickerValue />
+							<TimePickerValue />
+						</div>
+						<NumberOfPerson />
+						<SearchInput handleFilterClick={handleToggleFilterBtn} />
+						<SearchBtn />
+					</SearchForm>
+					<FilterMenu
+						isOpen={isOpen}
+						setIsOpen={setIsOpen}
+						handleFilterKitchenClick={handleFilterClick}
+						handleTypeFilterClick={handleTypeFilterClick}
+						handleCheckFilterClick={handleCheckFilterClick}
+						handleServiceFilterClick={handleServiceFilterClick}
+						selectedKitchenFilters={selectedKitchenFilters}
+						selectedTypeFilters={selectedTypeFilters}
+						selectedCheckFilters={selectedCheckFilters}
+						selectedServiceFilters={selectedServiceFilters}
 					/>
-				))}
-			</ul>
-		</section>
+				</div>
+				<h2 id="search-results" className="search-results__title">
+					Результаты поиска
+				</h2>
+				<p className="search-results__find-items">
+					Найдено {mainArr.length} заведений
+				</p>
+				<ul className="search-results__list">
+					{mainArr.map((restaurant: Restaurant, index: number) => (
+						<RestCard
+							key={index}
+							name={restaurant.name}
+							rating={restaurant.rating}
+							img={restaurant.image[0].image}
+							search={true}
+							address={restaurant.address}
+						/>
+					))}
+				</ul>
+			</section>
+			<Footer />
+		</>
 	);
 }
 
