@@ -39,7 +39,7 @@ const RestCard: React.FC<RestCardProps> = ({
 	);
 
 	const handleCardClick = () => {
-		navigate(`/establishment/${id}`, { replace: true });
+		navigate(`/establishment/${id}`);
 	};
 
 	return (

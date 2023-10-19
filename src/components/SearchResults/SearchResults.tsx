@@ -17,6 +17,7 @@ interface SearchResultsProps {
 	onSubmit: (event: React.FormEvent<HTMLFormElement>) => void;
 	query: string;
 	setQuery: (query: string) => void;
+	isSearching: boolean;
 }
 
 function SearchResults({
@@ -24,6 +25,7 @@ function SearchResults({
 	onSubmit,
 	query,
 	setQuery,
+	isSearching,
 }: SearchResultsProps) {
 	const [isOpen, setIsOpen] = useState(false);
 	const [mainArr, setMainArr] = useState(searchEstablishments);
@@ -167,6 +169,7 @@ function SearchResults({
 						handleFilterClick={handleToggleFilterBtn}
 						query={query}
 						setQuery={setQuery}
+						isSearching={isSearching}
 					/>
 					<SearchBtn />
 				</SearchForm>
@@ -183,29 +186,31 @@ function SearchResults({
 					selectedServiceFilters={selectedServiceFilters}
 				/>
 			</div>
-
-			<h2 id="search-results" className="search-results__title">
-				Результаты поиска
-			</h2>
-
-			<p className="search-results__find-items">
-				Найдено {mainArr.length} заведений
-			</p>
-			{/* <button className='search-input__filter-btn'></button> */}
-			<button onClick={handleResetFilters}>Сбросить фильтры</button>
-			<ul className="search-results__list">
-				{mainArr.map((restaurant: Restaurant, index: number) => (
-					<RestCard
-						key={index}
-						name={restaurant.name}
-						rating={restaurant.rating}
-						img={restaurant.poster}
-						search={true}
-						address={restaurant.address}
-						id={restaurant.id}
-					/>
-				))}
-			</ul>
+			{isSearching && (
+				<div className="search-results__cards-container">
+					<h2 id="search-results" className="search-results__title">
+						Результаты поиска
+					</h2>
+					<p className="search-results__find-items">
+						Найдено {mainArr.length} заведений
+					</p>
+					{/* <button className='search-input__filter-btn'></button> */}
+					{/* <button onClick={handleResetFilters}>Сбросить фильтры</button> */}
+					<ul className="search-results__list">
+						{mainArr.map((restaurant: Restaurant, index: number) => (
+							<RestCard
+								key={index}
+								name={restaurant.name}
+								rating={restaurant.rating}
+								img={restaurant.poster}
+								search={true}
+								address={restaurant.address}
+								id={restaurant.id}
+							/>
+						))}
+					</ul>
+				</div>
+			)}
 		</section>
 	);
 }

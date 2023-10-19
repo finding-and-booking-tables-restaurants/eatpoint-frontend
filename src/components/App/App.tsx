@@ -16,6 +16,8 @@ function App() {
 	>([]);
 	const [query, setQuery] = useState('');
 
+	const [isSearching, setIsSearching] = useState(false);
+
 	useEffect(() => {
 		const fetchData = async () => {
 			try {
@@ -43,8 +45,8 @@ function App() {
 		fetchData();
 	}, []);
 
-
 	function handleSearchEstablishments() {
+		setIsSearching(true);
 		const fetchData = async () => {
 			try {
 				const response = await fetch(
@@ -71,6 +73,10 @@ function App() {
 		fetchData();
 	}
 
+	const handleRestart = (value: boolean) => {
+		setIsSearching(!value);
+	};
+
 	return (
 		<div className="App">
 			<Routes>
@@ -78,26 +84,31 @@ function App() {
 					path="/"
 					element={
 						<>
-							<Header />
+							<Header handleRestart={handleRestart} />
 							<SearchResults
 								searchEstablishments={searchEstablishments}
 								setAllEstablishments={setSearchEstablishments}
 								onSubmit={handleSearchEstablishments}
 								query={query}
 								setQuery={setQuery}
+								isSearching={isSearching}
 							/>
-							<Recomended
-								establishments={allEstablishments}
-								nearest={false}
-								link="Все"
-								title="Рекомендации"
-							/>
-							<Recomended
-								establishments={allEstablishments}
-								nearest
-								link="На карте"
-								title="Ближайшие"
-							/>
+							{!isSearching && (
+								<>
+									<Recomended
+										establishments={allEstablishments}
+										nearest={false}
+										link="Все"
+										title="Рекомендации"
+									/>
+									<Recomended
+										establishments={allEstablishments}
+										nearest
+										link="На карте"
+										title="Ближайшие"
+									/>
+								</>
+							)}
 							<Footer />
 						</>
 					}
@@ -106,24 +117,14 @@ function App() {
 					<Route
 						key={item.id}
 						path={`/establishment/${item.id}`}
-						element={
-							<>
-								<Header />
-								<RestaurantPage id={item.id} />
-								<Footer />
-							</>
-						}
+						element={<RestaurantPage id={item.id} />}
 					/>
 				))}
 				{allEstablishments.map((item: Restaurant) => (
 					<Route
 						key={item.id}
 						path={`/booking/${item.id}`}
-						element={
-							<>
-								<BookingPage id={item.id} />
-							</>
-						}
+						element={<BookingPage id={item.id} />}
 					/>
 				))}
 				<Route path="add-restaurant" element={<AddRestaurant />}></Route>

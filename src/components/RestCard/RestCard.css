@@ -6,6 +6,8 @@
 	border-radius: 2px;
 	background-color: white;
 	position: relative;
+	border-radius: 8px;
+	box-shadow: 0px 4px 4px 0px rgba(0, 108, 96, 0.2);
 }
 
 .card__like-btn {
@@ -25,7 +27,6 @@
 
 .card_type_recomendation {
 	width: 232px;
-	height: 354px;
 }
 
 .card_type_search {
@@ -42,6 +43,8 @@
 .card__img {
 	width: 100%;
 	object-fit: cover;
+	border-top-left-radius: 8px;
+	border-top-right-radius: 8px;
 }
 
 .card__img_type_recomended {
@@ -141,6 +144,7 @@
 	gap: 8px;
 	justify-content: center;
 	align-items: center;
+	border-radius: 100px;
 }
 
 .card__button_type_recomended {
