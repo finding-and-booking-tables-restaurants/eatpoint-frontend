@@ -9,21 +9,24 @@ import SearchInput from '../SearchFormInput/SearchInput';
 import SearchBtn from '../SearchFormBtn/SearchBtn';
 import RestCard from '../RestCard/RestCard';
 import FilterMenu from '../FilterMenu/FilterMenu';
-import fakeFilterData from '../../fakeFilterData/fakeFilterData';
-// import { Restaurant } from '../../models/data/RestData';
 import { Restaurant } from '../../utils/constants';
 
 interface SearchResultsProps {
-	allEstablishments: Restaurant[];
+	searchEstablishments: Restaurant[];
 	setAllEstablishments: (restaurants: Restaurant[]) => void;
+	onSubmit: (event: React.FormEvent<HTMLFormElement>) => void;
+	query: string;
+	setQuery: (query: string) => void;
 }
 
 function SearchResults({
-	allEstablishments,
-	setAllEstablishments,
+	searchEstablishments,
+	onSubmit,
+	query,
+	setQuery,
 }: SearchResultsProps) {
 	const [isOpen, setIsOpen] = useState(false);
-	const [mainArr, setMainArr] = useState(allEstablishments);
+	const [mainArr, setMainArr] = useState(searchEstablishments);
 	const [selectedKitchenFilters, setSelectedKitchenFilters] = useState<
 		string[]
 	>([]);
@@ -36,11 +39,11 @@ function SearchResults({
 	>([]);
 
 	useEffect(() => {
-		setMainArr(allEstablishments);
-	}, [allEstablishments]);
+		setMainArr(searchEstablishments);
+	}, [searchEstablishments]);
 
 	const handleResetFilters = () => {
-		setMainArr(allEstablishments);
+		setMainArr(searchEstablishments);
 		setSelectedKitchenFilters([]);
 		setSelectedTypeFilters([]);
 		setSelectedCheckFilters(null);
@@ -137,7 +140,7 @@ function SearchResults({
 
 			setMainArr(combinedFilteredRestaurants);
 		} else {
-			setMainArr(allEstablishments);
+			setMainArr(searchEstablishments);
 		}
 	}, [
 		selectedKitchenFilters,
@@ -154,13 +157,17 @@ function SearchResults({
 	return (
 		<section className="search-results">
 			<div className="search-results__bg-box">
-				<SearchForm onSubmit={(event) => console.log(event)}>
+				<SearchForm onSubmit={onSubmit}>
 					<div className="search-results__flex-box">
 						<DatePickerValue />
 						<TimePickerValue />
 					</div>
 					<NumberOfPerson />
-					<SearchInput handleFilterClick={handleToggleFilterBtn} />
+					<SearchInput
+						handleFilterClick={handleToggleFilterBtn}
+						query={query}
+						setQuery={setQuery}
+					/>
 					<SearchBtn />
 				</SearchForm>
 				<FilterMenu
@@ -176,13 +183,15 @@ function SearchResults({
 					selectedServiceFilters={selectedServiceFilters}
 				/>
 			</div>
-			{}
+
 			<h2 id="search-results" className="search-results__title">
 				Результаты поиска
 			</h2>
+
 			<p className="search-results__find-items">
 				Найдено {mainArr.length} заведений
 			</p>
+			{/* <button className='search-input__filter-btn'></button> */}
 			<button onClick={handleResetFilters}>Сбросить фильтры</button>
 			<ul className="search-results__list">
 				{mainArr.map((restaurant: Restaurant, index: number) => (

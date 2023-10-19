@@ -11,14 +11,16 @@ import { Restaurant } from '../../utils/constants';
 
 function App() {
 	const [allEstablishments, setAllEstablishments] = useState<Restaurant[]>([]);
-	const [query, setQuery] = useState('Русская');
+	const [searchEstablishments, setSearchEstablishments] = useState<
+		Restaurant[]
+	>([]);
+	const [query, setQuery] = useState('');
 
 	useEffect(() => {
 		const fetchData = async () => {
 			try {
 				const response = await fetch(
-					`http://80.87.109.70/api/v1/establishments/?search=${query}`
-					// `http://80.87.109.70/api/v1/establishments`
+					`http://80.87.109.70/api/v1/establishments`
 				);
 				const data = await response.json();
 
@@ -41,7 +43,32 @@ function App() {
 		fetchData();
 	}, []);
 
-	console.log(allEstablishments);
+	function handleSearchEstablishments() {
+		const fetchData = async () => {
+			try {
+				const response = await fetch(
+					`http://80.87.109.70/api/v1/establishments/?search=${query}`
+				);
+				const data = await response.json();
+
+				const updatedData = data.results.map((item: Restaurant) => {
+					const updatedPoster = item.poster.replace(
+						'backend:8000',
+						'80.87.109.70'
+					);
+					return {
+						...item,
+						poster: updatedPoster,
+					};
+				});
+				setSearchEstablishments(updatedData);
+			} catch (error) {
+				console.error('Error fetching data:', error);
+			}
+		};
+
+		fetchData();
+	}
 
 	return (
 		<div className="App">
@@ -52,8 +79,11 @@ function App() {
 						<>
 							<Header />
 							<SearchResults
-								allEstablishments={allEstablishments}
-								setAllEstablishments={setAllEstablishments}
+								searchEstablishments={searchEstablishments}
+								setAllEstablishments={setSearchEstablishments}
+								onSubmit={handleSearchEstablishments}
+								query={query}
+								setQuery={setQuery}
 							/>
 							<Recomended
 								establishments={allEstablishments}

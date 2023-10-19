@@ -30,7 +30,11 @@ function AddRestaurant() {
 					<ul className="add-restaurant__list">
 						{availableType.map((item, i) => (
 							<li key={i}>
-								<button className="add-restaurant__option-btn">{item}</button>
+								<input
+									className="add-restaurant__option-btn"
+									type="checkbox"
+									name=""
+								></input>
 							</li>
 						))}
 					</ul>
