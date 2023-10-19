@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-// import Header from '../Header/Header';
-// import Footer from '../Footer/Footer';
-// import Recomended from '../Recomended/Recomended';
-// import SearchResults from '../SearchResults/SearchResults';
-import RegisterFormUser from '../RegisterFormUser/RegisterFormUser';
+import Header from '../Header/Header';
+import Footer from '../Footer/Footer';
+import Recomended from '../Recomended/Recomended';
+import SearchResults from '../SearchResults/SearchResults';
+// import RegisterFormUser from '../RegisterFormUser/RegisterFormUser';
 import usersApi from '../../utils/UsersApi';
 import { IRegisterFormData } from '../../types/commonTypes';
 import {
@@ -55,15 +55,15 @@ const App: React.FC = () => {
 
 	return (
 		<div className="App">
-			{/* <Header /> */}
-			<RegisterFormUser
+			<Header />
+			{/* <RegisterFormUser
 				onRegistration={handleRegistration}
 				requestErrorMessage={regErrorMessage}
-			/>
-			{/* <SearchResults />
+			/> */}
+			<SearchResults />
 			<Recomended nearest={false} link="Все" title="Рекомендации" />
-			<Recomended nearest link="На карте" title="Ближайшие" /> */}
-			{/* <Footer /> */}
+			<Recomended nearest link="На карте" title="Ближайшие" />
+			<Footer />
 		</div>
 	);
 };
