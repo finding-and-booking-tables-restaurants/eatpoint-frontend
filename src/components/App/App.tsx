@@ -7,9 +7,24 @@ import { Restaurant } from '../../models/data/RestData';
 import { Routes, Route } from 'react-router-dom';
 import RestaurantPage from '../RestaurantPage/RestaurantPage';
 import BookingPage from '../BookingPage/BookingPage';
+import LoginForm from '../LoginForm/LoginForm';
+import { ILoginFormData, ILoginFormProps } from '../../types/commonTypes';
+import usersApi from '../../utils/UsersApi';
+import {
+	ERROR_400,
+	ERROR_401,
+	ERROR_409,
+	EMAIL_ALREADY_REGISTERED_MESSAGE,
+	INCORRECT_ADD_USER_DATA,
+	REG_ERROR_MESSAGE,
+	AUTH_ERROR_MESSAGE,
+	INVALID_AUTH_DATA_ERROR_MESSAGE,
+} from '../../utils/constants';
 
 function App() {
 	const [allEstablishments, setAllEstablishments] = useState([]);
+	const [authErrorMessage, setAuthErrorMessage] = useState('');
+	const [isLoggedIn, setIsLoggedIn] = useState(false);
 
 	useEffect(() => {
 		const fetchData = async () => {
@@ -38,6 +53,25 @@ function App() {
 		fetchData();
 	}, []);
 
+	// Логин
+	const handleLogin = (data: ILoginFormData) => {
+		usersApi
+			.authorize(data)
+			.then((res) => {
+				if (res.token) {
+					localStorage.setItem('jwt', res.token);
+				}
+				setIsLoggedIn(!isLoggedIn);
+			})
+			.catch((err) => {
+				if (err === ERROR_401) {
+					setAuthErrorMessage(INVALID_AUTH_DATA_ERROR_MESSAGE);
+				} else {
+					setAuthErrorMessage(AUTH_ERROR_MESSAGE);
+				}
+			});
+	};
+
 	return (
 		<div className="App">
 			<Routes>
@@ -45,7 +79,11 @@ function App() {
 					path="/"
 					element={
 						<>
-							<Header />
+							<LoginForm
+								onLogin={handleLogin}
+								requestErrorMessage={authErrorMessage}
+							/>
+							{/* <Header />
 							<Recomended
 								establishments={allEstablishments}
 								nearest={false}
@@ -58,7 +96,7 @@ function App() {
 								link="На карте"
 								title="Ближайшие"
 							/>
-							<Footer />
+							<Footer /> */}
 						</>
 					}
 				/>
@@ -87,6 +125,7 @@ function App() {
 					/>
 				))}
 			</Routes>
+
 			{/* import React, { useState } from 'react';
 import Header from '../Header/Header';
 import Footer from '../Footer/Footer';
@@ -95,13 +134,7 @@ import SearchResults from '../SearchResults/SearchResults';
 // import RegisterFormUser from '../RegisterFormUser/RegisterFormUser';
 import usersApi from '../../utils/UsersApi';
 import { IRegisterFormData } from '../../types/commonTypes';
-import {
-	ERROR_400,
-	ERROR_409,
-	EMAIL_ALREADY_REGISTERED_MESSAGE,
-	INCORRECT_ADD_USER_DATA,
-	REG_ERROR_MESSAGE,
-} from '../../utils/constants';
+
 
 const App: React.FC = () => {
 	const [regErrorMessage, setRegErrorMessage] = useState('');

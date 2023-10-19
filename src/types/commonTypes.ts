@@ -15,4 +15,19 @@ interface IRegisterFormUserProps {
 	requestErrorMessage: string;
 }
 
-export type { IRegisterFormData, IRegisterFormUserProps };
+interface ILoginFormData {
+	email: string;
+	password: string;
+}
+
+interface ILoginFormProps {
+	onLogin: (data: ILoginFormData) => void;
+	requestErrorMessage: string;
+}
+
+export type {
+	IRegisterFormData,
+	IRegisterFormUserProps,
+	ILoginFormData,
+	ILoginFormProps,
+};
