@@ -7,8 +7,9 @@ import { Restaurant } from '../../models/data/RestData';
 import { Routes, Route } from 'react-router-dom';
 import RestaurantPage from '../RestaurantPage/RestaurantPage';
 import BookingPage from '../BookingPage/BookingPage';
-import LoginForm from '../LoginForm/LoginForm';
-import { ILoginFormData, ILoginFormProps } from '../../types/commonTypes';
+// import RegisterFormUser from '../RegisterFormUser/RegisterFormUser';
+// import LoginForm from '../LoginForm/LoginForm';
+import { ILoginFormData, IRegisterFormData } from '../../types/commonTypes';
 import usersApi from '../../utils/UsersApi';
 import {
 	ERROR_400,
@@ -24,6 +25,7 @@ import {
 function App() {
 	const [allEstablishments, setAllEstablishments] = useState([]);
 	const [authErrorMessage, setAuthErrorMessage] = useState('');
+	const [regErrorMessage, setRegErrorMessage] = useState('');
 	const [isLoggedIn, setIsLoggedIn] = useState(false);
 
 	useEffect(() => {
@@ -61,7 +63,7 @@ function App() {
 				if (res.token) {
 					localStorage.setItem('jwt', res.token);
 				}
-				setIsLoggedIn(!isLoggedIn);
+				setIsLoggedIn(true);
 			})
 			.catch((err) => {
 				if (err === ERROR_401) {
@@ -72,73 +74,7 @@ function App() {
 			});
 	};
 
-	return (
-		<div className="App">
-			<Routes>
-				<Route
-					path="/"
-					element={
-						<>
-							<LoginForm
-								onLogin={handleLogin}
-								requestErrorMessage={authErrorMessage}
-							/>
-							{/* <Header />
-							<Recomended
-								establishments={allEstablishments}
-								nearest={false}
-								link="Все"
-								title="Рекомендации"
-							/>
-							<Recomended
-								establishments={allEstablishments}
-								nearest
-								link="На карте"
-								title="Ближайшие"
-							/>
-							<Footer /> */}
-						</>
-					}
-				/>
-				{allEstablishments.map((item: Restaurant) => (
-					<Route
-						key={item.id}
-						path={`/establishment/${item.id}`}
-						element={
-							<>
-								<Header />
-								<RestaurantPage id={item.id} />
-								<Footer />
-							</>
-						}
-					/>
-				))}
-				{allEstablishments.map((item: Restaurant) => (
-					<Route
-						key={item.id}
-						path={`/booking/${item.id}`}
-						element={
-							<>
-								<BookingPage id={item.id} />
-							</>
-						}
-					/>
-				))}
-			</Routes>
-
-			{/* import React, { useState } from 'react';
-import Header from '../Header/Header';
-import Footer from '../Footer/Footer';
-import Recomended from '../Recomended/Recomended';
-import SearchResults from '../SearchResults/SearchResults';
-// import RegisterFormUser from '../RegisterFormUser/RegisterFormUser';
-import usersApi from '../../utils/UsersApi';
-import { IRegisterFormData } from '../../types/commonTypes';
-
-
-const App: React.FC = () => {
-	const [regErrorMessage, setRegErrorMessage] = useState('');
-
+	// Регистрация
 	const handleRegistration: (data: IRegisterFormData) => void = ({
 		telephone,
 		email,
@@ -177,15 +113,53 @@ const App: React.FC = () => {
 
 	return (
 		<div className="App">
-			<Header />
-			{/* <RegisterFormUser
-				onRegistration={handleRegistration}
-				requestErrorMessage={regErrorMessage}
-			/> */}
-			{/* <SearchResults />
-			<Recomended nearest={false} link="Все" title="Рекомендации" />
-			<Recomended nearest link="На карте" title="Ближайшие" />
-			<Footer /> */}
+			<Routes>
+				<Route
+					path="/"
+					element={
+						<>
+							<Header />
+							<Recomended
+								establishments={allEstablishments}
+								nearest={false}
+								link="Все"
+								title="Рекомендации"
+							/>
+							<Recomended
+								establishments={allEstablishments}
+								nearest
+								link="На карте"
+								title="Ближайшие"
+							/>
+							<Footer />
+						</>
+					}
+				/>
+				{allEstablishments.map((item: Restaurant) => (
+					<Route
+						key={item.id}
+						path={`/establishment/${item.id}`}
+						element={
+							<>
+								<Header />
+								<RestaurantPage id={item.id} />
+								<Footer />
+							</>
+						}
+					/>
+				))}
+				{allEstablishments.map((item: Restaurant) => (
+					<Route
+						key={item.id}
+						path={`/booking/${item.id}`}
+						element={
+							<>
+								<BookingPage id={item.id} />
+							</>
+						}
+					/>
+				))}
+			</Routes>
 		</div>
 	);
 }
