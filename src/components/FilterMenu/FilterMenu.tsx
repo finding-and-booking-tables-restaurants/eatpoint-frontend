@@ -1,6 +1,6 @@
 import './FilterMenu.css';
 import SearchForm from '../SearchForm/SearchForm';
-import DatePickerValue from '../DatePicker/DatePickerValue';
+import DatePickerValue from '../DatePickerValue/DatePickerValue';
 import TimePickerValue from '../TimePickerValue/TimePickerValue';
 import NumberOfPerson from '../NumberOfPerson/NumberOfPerson';
 import FilterMenuProps from '../../models/propsInterfaces/FilterMenuProps';
@@ -90,7 +90,7 @@ function FilterMenu({
 						<li key={i}>
 							<button
 								className={`filter-menu__filter-btn ${
-									selectedTypeFilters.includes(filter)
+									selectedTypeFilters?.includes(filter)
 										? 'filter-menu__filter-btn_active'
 										: ''
 								} `}
@@ -109,7 +109,7 @@ function FilterMenu({
 						<li key={i}>
 							<button
 								className={`filter-menu__filter-btn ${
-									selectedServiceFilters.includes(filter)
+									selectedServiceFilters?.includes(filter)
 										? 'filter-menu__filter-btn_active'
 										: ''
 								} `}

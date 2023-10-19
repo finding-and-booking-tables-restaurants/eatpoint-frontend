@@ -1,21 +1,26 @@
 import Header from '../Header/Header';
 import Footer from '../Footer/Footer';
 import Recomended from '../Recomended/Recomended';
-// import SearchResults from '../SearchResults/SearchResults';
+import SearchResults from '../SearchResults/SearchResults';
+import AddRestaurant from '../AddRestaurant/AddRestaurant';
 import { useEffect, useState } from 'react';
-import { Restaurant } from '../../models/data/RestData';
 import { Routes, Route } from 'react-router-dom';
 import RestaurantPage from '../RestaurantPage/RestaurantPage';
 import BookingPage from '../BookingPage/BookingPage';
+import { Restaurant } from '../../utils/constants';
 
 function App() {
-	const [allEstablishments, setAllEstablishments] = useState([]);
+	const [allEstablishments, setAllEstablishments] = useState<Restaurant[]>([]);
+	const [searchEstablishments, setSearchEstablishments] = useState<
+		Restaurant[]
+	>([]);
+	const [query, setQuery] = useState('');
 
 	useEffect(() => {
 		const fetchData = async () => {
 			try {
 				const response = await fetch(
-					'http://80.87.109.70/api/v1/establishments'
+					`http://80.87.109.70/api/v1/establishments`
 				);
 				const data = await response.json();
 
@@ -38,6 +43,34 @@ function App() {
 		fetchData();
 	}, []);
 
+
+	function handleSearchEstablishments() {
+		const fetchData = async () => {
+			try {
+				const response = await fetch(
+					`http://80.87.109.70/api/v1/establishments/?search=${query}`
+				);
+				const data = await response.json();
+
+				const updatedData = data.results.map((item: Restaurant) => {
+					const updatedPoster = item.poster.replace(
+						'backend:8000',
+						'80.87.109.70'
+					);
+					return {
+						...item,
+						poster: updatedPoster,
+					};
+				});
+				setSearchEstablishments(updatedData);
+			} catch (error) {
+				console.error('Error fetching data:', error);
+			}
+		};
+
+		fetchData();
+	}
+
 	return (
 		<div className="App">
 			<Routes>
@@ -46,6 +79,13 @@ function App() {
 					element={
 						<>
 							<Header />
+							<SearchResults
+								searchEstablishments={searchEstablishments}
+								setAllEstablishments={setSearchEstablishments}
+								onSubmit={handleSearchEstablishments}
+								query={query}
+								setQuery={setQuery}
+							/>
 							<Recomended
 								establishments={allEstablishments}
 								nearest={false}
@@ -86,6 +126,7 @@ function App() {
 						}
 					/>
 				))}
+				<Route path="add-restaurant" element={<AddRestaurant />}></Route>
 			</Routes>
 			{/* import React, { useState } from 'react';
 import Header from '../Header/Header';

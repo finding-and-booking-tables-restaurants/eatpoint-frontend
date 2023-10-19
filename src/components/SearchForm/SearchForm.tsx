@@ -4,11 +4,16 @@ function SearchForm({
 	children,
 	onSubmit,
 }: {
-	children: ReactNode;
+	children?: ReactNode;
 	onSubmit: (event: React.FormEvent<HTMLFormElement>) => void;
 }) {
+	function handleSubmit(evt: React.FormEvent<HTMLFormElement>) {
+		evt.preventDefault();
+
+		onSubmit(evt);
+	}
 	return (
-		<form onSubmit={onSubmit} className="search-form">
+		<form onSubmit={handleSubmit} className="search-form">
 			{children}
 		</form>
 	);

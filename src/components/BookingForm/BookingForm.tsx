@@ -1,6 +1,6 @@
 import React, { Children, FC, ReactNode, useEffect, useState } from 'react';
 import SearchForm from '../SearchForm/SearchForm';
-import DatePickerValue from '../DatePicker/DatePickerValue';
+import DatePickerValue from '../DatePickerValue/DatePickerValue';
 import TimePickerValue from '../TimePickerValue/TimePickerValue';
 import NumberOfPerson from '../NumberOfPerson/NumberOfPerson';
 import SearchBtn from '../SearchFormBtn/SearchBtn';
