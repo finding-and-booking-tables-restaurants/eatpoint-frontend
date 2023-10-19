@@ -142,7 +142,7 @@ export const getDayAbbreviation = (day: string) => {
 
 function replaceBackendUrl(data: any): any {
 	const replaceUrl = (url: string) =>
-		url.replace('backend:8000', '80.87.109.70');
+		url.replace('backend:8000', 'eatpoint.sytes.net');
 
 	if (typeof data === 'string') {
 		return replaceUrl(data);
@@ -161,9 +161,7 @@ function replaceBackendUrl(data: any): any {
 
 export const fetchRestaurantData = async (id: number) => {
 	try {
-		const response = await fetch(
-			`http://80.87.109.70/api/v1/establishments/${id}`
-		);
+		const response = await fetch(`${API_URL}/api/v1/establishments/${id}`);
 		const data = await response.json();
 
 		const updatedData = replaceBackendUrl(data);
@@ -342,3 +340,5 @@ export {
 	AUTH_ERROR_MESSAGE,
 	INVALID_AUTH_DATA_ERROR_MESSAGE,
 };
+
+export const API_URL = 'http://eatpoint.sytes.net';
