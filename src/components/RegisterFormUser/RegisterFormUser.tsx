@@ -8,7 +8,7 @@ import {
 	FormControlLabel,
 	Box,
 } from '@mui/material';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
 	IRegisterFormData,
@@ -17,7 +17,6 @@ import {
 import Header from '../Header/Header';
 import Footer from '../Footer/Footer';
 import './RegisterFormUser.css';
-
 
 const RegisterFormUser: React.FC<IRegisterFormUserProps> = ({
 	onRegistration,
@@ -31,6 +30,7 @@ const RegisterFormUser: React.FC<IRegisterFormUserProps> = ({
 	const [password, setPassword] = useState('');
 	const [confirmPassword, setConfirmPassword] = useState('');
 	const [isAgreement, setIsAgreement] = useState(false);
+	const [isFormValid, setIsFormValid] = useState(false);
 
 	const handleRegistration = (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
@@ -54,10 +54,34 @@ const RegisterFormUser: React.FC<IRegisterFormUserProps> = ({
 		navigate(-1);
 	};
 
+	useEffect(() => {
+		const requiredFields = [
+			firstName,
+			lastName,
+			telephone,
+			email,
+			password,
+			confirmPassword,
+			isAgreement,
+		];
+		const isFormFilled = requiredFields.every(
+			(field) => field !== '' && field !== false
+		);
+		setIsFormValid(isFormFilled);
+	}, [
+		firstName,
+		lastName,
+		telephone,
+		email,
+		password,
+		confirmPassword,
+		isAgreement,
+	]);
+
 	return (
 		<>
 			<Header />
-			<Container fixed maxWidth="sm">
+			<Container fixed maxWidth="sm" sx={{ mb: 5 }}>
 				<Typography
 					variant="h1"
 					component="h1"
@@ -74,7 +98,13 @@ const RegisterFormUser: React.FC<IRegisterFormUserProps> = ({
 				>
 					Регистрация
 				</Typography>
-				<Box component="form" onSubmit={handleRegistration}>
+				<Box
+					component="form"
+					onSubmit={handleRegistration}
+					sx={{
+						'& > :not(style)': { m: 1, width: '100%', ml: 0, mb: 0 },
+					}}
+				>
 					<TextField
 						margin="dense"
 						name="name"
@@ -91,10 +121,11 @@ const RegisterFormUser: React.FC<IRegisterFormUserProps> = ({
 							setFirstName(firstName);
 							setLastName(lastName);
 						}}
-						sx={{ backgroundColor: '#FDFAF2' }}
+						sx={{
+							backgroundColor: '#FDFAF2',
+						}}
 					/>
 					<TextField
-						margin="dense"
 						variant="outlined"
 						name="telephone"
 						placeholder="Моб. телефон"
@@ -103,7 +134,9 @@ const RegisterFormUser: React.FC<IRegisterFormUserProps> = ({
 						onChange={(e) => setPhone(e.target.value)}
 						required
 						fullWidth
-						style={{ backgroundColor: '#FDFAF2' }}
+						sx={{
+							backgroundColor: '#FDFAF2',
+						}}
 					/>
 					<TextField
 						margin="dense"
@@ -114,7 +147,7 @@ const RegisterFormUser: React.FC<IRegisterFormUserProps> = ({
 						onChange={(e) => setEmail(e.target.value)}
 						required
 						fullWidth
-						style={{ backgroundColor: '#FDFAF2' }}
+						sx={{ backgroundColor: '#FDFAF2' }}
 					/>
 					<TextField
 						margin="dense"
@@ -124,7 +157,7 @@ const RegisterFormUser: React.FC<IRegisterFormUserProps> = ({
 						onChange={(e) => setPassword(e.target.value)}
 						required
 						fullWidth
-						style={{ backgroundColor: '#FDFAF2' }}
+						sx={{ backgroundColor: '#FDFAF2' }}
 					/>
 					<TextField
 						margin="dense"
@@ -161,7 +194,7 @@ const RegisterFormUser: React.FC<IRegisterFormUserProps> = ({
 							</Typography>
 						}
 					/>
-					<Stack direction="row" spacing={2} sx={{ ml: 2, mt: 3, mb: 3 }}>
+					<Stack direction="row" spacing={2} sx={{ mt: 2, mb: 3 }}>
 						<Button
 							onClick={handleGoBack}
 							variant="outlined"
@@ -181,17 +214,16 @@ const RegisterFormUser: React.FC<IRegisterFormUserProps> = ({
 									textTransform: 'capitalize',
 								}}
 							>
-								Отменить
+								Назад
 							</Typography>
 						</Button>
 						<Button
 							type="submit"
 							variant="contained"
+							disabled={!isFormValid}
 							sx={{
 								backgroundColor: '#05887B',
 								borderRadius: '100px',
-								height: '40px',
-								width: '156px',
 							}}
 						>
 							<Typography
