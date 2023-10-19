@@ -1,21 +1,50 @@
-import './Profile.css';
 import { TextField, Button, Typography, Box, Container } from '@mui/material';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
-export default function Profile() {
+const Profile: React.FC = () => {
 	const name = 'Иван Петров';
 	const email = 'ivan.petrov@gmail.com';
 	const phone = '9211231313';
+	const oldPassword = '';
+	const newPassword = '';
 
 	const [isVisible, setIsVisible] = useState(false);
+	const [isSuccess, setIsSuccess] = useState(false);
+	const [formData, setFormData] = useState({
+		name: 'Иван Петров',
+		phone: '9211231313',
+		email: 'ivan.petrov@gmail.com',
+		oldPassword: '',
+		newPassword: '',
+	});
 
-	function handleChangePassword() {
-		setIsVisible(!isVisible);
-	}
+	const handleChangePassword = (): void => setIsVisible(!isVisible);
+
+	const handleFieldChange = (fieldName: string, value: string): void => {
+		setFormData({
+			...formData,
+			[fieldName]: value,
+		});
+	};
+
+	const isDataChanged =
+		formData.name !== name ||
+		formData.phone !== phone ||
+		formData.email !== email ||
+		formData.oldPassword !== oldPassword ||
+		formData.newPassword !== newPassword;
 
 	function handleChange() {
-		if (!isVisible) {
+		if (isVisible) {
 			setIsVisible(!isVisible);
+
+			setTimeout(() => {
+				setIsSuccess(true);
+
+				setTimeout(() => {
+					setIsSuccess(false);
+				}, 2000);
+			}, 2000);
 		}
 	}
 
@@ -52,27 +81,27 @@ export default function Profile() {
 			>
 				<TextField
 					id="outlined-basic"
-					value={name}
 					variant="outlined"
-					type="text"
-					sx={{
-						backgroundColor: '#FDFAF2',
-						outline: 'none',
-					}}
-				/>
-				<TextField
-					id="outlined-basic"
-					variant="outlined"
-					value={phone}
+					value={formData.name}
 					type="phone"
 					style={{ backgroundColor: '#FDFAF2' }}
+					onChange={(e) => handleFieldChange('name', e.target.value)}
 				/>
 				<TextField
 					id="outlined-basic"
-					value={email}
+					variant="outlined"
+					value={formData.phone}
+					type="phone"
+					style={{ backgroundColor: '#FDFAF2' }}
+					onChange={(e) => handleFieldChange('phone', e.target.value)}
+				/>
+				<TextField
+					id="outlined-basic"
 					type="email"
 					variant="outlined"
+					value={formData.email}
 					style={{ backgroundColor: '#FDFAF2' }}
+					onChange={(e) => handleFieldChange('email', e.target.value)}
 				/>
 				<Button
 					onClick={handleChangePassword}
@@ -119,22 +148,40 @@ export default function Profile() {
 					/>
 				</Box>
 			)}
-			<Button
-				variant="contained"
-				sx={{
-					backgroundColor: '#C41A68',
-					borderRadius: '100px',
-					width: '100%',
-					mt: 1,
-					mb: 3,
-					'&:active': {
+			{isSuccess ? (
+				<Typography
+					fontFamily="Ubuntu"
+					fontSize="20px"
+					fontWeight="500"
+					lineHeight="26px"
+					letterSpacing="0.2px"
+					color="#006C60"
+					textAlign="center"
+					mb="26px"
+				>
+					Изменения успешно сохранены
+				</Typography>
+			) : (
+				<Button
+					variant="contained"
+					sx={{
 						backgroundColor: '#C41A68',
-					},
-				}}
-				onClick={handleChange}
-			>
-				Сохранить изменения
-			</Button>
+						borderRadius: '100px',
+						width: '100%',
+						mt: 1,
+						mb: 3,
+						'&:active': {
+							backgroundColor: '#C41A68',
+						},
+					}}
+					onClick={handleChange}
+					disabled={!isDataChanged}
+				>
+					Сохранить изменения
+				</Button>
+			)}
 		</Container>
 	);
-}
+};
+
+export default Profile;
