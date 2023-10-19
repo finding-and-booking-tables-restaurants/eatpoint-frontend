@@ -35,6 +35,11 @@ export default function DatePickerValue() {
 	return (
 		<LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="ru">
 			<ThemeProvider theme={newTheme}>
+				<input
+					type="hidden"
+					name="date_reservation"
+					value={value?.format('YYYY-MM-DD')}
+				/>
 				<DatePicker
 					label="Дата"
 					value={value}

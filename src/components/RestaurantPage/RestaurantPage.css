@@ -158,6 +158,8 @@
 	display: flex;
 	flex-direction: column;
 	align-items: flex-end;
+	overflow: hidden;
+	max-width: 100%;
 }
 
 .restaurant-page__description-text {

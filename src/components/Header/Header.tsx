@@ -41,9 +41,18 @@ const Header = () => {
 		setAnchorElNav(null);
 	};
 
+	const hadleLogoClick = () => {
+		navigate('/', { replace: true });
+	};
+
 	return (
 		<header className="header">
-			<img className="header__logo" src={logo} alt="лого" />
+			<img
+				onClick={hadleLogoClick}
+				className="header__logo"
+				src={logo}
+				alt="лого"
+			/>
 			<div onClick={handleLocationClick} className="header__location-btn">
 				<img src={place} alt="" />
 				<p className="header__location">{city}</p>

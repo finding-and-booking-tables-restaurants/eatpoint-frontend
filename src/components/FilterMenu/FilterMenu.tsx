@@ -35,7 +35,7 @@ function FilterMenu({
 					onClick={handleCloseBtn}
 				></button>
 				<h2 className="filter-menu__title">Фильтры</h2>
-				<SearchForm>
+				<SearchForm onSubmit={(event) => console.log(event)}>
 					<div className="search-results__flex-box">
 						<DatePickerValue />
 						<TimePickerValue />
@@ -90,7 +90,7 @@ function FilterMenu({
 						<li key={i}>
 							<button
 								className={`filter-menu__filter-btn ${
-									selectedTypeFilters.includes(filter)
+									selectedTypeFilters?.includes(filter)
 										? 'filter-menu__filter-btn_active'
 										: ''
 								} `}
@@ -109,7 +109,7 @@ function FilterMenu({
 						<li key={i}>
 							<button
 								className={`filter-menu__filter-btn ${
-									selectedServiceFilters.includes(filter)
+									selectedServiceFilters?.includes(filter)
 										? 'filter-menu__filter-btn_active'
 										: ''
 								} `}

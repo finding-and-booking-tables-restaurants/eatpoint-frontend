@@ -12,9 +12,14 @@ import map from '../../images/map-icon.svg';
 import './Recomended.css';
 import { Link } from 'react-router-dom';
 import RecomendedProps from '../../models/propsInterfaces/RecomendedProps';
-import RestData from '../../models/data/RestData';
+import { Restaurant } from '../../models/data/RestData';
 
-const Recomended: React.FC<RecomendedProps> = ({ title, link, nearest }) => {
+const Recomended: React.FC<RecomendedProps> = ({
+	title,
+	link,
+	nearest,
+	establishments,
+}) => {
 	return (
 		<section
 			className={`recomended ${
@@ -36,16 +41,17 @@ const Recomended: React.FC<RecomendedProps> = ({ title, link, nearest }) => {
 				loop={true}
 				slideToClickedSlide={true}
 			>
-				{fakeRestaurants.map((restaurant: RestData, index: number) => (
+				{establishments.map((restaurant: Restaurant, index: number) => (
 					<SwiperSlide key={index}>
 						<RestCard
 							key={index}
-							img={restaurant.img}
+							img={restaurant.poster}
 							name={restaurant.name}
 							address={restaurant.address}
 							rating={restaurant.rating}
-							reviews={restaurant.reviews}
+							reviews={45}
 							search={false}
+							id={restaurant.id}
 						/>
 					</SwiperSlide>
 				))}

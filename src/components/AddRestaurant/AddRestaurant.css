@@ -54,7 +54,6 @@
 }
 
 .add-restaurant__category {
-	padding-top: 24px;
 	color: #001f1c;
 	font-family: Ubuntu;
 	font-size: 18px;
@@ -66,7 +65,6 @@
 .add-restaurant__list {
 	margin: 0;
 	padding: 0;
-	padding-top: 16px;
 	list-style: none;
 	display: flex;
 	flex-wrap: wrap;
@@ -185,9 +183,54 @@
 .add-restaurant__radio-list {
 	margin: 0;
 	padding: 0;
-	padding-top: 20px;
 	gap: 5px;
 	list-style: none;
 	display: flex;
 	flex-direction: column;
+}
+
+.add-restaurant__text-area {
+	padding: 10px;
+	max-width: 328px;
+	width: 95%;
+	height: 103px;
+	border: 1px solid rgb(180, 177, 177);
+	border-radius: 8px;
+	background-color: #fdfaf2;
+	font-family: Roboto;
+	font-size: 16px;
+	font-weight: 400;
+	line-height: 24px;
+	letter-spacing: 0.5px;
+}
+
+.add-restaurant__category_padding-bot {
+	color: #001f1c;
+	font-family: Ubuntu;
+	font-size: 18px;
+	font-weight: 500;
+	line-height: 24px;
+	letter-spacing: 0.20000000298023224px;
+}
+
+.add-restaurant__submit-btn {
+	margin-bottom: 24px;
+	align-items: center;
+	max-width: 328px;
+	height: 48px;
+	color: white;
+	border: 1px solid rgb(180, 177, 177);
+	border-radius: 30px;
+	background-color: #05887b;
+	font-family: Roboto;
+	font-size: 16px;
+	font-weight: 500;
+	line-height: 20px;
+	letter-spacing: 0.10000000149011612px;
+	text-align: center;
+	cursor: pointer;
+}
+
+.add-restaurant__submit-btn:hover {
+	opacity: 0.8;
 }
