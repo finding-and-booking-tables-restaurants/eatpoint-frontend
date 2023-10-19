@@ -226,8 +226,6 @@ export const zones = [
 ];
 
 export const formValues: any = {
-	// last_name: '',
-	// end_time_reservation: '',
 	reminder_one_day: true,
 	reminder_three_hours: true,
 	reminder_half_on_hour: true,
@@ -237,21 +235,30 @@ export const inputs = [
 	{
 		label: 'Имя',
 		id: 'first_name',
+		type: 'text',
 		required: true,
+		maxLength: 30,
+		errorMessage: 'Введите корректное имя фамилию',
 	},
 	{
 		label: 'Моб. телефон',
 		id: 'telephone',
 		required: true,
+		type: 'number',
+		errorMessage: 'Введите корректный номер моб. телефона',
 	},
 	{
 		label: 'Эл. почта',
+		type: 'email',
 		id: 'email',
-		required: true,
+		errorMessage: 'Введите корректный адрес эл. почты',
 	},
 	{
 		label: 'Комментарий',
+		type: 'text',
 		id: 'comment',
 		required: false,
+		maxLength: 1500,
+		errorMessage: 'Длина введённого текста превышает 1500 символов',
 	},
 ];
