@@ -21,11 +21,14 @@ import {
 	INVALID_AUTH_DATA_ERROR_MESSAGE,
 } from '../../utils/constants';
 import { Restaurant } from '../../utils/constants';
+import RegisterFormUser from '../RegisterFormUser/RegisterFormUser';
+import LoginForm from '../LoginForm/LoginForm';
 
 function App() {
 	const [authErrorMessage, setAuthErrorMessage] = useState('');
 	const [regErrorMessage, setRegErrorMessage] = useState('');
 	const [isLoggedIn, setIsLoggedIn] = useState(false);
+	const [isSuccessRegister, setIsSuccessRegister] = useState(false);
 	const [allEstablishments, setAllEstablishments] = useState<Restaurant[]>([]);
 	const [searchEstablishments, setSearchEstablishments] = useState<
 		Restaurant[]
@@ -33,7 +36,6 @@ function App() {
 	const [query, setQuery] = useState('');
 
 	const [isSearching, setIsSearching] = useState(false);
-
 
 	useEffect(() => {
 		const fetchData = async () => {
@@ -61,7 +63,6 @@ function App() {
 
 		fetchData();
 	}, []);
-
 
 	// Логин
 	const handleLogin = (data: ILoginFormData) => {
@@ -106,7 +107,9 @@ function App() {
 				is_agreement,
 				confirm_code_send_method,
 			})
-			.then(() => {})
+			.then(() => {
+				setIsSuccessRegister(true);
+			})
 			.catch((err) => {
 				console.log('register-error:', err);
 				if (err === ERROR_409) {
@@ -117,6 +120,7 @@ function App() {
 					setRegErrorMessage(REG_ERROR_MESSAGE);
 				}
 			});
+	};
 
 	function handleSearchEstablishments() {
 		setIsSearching(true);
@@ -200,7 +204,18 @@ function App() {
 						element={<BookingPage id={item.id} />}
 					/>
 				))}
-				<Route path="add-restaurant" element={<AddRestaurant />}></Route>
+				<Route path="/add-restaurant" element={<AddRestaurant />}></Route>
+				<Route
+					path="/user-signup"
+					element={
+						<RegisterFormUser
+							requestErrorMessage={regErrorMessage}
+							isSuccessRegister={isSuccessRegister}
+							onRegistration={handleRegistration}
+						/>
+					}
+				/>
+				<Route path="/signin" element={<LoginForm onLogin={handleLogin} />} />
 			</Routes>
 		</div>
 	);

@@ -17,10 +17,12 @@ import {
 import Header from '../Header/Header';
 import Footer from '../Footer/Footer';
 import './RegisterFormUser.css';
+import SuccessRegister from '../SuccessRegister/SuccessRegister';
 
 const RegisterFormUser: React.FC<IRegisterFormUserProps> = ({
 	onRegistration,
 	requestErrorMessage,
+	isSuccessRegister,
 }) => {
 	const navigate = useNavigate();
 	const [firstName, setFirstName] = useState('');
@@ -97,148 +99,152 @@ const RegisterFormUser: React.FC<IRegisterFormUserProps> = ({
 				>
 					Регистрация
 				</Typography>
-				<Box
-					component="form"
-					onSubmit={handleRegistration}
-					sx={{
-						'& > :not(style)': { m: 1, width: '100%', ml: 0, mb: 0 },
-					}}
-				>
-					<TextField
-						margin="dense"
-						name="name"
-						variant="outlined"
-						placeholder="Имя, Фамилия"
-						type="text"
-						id="name"
-						required
-						fullWidth
-						onChange={(e) => {
-							const fullName = e.target.value;
-							const [firstName, ...lastNameArr] = fullName.split(' ');
-							const lastName = lastNameArr.join(' ');
-							setFirstName(firstName);
-							setLastName(lastName);
-						}}
+				{isSuccessRegister ? (
+					<SuccessRegister userEmail={email} />
+				) : (
+					<Box
+						component="form"
+						onSubmit={handleRegistration}
 						sx={{
-							backgroundColor: '#FDFAF2',
+							'& > :not(style)': { m: 1, width: '100%', ml: 0, mb: 0 },
 						}}
-					/>
-					<TextField
-						variant="outlined"
-						name="telephone"
-						placeholder="Моб. телефон"
-						type="text"
-						id="phone"
-						onChange={(e) => setPhone(e.target.value)}
-						required
-						fullWidth
-						sx={{
-							backgroundColor: '#FDFAF2',
-						}}
-					/>
-					<TextField
-						margin="dense"
-						variant="outlined"
-						placeholder="Эл. почта"
-						name="email"
-						type="text"
-						onChange={(e) => setEmail(e.target.value)}
-						required
-						fullWidth
-						sx={{ backgroundColor: '#FDFAF2' }}
-					/>
-					<TextField
-						margin="dense"
-						variant="outlined"
-						placeholder="Пароль"
-						type="password"
-						onChange={(e) => setPassword(e.target.value)}
-						required
-						fullWidth
-						sx={{ backgroundColor: '#FDFAF2' }}
-					/>
-					<TextField
-						margin="dense"
-						variant="outlined"
-						placeholder="Пароль повторно"
-						type="password"
-						onChange={(e) => setConfirmPassword(e.target.value)}
-						required
-						fullWidth
-						style={{ backgroundColor: '#FDFAF2' }}
-					/>
-					<FormControlLabel
-						control={
-							<Checkbox
-								checked={isAgreement}
-								onChange={(e) => setIsAgreement(e.target.checked)}
-							/>
-						}
-						sx={{
-							alignItems: 'center',
-						}}
-						label={
-							<Typography
-								sx={{
-									maxWidth: '264px',
-									fontSize: '12px',
-									fontWeight: '400',
-									lineHeight: '16px',
-									mt: '2px',
-									ml: '13px',
-								}}
-							>
-								Соглашаюсь на обработку персональных данных
-							</Typography>
-						}
-					/>
-					<Stack direction="row" spacing={2} sx={{ mt: 2, mb: 3 }}>
-						<Button
-							onClick={handleGoBack}
+					>
+						<TextField
+							margin="dense"
+							name="name"
 							variant="outlined"
-							sx={{
-								borderRadius: '100px',
-								borderColor: '#006C60',
-								height: '40px',
-								width: '156px',
+							placeholder="Имя, Фамилия"
+							type="text"
+							id="name"
+							required
+							fullWidth
+							onChange={(e) => {
+								const fullName = e.target.value;
+								const [firstName, ...lastNameArr] = fullName.split(' ');
+								const lastName = lastNameArr.join(' ');
+								setFirstName(firstName);
+								setLastName(lastName);
 							}}
-						>
-							<Typography
+							sx={{
+								backgroundColor: '#FDFAF2',
+							}}
+						/>
+						<TextField
+							variant="outlined"
+							name="telephone"
+							placeholder="Моб. телефон"
+							type="text"
+							id="phone"
+							onChange={(e) => setPhone(e.target.value)}
+							required
+							fullWidth
+							sx={{
+								backgroundColor: '#FDFAF2',
+							}}
+						/>
+						<TextField
+							margin="dense"
+							variant="outlined"
+							placeholder="Эл. почта"
+							name="email"
+							type="text"
+							onChange={(e) => setEmail(e.target.value)}
+							required
+							fullWidth
+							sx={{ backgroundColor: '#FDFAF2' }}
+						/>
+						<TextField
+							margin="dense"
+							variant="outlined"
+							placeholder="Пароль"
+							type="password"
+							onChange={(e) => setPassword(e.target.value)}
+							required
+							fullWidth
+							sx={{ backgroundColor: '#FDFAF2' }}
+						/>
+						<TextField
+							margin="dense"
+							variant="outlined"
+							placeholder="Пароль повторно"
+							type="password"
+							onChange={(e) => setConfirmPassword(e.target.value)}
+							required
+							fullWidth
+							style={{ backgroundColor: '#FDFAF2' }}
+						/>
+						<FormControlLabel
+							control={
+								<Checkbox
+									checked={isAgreement}
+									onChange={(e) => setIsAgreement(e.target.checked)}
+								/>
+							}
+							sx={{
+								alignItems: 'center',
+							}}
+							label={
+								<Typography
+									sx={{
+										maxWidth: '264px',
+										fontSize: '12px',
+										fontWeight: '400',
+										lineHeight: '16px',
+										mt: '2px',
+										ml: '13px',
+									}}
+								>
+									Соглашаюсь на обработку персональных данных
+								</Typography>
+							}
+						/>
+						<Stack direction="row" spacing={2} sx={{ mt: 2, mb: 3 }}>
+							<Button
+								onClick={handleGoBack}
+								variant="outlined"
 								sx={{
-									color: '#05887B',
-									fontSize: '14px',
-									fontWeight: '500',
-									lineHeight: '20px',
-									textTransform: 'capitalize',
+									borderRadius: '100px',
+									borderColor: '#006C60',
+									height: '40px',
+									width: '156px',
 								}}
 							>
-								Назад
-							</Typography>
-						</Button>
-						<Button
-							type="submit"
-							variant="contained"
-							disabled={!isFormValid}
-							sx={{
-								backgroundColor: '#05887B',
-								borderRadius: '100px',
-							}}
-						>
-							<Typography
+								<Typography
+									sx={{
+										color: '#05887B',
+										fontSize: '14px',
+										fontWeight: '500',
+										lineHeight: '20px',
+										textTransform: 'capitalize',
+									}}
+								>
+									Назад
+								</Typography>
+							</Button>
+							<Button
+								type="submit"
+								variant="contained"
+								disabled={!isFormValid}
 								sx={{
-									fontSize: '14px',
-									fontWeight: '500',
-									lineHeight: '20px',
-									textTransform: 'capitalize',
-									letterSpacing: '-0.6px',
+									backgroundColor: '#05887B',
+									borderRadius: '100px',
 								}}
 							>
-								Зарегистрироваться
-							</Typography>
-						</Button>
-					</Stack>
-				</Box>
+								<Typography
+									sx={{
+										fontSize: '14px',
+										fontWeight: '500',
+										lineHeight: '20px',
+										textTransform: 'capitalize',
+										letterSpacing: '-0.6px',
+									}}
+								>
+									Зарегистрироваться
+								</Typography>
+							</Button>
+						</Stack>
+					</Box>
+				)}
 			</Container>
 			<Footer />
 		</>

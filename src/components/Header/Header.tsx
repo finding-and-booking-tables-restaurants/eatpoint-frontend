@@ -93,13 +93,13 @@ const Header = ({
 					'aria-labelledby': 'basic-button',
 				}}
 			>
-				<MenuItem id="/sign-in" onClick={handleNavClose}>
+				<MenuItem id="/signin" onClick={handleNavClose}>
 					<KeyboardArrowRightIcon /> Вход
 				</MenuItem>
-				<MenuItem id="/sign-up" onClick={handleNavClose}>
+				<MenuItem id="/user-signup" onClick={handleNavClose}>
 					<KeyboardArrowRightIcon /> Регистрация
 				</MenuItem>
-				<MenuItem id="/for-restaurants" onClick={handleNavClose}>
+				<MenuItem id="/business-signup" onClick={handleNavClose}>
 					<KeyboardArrowRightIcon /> Для ресторанов
 				</MenuItem>
 			</Menu>
