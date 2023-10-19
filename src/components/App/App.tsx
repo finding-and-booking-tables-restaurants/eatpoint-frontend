@@ -1,14 +1,13 @@
 import Header from '../Header/Header';
 import Footer from '../Footer/Footer';
 import Recomended from '../Recomended/Recomended';
-// import SearchResults from '../SearchResults/SearchResults';
+import SearchResults from '../SearchResults/SearchResults';
+import AddRestaurant from '../AddRestaurant/AddRestaurant';
 import { useEffect, useState } from 'react';
-import { Restaurant } from '../../models/data/RestData';
 import { Routes, Route } from 'react-router-dom';
 import RestaurantPage from '../RestaurantPage/RestaurantPage';
 import BookingPage from '../BookingPage/BookingPage';
-// import RegisterFormUser from '../RegisterFormUser/RegisterFormUser';
-// import LoginForm from '../LoginForm/LoginForm';
+
 import { ILoginFormData, IRegisterFormData } from '../../types/commonTypes';
 import usersApi from '../../utils/UsersApi';
 import {
@@ -21,18 +20,26 @@ import {
 	AUTH_ERROR_MESSAGE,
 	INVALID_AUTH_DATA_ERROR_MESSAGE,
 } from '../../utils/constants';
+import { Restaurant } from '../../utils/constants';
 
 function App() {
-	const [allEstablishments, setAllEstablishments] = useState([]);
 	const [authErrorMessage, setAuthErrorMessage] = useState('');
 	const [regErrorMessage, setRegErrorMessage] = useState('');
 	const [isLoggedIn, setIsLoggedIn] = useState(false);
+	const [allEstablishments, setAllEstablishments] = useState<Restaurant[]>([]);
+	const [searchEstablishments, setSearchEstablishments] = useState<
+		Restaurant[]
+	>([]);
+	const [query, setQuery] = useState('');
+
+	const [isSearching, setIsSearching] = useState(false);
+
 
 	useEffect(() => {
 		const fetchData = async () => {
 			try {
 				const response = await fetch(
-					'http://80.87.109.70/api/v1/establishments'
+					`http://80.87.109.70/api/v1/establishments`
 				);
 				const data = await response.json();
 
@@ -54,6 +61,7 @@ function App() {
 
 		fetchData();
 	}, []);
+
 
 	// Логин
 	const handleLogin = (data: ILoginFormData) => {
@@ -109,6 +117,37 @@ function App() {
 					setRegErrorMessage(REG_ERROR_MESSAGE);
 				}
 			});
+
+	function handleSearchEstablishments() {
+		setIsSearching(true);
+		const fetchData = async () => {
+			try {
+				const response = await fetch(
+					`http://80.87.109.70/api/v1/establishments/?search=${query}`
+				);
+				const data = await response.json();
+
+				const updatedData = data.results.map((item: Restaurant) => {
+					const updatedPoster = item.poster.replace(
+						'backend:8000',
+						'80.87.109.70'
+					);
+					return {
+						...item,
+						poster: updatedPoster,
+					};
+				});
+				setSearchEstablishments(updatedData);
+			} catch (error) {
+				console.error('Error fetching data:', error);
+			}
+		};
+
+		fetchData();
+	}
+
+	const handleRestart = (value: boolean) => {
+		setIsSearching(!value);
 	};
 
 	return (
@@ -118,19 +157,31 @@ function App() {
 					path="/"
 					element={
 						<>
-							<Header />
-							<Recomended
-								establishments={allEstablishments}
-								nearest={false}
-								link="Все"
-								title="Рекомендации"
+							<Header handleRestart={handleRestart} />
+							<SearchResults
+								searchEstablishments={searchEstablishments}
+								setAllEstablishments={setSearchEstablishments}
+								onSubmit={handleSearchEstablishments}
+								query={query}
+								setQuery={setQuery}
+								isSearching={isSearching}
 							/>
-							<Recomended
-								establishments={allEstablishments}
-								nearest
-								link="На карте"
-								title="Ближайшие"
-							/>
+							{!isSearching && (
+								<>
+									<Recomended
+										establishments={allEstablishments}
+										nearest={false}
+										link="Все"
+										title="Рекомендации"
+									/>
+									<Recomended
+										establishments={allEstablishments}
+										nearest
+										link="На карте"
+										title="Ближайшие"
+									/>
+								</>
+							)}
 							<Footer />
 						</>
 					}
@@ -139,26 +190,17 @@ function App() {
 					<Route
 						key={item.id}
 						path={`/establishment/${item.id}`}
-						element={
-							<>
-								<Header />
-								<RestaurantPage id={item.id} />
-								<Footer />
-							</>
-						}
+						element={<RestaurantPage id={item.id} />}
 					/>
 				))}
 				{allEstablishments.map((item: Restaurant) => (
 					<Route
 						key={item.id}
 						path={`/booking/${item.id}`}
-						element={
-							<>
-								<BookingPage id={item.id} />
-							</>
-						}
+						element={<BookingPage id={item.id} />}
 					/>
 				))}
+				<Route path="add-restaurant" element={<AddRestaurant />}></Route>
 			</Routes>
 		</div>
 	);

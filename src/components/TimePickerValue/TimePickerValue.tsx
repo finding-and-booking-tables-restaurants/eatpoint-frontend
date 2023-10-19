@@ -6,9 +6,17 @@ function MyTimePicker() {
 	const [time, setTime] = useState<Dayjs | null>(dayjs(dayjs()));
 
 	const handleTimeChange = (event: ChangeEvent<HTMLInputElement>) => {
-		const newTime = dayjs(event.target.value, 'HH:mm');
-		setTime(newTime);
+		const selectedTime = dayjs(event.target.value, 'HH:mm');
+
+		const roundedTime = roundToNearest(selectedTime, 30); // или roundToNearest(selectedTime, 60) для целых часов
+
+		setTime(roundedTime);
 	};
+
+	function roundToNearest(time: Dayjs, minutes: number): Dayjs {
+		const roundedMinutes = Math.round(time.minute() / minutes) * minutes;
+		return time.set('minute', roundedMinutes);
+	}
 
 	return (
 		<TextField
@@ -20,8 +28,9 @@ function MyTimePicker() {
 			InputLabelProps={{
 				shrink: true,
 			}}
+			inputMode="text"
 			inputProps={{
-				step: 300,
+				step: 1800,
 				type: 'time',
 			}}
 			sx={{

@@ -8,7 +8,11 @@ import cities from '../../fakeData/cities';
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import { useNavigate } from 'react-router-dom';
 
-const Header = () => {
+const Header = ({
+	handleRestart,
+}: {
+	handleRestart?: (value: boolean) => void;
+}) => {
 	const navigate = useNavigate();
 
 	const [city, setCity] = useState('Москва');
@@ -42,7 +46,8 @@ const Header = () => {
 	};
 
 	const hadleLogoClick = () => {
-		navigate('/', { replace: true });
+		navigate('/');
+		handleRestart && handleRestart(true);
 	};
 
 	return (
