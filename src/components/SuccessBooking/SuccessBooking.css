@@ -1,0 +1,71 @@
+.success-booking {
+	display: flex;
+	flex-direction: column;
+	font-family: 'Roboto';
+	align-items: start;
+	margin: 16px 0;
+}
+
+.success-booking__title {
+	font-family: 'Ubuntu';
+	font-size: 20px;
+	font-style: normal;
+	font-weight: 500;
+	line-height: 26px;
+	letter-spacing: 0.2px;
+	margin: 32px 0 17px 0;
+}
+
+.success-booking__notification {
+	font-size: 14px;
+	font-style: normal;
+	font-weight: 400;
+	line-height: 20px;
+	letter-spacing: 0.25px;
+	max-width: 264px;
+	margin-right: auto;
+}
+
+.success-booking__rest-info {
+	padding: 20px 0 15px;
+	border-bottom: 1px solid #cac4d0;
+}
+
+.success-booking__name {
+	font-size: 16px;
+	font-style: normal;
+	font-weight: 400;
+	line-height: 24px;
+	letter-spacing: 0.5px;
+}
+.success-booking__adress {
+	color: #49454f;
+	text-overflow: ellipsis;
+	font-family: Roboto;
+	font-size: 14px;
+	font-style: normal;
+	font-weight: 400;
+	line-height: 20px;
+	letter-spacing: 0.25px;
+}
+
+.success-booking__time-info {
+	font-size: 16px;
+	font-style: normal;
+	font-weight: 400;
+	line-height: 24px;
+	letter-spacing: 0.5px;
+	padding: 16px 0;
+	border-bottom: 1px solid #cac4d0;
+}
+
+.success-booking__unbooked-text {
+	color: #c41a68;
+	font-family: 'Ubuntu';
+	font-size: 20px;
+	font-style: normal;
+	font-weight: 500;
+	line-height: 26px;
+	letter-spacing: 0.2px;
+	margin-top: 23px;
+}

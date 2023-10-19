@@ -1,0 +1,33 @@
+.success-register__title {
+	color: #49454f;
+	font-family: 'Ubuntu';
+	font-size: 20px;
+	font-style: normal;
+	font-weight: 500;
+	line-height: 26px;
+	letter-spacing: 0.2px;
+	max-width: 296px;
+	margin-top: 8px;
+	margin-bottom: 16px;
+}
+
+.success-register__message {
+	color: #49454f;
+	font-family: 'Roboto';
+	font-size: 16px;
+	font-style: normal;
+	font-weight: 400;
+	line-height: 24px;
+	letter-spacing: 0.5px;
+}
+
+.success-register__user-email {
+	color: #05887b;
+	font-family: 'Roboto';
+	font-size: 16px;
+	font-style: normal;
+	font-weight: 400;
+	line-height: 24px;
+	letter-spacing: 0.5px;
+	margin-bottom: 268px;
+}

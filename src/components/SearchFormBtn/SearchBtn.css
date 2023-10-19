@@ -1,0 +1,20 @@
+.search-form__btn {
+	align-items: center;
+	max-width: 328px;
+	height: 48px;
+	color: white;
+	border: 1px solid rgb(180, 177, 177);
+	border-radius: 30px;
+	background-color: #05887b;
+	font-family: Roboto;
+	font-size: 16px;
+	font-weight: 500;
+	line-height: 20px;
+	letter-spacing: 0.10000000149011612px;
+	text-align: center;
+	cursor: pointer;
+}
+
+.search-form__btn:hover {
+	opacity: 0.8;
+}

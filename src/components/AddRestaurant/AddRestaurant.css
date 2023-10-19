@@ -1,0 +1,236 @@
+.add-restaurant {
+	padding: 16px 16px 0 16px;
+}
+
+.add-restaurant__box {
+	padding-bottom: 24px;
+	display: flex;
+	align-items: center;
+	gap: 10px;
+}
+
+.add-restautant__backBtn {
+	width: 16px;
+	height: 16px;
+	background: url('../../images/add-restaurant__backBtn.svg') no-repeat center;
+	border: none;
+	cursor: pointer;
+}
+
+.add-restautant__backBtn:hover {
+	opacity: 0.8;
+}
+
+.add-restaurant__title {
+	font-family: Ubuntu;
+	font-size: 26px;
+	font-weight: 400;
+	line-height: 32px;
+	letter-spacing: 0em;
+	text-align: left;
+}
+
+.add-restaurant__form {
+	display: flex;
+	flex-direction: column;
+	gap: 17px;
+}
+
+.add-restaurant__input {
+	padding: 0;
+	padding-left: 20px;
+	background-color: #fdfaf2;
+	max-width: 318px;
+	width: 93%;
+	height: 48px;
+	border: 1px solid rgb(180, 177, 177);
+	border-radius: 4px;
+	font-family: Roboto;
+	font-size: 14px;
+	font-weight: 400;
+	line-height: 24px;
+	letter-spacing: 0.5px;
+	outline: none;
+}
+
+.add-restaurant__category {
+	color: #001f1c;
+	font-family: Ubuntu;
+	font-size: 18px;
+	font-weight: 500;
+	line-height: 24px;
+	letter-spacing: 0.20000000298023224px;
+}
+
+.add-restaurant__list {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+	display: flex;
+	flex-wrap: wrap;
+	gap: 8px;
+}
+
+.add-restaurant__option-btn {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	padding: 6px 16px;
+	font-family: Roboto;
+	font-size: 14px;
+	font-weight: 500;
+	line-height: 20px;
+	letter-spacing: 0.10000000149011612px;
+	border: 1px solid #006c60;
+	border-radius: 4px;
+	background: initial;
+	cursor: pointer;
+	color: #49454f;
+}
+
+.add-restaurant__option-btn_active {
+	color: #02332e;
+	background-color: #e4f4f1;
+	border: 1px solid #fff;
+}
+
+.add-restaurant__option-btn_active::before {
+	display: flex;
+	width: 13px;
+	height: 13px;
+	content: '';
+	background: url('../../images/filter-menu__successMarkGreen.svg') no-repeat;
+}
+
+.add-restaurant__description {
+	font-family: Roboto;
+	font-size: 14px;
+	font-weight: 400;
+	line-height: 20px;
+	letter-spacing: 0.25px;
+	text-align: left;
+}
+
+.add-restaurant__add-form {
+	display: flex;
+	flex-direction: column;
+}
+
+.add-restaurant__flex-box {
+	padding: 16px 0;
+	display: flex;
+	gap: 8px;
+}
+
+.add-restaurant__input-place {
+	padding: 0;
+	padding-left: 16px;
+	background-color: #fdfaf2;
+	max-width: 247px;
+	width: 93%;
+	height: 48px;
+	border: 1px solid rgb(180, 177, 177);
+	border-radius: 4px;
+	font-family: Roboto;
+	font-size: 14px;
+	font-weight: 400;
+	line-height: 24px;
+	letter-spacing: 0.5px;
+	outline: none;
+}
+
+.add-restaurant__input-place_num {
+	padding: 0;
+	padding-left: 16px;
+	background-color: #fdfaf2;
+	max-width: 73px;
+	width: 93%;
+	height: 48px;
+	border: 1px solid rgb(180, 177, 177);
+	border-radius: 4px;
+	font-family: Roboto;
+	font-size: 14px;
+	font-weight: 400;
+	line-height: 24px;
+	letter-spacing: 0.5px;
+	outline: none;
+}
+
+.add-restaurant__moreBtn {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	width: 156px;
+	height: 40px;
+	color: #006c60;
+	border: 1px solid #006c60;
+	border-radius: 100px;
+	background-color: initial;
+	align-self: flex-end;
+	cursor: pointer;
+}
+
+.add-restaurant__moreBtn::before {
+	padding-right: 10px;
+	display: flex;
+	align-items: center;
+	content: '';
+	width: 12px;
+	height: 12px;
+	background: url('../../images/add-restaurant__plus.svg') no-repeat;
+}
+
+.add-restaurant__radio-list {
+	margin: 0;
+	padding: 0;
+	gap: 5px;
+	list-style: none;
+	display: flex;
+	flex-direction: column;
+}
+
+.add-restaurant__text-area {
+	padding: 10px;
+	max-width: 328px;
+	width: 95%;
+	height: 103px;
+	border: 1px solid rgb(180, 177, 177);
+	border-radius: 8px;
+	background-color: #fdfaf2;
+	font-family: Roboto;
+	font-size: 16px;
+	font-weight: 400;
+	line-height: 24px;
+	letter-spacing: 0.5px;
+}
+
+.add-restaurant__category_padding-bot {
+	color: #001f1c;
+	font-family: Ubuntu;
+	font-size: 18px;
+	font-weight: 500;
+	line-height: 24px;
+	letter-spacing: 0.20000000298023224px;
+}
+
+.add-restaurant__submit-btn {
+	margin-bottom: 24px;
+	align-items: center;
+	max-width: 328px;
+	height: 48px;
+	color: white;
+	border: 1px solid rgb(180, 177, 177);
+	border-radius: 30px;
+	background-color: #05887b;
+	font-family: Roboto;
+	font-size: 16px;
+	font-weight: 500;
+	line-height: 20px;
+	letter-spacing: 0.10000000149011612px;
+	text-align: center;
+	cursor: pointer;
+}
+
+.add-restaurant__submit-btn:hover {
+	opacity: 0.8;
+}

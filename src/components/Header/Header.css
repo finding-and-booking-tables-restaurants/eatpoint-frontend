@@ -1,0 +1,46 @@
+.header {
+	display: inline-flex;
+	width: 92%;
+	margin: 14px 12px;
+	gap: 16px;
+	align-items: center;
+	justify-content: space-between;
+}
+
+.header__location-btn {
+	display: inline-flex;
+	gap: 8px;
+	cursor: pointer;
+}
+
+.header__srch-btn {
+	background: transparent url(../../images/search-icon.svg) center no-repeat;
+	background-size: cover;
+	width: 24px;
+	height: 24px;
+	border: none;
+	cursor: pointer;
+}
+
+.header__location {
+	color: #05887b;
+	font-size: 14px;
+	font-style: normal;
+	font-weight: 500;
+	line-height: 20px;
+	letter-spacing: 0.1px;
+	cursor: pointer;
+}
+
+.header__nav-btn {
+	background: transparent url(../../images/bm-icon.svg) center no-repeat;
+	background-size: cover;
+	width: 24px;
+	height: 24px;
+	border: none;
+	cursor: pointer;
+}
+
+.header__logo {
+	cursor: pointer;
+}

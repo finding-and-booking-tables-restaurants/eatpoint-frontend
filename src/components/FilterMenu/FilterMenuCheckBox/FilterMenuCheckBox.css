@@ -1,0 +1,53 @@
+.checkbox-item {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+
+.checkbox-item__box {
+	display: flex;
+	gap: 20px;
+	align-items: center;
+}
+
+.checkbox-item__input {
+	-webkit-appearance: none;
+	-moz-appearance: none;
+	-ms-appearance: none;
+	-o-appearance: none;
+	appearance: none;
+	height: 18px;
+	width: 18px;
+	transition: all 0.15s ease-out 0s;
+	border: none;
+	color: transparent;
+	cursor: pointer;
+	display: inline-block;
+	margin-right: 0.5rem;
+	outline: none;
+	position: relative;
+	z-index: 1000;
+	background: #05887b;
+}
+
+.checkbox-item__input:checked::before {
+	width: 18px;
+	height: 18px;
+	display: flex;
+	content: '\f00c';
+	font-size: 25px;
+	font-weight: bold;
+	position: absolute;
+	align-items: center;
+	justify-content: center;
+	background: url('../../../images/CheckBox__successMark.svg') no-repeat center;
+}
+.checkbox-item__input:checked::after {
+	background: #40e0d0;
+	content: '';
+	display: block;
+	position: relative;
+	z-index: 100;
+	border: none;
+	outline: none;
+}
