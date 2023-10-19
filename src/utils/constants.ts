@@ -327,10 +327,11 @@ const EMAIL_ALREADY_REGISTERED_MESSAGE =
 	'Пользователь с таким email уже существует.';
 const INCORRECT_ADD_USER_DATA = 'Переданы некорректные данные при регистрации';
 const REG_ERROR_MESSAGE = 'При регистрации пользователя произошла ошибка.';
+const INVALID_AUTH_DATA_ERROR_MESSAGE =
+	'Вы ввели неправильный логин или пароль.';
+const AUTH_ERROR_MESSAGE = 'При авторизации пользователя произошла ошибка.';
 
 export {
-	EMAIL_REGEX,
-	NAME_REGEX,
 	ERROR,
 	ERROR_400,
 	ERROR_401,
@@ -338,5 +339,6 @@ export {
 	EMAIL_ALREADY_REGISTERED_MESSAGE,
 	INCORRECT_ADD_USER_DATA,
 	REG_ERROR_MESSAGE,
-	PHONE_NUMBER_REGEX,
+	AUTH_ERROR_MESSAGE,
+	INVALID_AUTH_DATA_ERROR_MESSAGE,
 };

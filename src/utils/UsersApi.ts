@@ -1,4 +1,4 @@
-import { IRegisterFormData } from '../types/commonTypes';
+import { IRegisterFormData, ILoginFormData } from '../types/commonTypes';
 
 class UsersApi {
 	private _baseUrl: string;
@@ -46,6 +46,40 @@ class UsersApi {
 				confirm_code_send_method: confirm_code_send_method,
 			}),
 		}).then(this._handleResponse);
+	}
+
+	// authorize({ email, password }: ILoginFormData): Promise<{ token: string }> {
+	// 	return fetch(`${this._baseUrl}/api/v1/login/jwt/create/`, {
+	// 		method: 'POST',
+	// 		headers: this._headers,
+	// 		body: JSON.stringify({
+	// 			email: email,
+	// 			password: password,
+	// 		}),
+	// 	}).then(this._handleResponse);
+	// }
+
+	authorize({ email, password }: ILoginFormData): Promise<{ token: string }> {
+		return fetch(`${this._baseUrl}/api/v1/login/jwt/create/`, {
+			method: 'POST',
+			headers: this._headers,
+			body: JSON.stringify({
+				email,
+				password,
+			}),
+		})
+			.then(this._handleResponse)
+			.then((response) => response.json())
+			.then((data) => {
+				if (!data || !data.token) {
+					return Promise.reject('В ответе нет токена');
+				}
+				return { token: data.token };
+			})
+			.catch((error) => {
+				console.error('Ошибка авторизации:', error);
+				return Promise.reject('Ошибка авторизации');
+			});
 	}
 }
 

@@ -45,7 +45,6 @@ const RegisterFormUser: React.FC<IRegisterFormUserProps> = ({
 			role: 'client',
 			confirm_code_send_method: 'nothing',
 		};
-		console.log(userData);
 
 		onRegistration(userData);
 	};

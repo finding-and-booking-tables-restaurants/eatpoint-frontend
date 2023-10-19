@@ -7,9 +7,25 @@ import { useEffect, useState } from 'react';
 import { Routes, Route } from 'react-router-dom';
 import RestaurantPage from '../RestaurantPage/RestaurantPage';
 import BookingPage from '../BookingPage/BookingPage';
+
+import { ILoginFormData, IRegisterFormData } from '../../types/commonTypes';
+import usersApi from '../../utils/UsersApi';
+import {
+	ERROR_400,
+	ERROR_401,
+	ERROR_409,
+	EMAIL_ALREADY_REGISTERED_MESSAGE,
+	INCORRECT_ADD_USER_DATA,
+	REG_ERROR_MESSAGE,
+	AUTH_ERROR_MESSAGE,
+	INVALID_AUTH_DATA_ERROR_MESSAGE,
+} from '../../utils/constants';
 import { Restaurant } from '../../utils/constants';
 
 function App() {
+	const [authErrorMessage, setAuthErrorMessage] = useState('');
+	const [regErrorMessage, setRegErrorMessage] = useState('');
+	const [isLoggedIn, setIsLoggedIn] = useState(false);
 	const [allEstablishments, setAllEstablishments] = useState<Restaurant[]>([]);
 	const [searchEstablishments, setSearchEstablishments] = useState<
 		Restaurant[]
@@ -17,6 +33,7 @@ function App() {
 	const [query, setQuery] = useState('');
 
 	const [isSearching, setIsSearching] = useState(false);
+
 
 	useEffect(() => {
 		const fetchData = async () => {
@@ -44,6 +61,62 @@ function App() {
 
 		fetchData();
 	}, []);
+
+
+	// Логин
+	const handleLogin = (data: ILoginFormData) => {
+		usersApi
+			.authorize(data)
+			.then((res) => {
+				if (res.token) {
+					localStorage.setItem('jwt', res.token);
+				}
+				setIsLoggedIn(true);
+			})
+			.catch((err) => {
+				if (err === ERROR_401) {
+					setAuthErrorMessage(INVALID_AUTH_DATA_ERROR_MESSAGE);
+				} else {
+					setAuthErrorMessage(AUTH_ERROR_MESSAGE);
+				}
+			});
+	};
+
+	// Регистрация
+	const handleRegistration: (data: IRegisterFormData) => void = ({
+		telephone,
+		email,
+		firstName,
+		lastName,
+		role,
+		password,
+		confirmPassword,
+		is_agreement,
+		confirm_code_send_method,
+	}) => {
+		usersApi
+			.registerUser({
+				telephone,
+				email,
+				firstName,
+				lastName,
+				password,
+				confirmPassword,
+				role,
+				is_agreement,
+				confirm_code_send_method,
+			})
+			.then(() => {})
+			.catch((err) => {
+				console.log('register-error:', err);
+				if (err === ERROR_409) {
+					setRegErrorMessage(EMAIL_ALREADY_REGISTERED_MESSAGE);
+				} else if (err === ERROR_400) {
+					setRegErrorMessage(INCORRECT_ADD_USER_DATA);
+				} else {
+					setRegErrorMessage(REG_ERROR_MESSAGE);
+				}
+			});
 
 	function handleSearchEstablishments() {
 		setIsSearching(true);
@@ -129,72 +202,6 @@ function App() {
 				))}
 				<Route path="add-restaurant" element={<AddRestaurant />}></Route>
 			</Routes>
-			{/* import React, { useState } from 'react';
-import Header from '../Header/Header';
-import Footer from '../Footer/Footer';
-import Recomended from '../Recomended/Recomended';
-import SearchResults from '../SearchResults/SearchResults';
-// import RegisterFormUser from '../RegisterFormUser/RegisterFormUser';
-import usersApi from '../../utils/UsersApi';
-import { IRegisterFormData } from '../../types/commonTypes';
-import {
-	ERROR_400,
-	ERROR_409,
-	EMAIL_ALREADY_REGISTERED_MESSAGE,
-	INCORRECT_ADD_USER_DATA,
-	REG_ERROR_MESSAGE,
-} from '../../utils/constants';
-
-const App: React.FC = () => {
-	const [regErrorMessage, setRegErrorMessage] = useState('');
-
-	const handleRegistration: (data: IRegisterFormData) => void = ({
-		telephone,
-		email,
-		firstName,
-		lastName,
-		role,
-		password,
-		confirmPassword,
-		is_agreement,
-		confirm_code_send_method,
-	}) => {
-		usersApi
-			.registerUser({
-				telephone,
-				email,
-				firstName,
-				lastName,
-				password,
-				confirmPassword,
-				role,
-				is_agreement,
-				confirm_code_send_method,
-			})
-			.then(() => {})
-			.catch((err) => {
-				console.log('register-error:', err);
-				if (err === ERROR_409) {
-					setRegErrorMessage(EMAIL_ALREADY_REGISTERED_MESSAGE);
-				} else if (err === ERROR_400) {
-					setRegErrorMessage(INCORRECT_ADD_USER_DATA);
-				} else {
-					setRegErrorMessage(REG_ERROR_MESSAGE);
-				}
-			});
-	};
-
-	return (
-		<div className="App">
-			<Header />
-			{/* <RegisterFormUser
-				onRegistration={handleRegistration}
-				requestErrorMessage={regErrorMessage}
-			/> */}
-			{/* <SearchResults />
-			<Recomended nearest={false} link="Все" title="Рекомендации" />
-			<Recomended nearest link="На карте" title="Ближайшие" />
-			<Footer /> */}
 		</div>
 	);
 }
