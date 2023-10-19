@@ -19,6 +19,7 @@ import {
 	REG_ERROR_MESSAGE,
 	AUTH_ERROR_MESSAGE,
 	INVALID_AUTH_DATA_ERROR_MESSAGE,
+	API_URL,
 } from '../../utils/constants';
 import { Restaurant } from '../../utils/constants';
 import RegisterFormUser from '../RegisterFormUser/RegisterFormUser';
@@ -40,15 +41,13 @@ function App() {
 	useEffect(() => {
 		const fetchData = async () => {
 			try {
-				const response = await fetch(
-					`http://80.87.109.70/api/v1/establishments`
-				);
+				const response = await fetch(`${API_URL}/api/v1/establishments`);
 				const data = await response.json();
 
 				const updatedData = data.results.map((item: Restaurant) => {
 					const updatedPoster = item.poster.replace(
 						'backend:8000',
-						'80.87.109.70'
+						'eatpoint.sytes.net'
 					);
 					return {
 						...item,
@@ -127,14 +126,14 @@ function App() {
 		const fetchData = async () => {
 			try {
 				const response = await fetch(
-					`http://80.87.109.70/api/v1/establishments/?search=${query}`
+					`${API_URL}/api/v1/establishments/?search=${query}`
 				);
 				const data = await response.json();
 
 				const updatedData = data.results.map((item: Restaurant) => {
 					const updatedPoster = item.poster.replace(
 						'backend:8000',
-						'80.87.109.70'
+						'eatpoint.sytes.net'
 					);
 					return {
 						...item,
