@@ -158,6 +158,8 @@ const BookingPage: FC<BookingPageProps> = ({ id }) => {
 						{inputs.map((option, index) => (
 							<TextField
 								required={option.required}
+								type={option.type}
+								inputProps={{ max: option.maxLength }}
 								name={option.id}
 								key={index}
 								id="outlined-select-currency"

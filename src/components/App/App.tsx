@@ -38,8 +38,6 @@ function App() {
 		fetchData();
 	}, []);
 
-	console.log(allEstablishments);
-
 	return (
 		<div className="App">
 			<Routes>
