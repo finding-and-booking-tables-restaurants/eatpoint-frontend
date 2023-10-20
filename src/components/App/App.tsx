@@ -43,18 +43,7 @@ function App() {
 			try {
 				const response = await fetch(`${API_URL}/api/v1/establishments`);
 				const data = await response.json();
-
-				const updatedData = data.results.map((item: Restaurant) => {
-					const updatedPoster = item.poster.replace(
-						'backend:8000',
-						'eatpoint.sytes.net'
-					);
-					return {
-						...item,
-						poster: updatedPoster,
-					};
-				});
-				setAllEstablishments(updatedData);
+				setAllEstablishments(data.results);
 			} catch (error) {
 				console.error('Error fetching data:', error);
 			}
@@ -130,17 +119,7 @@ function App() {
 				);
 				const data = await response.json();
 
-				const updatedData = data.results.map((item: Restaurant) => {
-					const updatedPoster = item.poster.replace(
-						'backend:8000',
-						'eatpoint.sytes.net'
-					);
-					return {
-						...item,
-						poster: updatedPoster,
-					};
-				});
-				setSearchEstablishments(updatedData);
+				setSearchEstablishments(data.results);
 			} catch (error) {
 				console.error('Error fetching data:', error);
 			}

@@ -1,4 +1,5 @@
 import { IRegisterFormData, ILoginFormData } from '../types/commonTypes';
+import { API_URL } from './constants';
 
 class UsersApi {
 	private _baseUrl: string;
@@ -84,7 +85,7 @@ class UsersApi {
 }
 
 const usersApi = new UsersApi({
-	baseUrl: 'http://80.87.109.70',
+	baseUrl: API_URL,
 	headers: {
 		'Content-Type': 'application/json',
 	},
