@@ -12,7 +12,8 @@ interface IRegisterFormData {
 
 interface IRegisterFormUserProps {
 	onRegistration: (data: IRegisterFormData) => void;
-	requestErrorMessage: string;
+	requestErrorMessage?: string;
+	isSuccessRegister: boolean;
 }
 
 interface ILoginFormData {
@@ -22,7 +23,7 @@ interface ILoginFormData {
 
 interface ILoginFormProps {
 	onLogin: (data: ILoginFormData, rememberMe: boolean) => void;
-	requestErrorMessage: string;
+	requestErrorMessage?: string;
 }
 
 export type {

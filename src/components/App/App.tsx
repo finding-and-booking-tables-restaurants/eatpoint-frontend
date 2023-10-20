@@ -4,7 +4,7 @@ import Recomended from '../Recomended/Recomended';
 import SearchResults from '../SearchResults/SearchResults';
 import AddRestaurant from '../AddRestaurant/AddRestaurant';
 import { useEffect, useState } from 'react';
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, useNavigate } from 'react-router-dom';
 import RestaurantPage from '../RestaurantPage/RestaurantPage';
 import BookingPage from '../BookingPage/BookingPage';
 
@@ -19,41 +19,33 @@ import {
 	REG_ERROR_MESSAGE,
 	AUTH_ERROR_MESSAGE,
 	INVALID_AUTH_DATA_ERROR_MESSAGE,
+	API_URL,
 } from '../../utils/constants';
 import { Restaurant } from '../../utils/constants';
+import RegisterFormUser from '../RegisterFormUser/RegisterFormUser';
+import LoginForm from '../LoginForm/LoginForm';
 
 function App() {
 	const [authErrorMessage, setAuthErrorMessage] = useState('');
 	const [regErrorMessage, setRegErrorMessage] = useState('');
 	const [isLoggedIn, setIsLoggedIn] = useState(false);
+	const [isSuccessRegister, setIsSuccessRegister] = useState(false);
 	const [allEstablishments, setAllEstablishments] = useState<Restaurant[]>([]);
 	const [searchEstablishments, setSearchEstablishments] = useState<
 		Restaurant[]
 	>([]);
 	const [query, setQuery] = useState('');
 
-	const [isSearching, setIsSearching] = useState(false);
+	const navigate = useNavigate();
 
+	const [isSearching, setIsSearching] = useState(false);
 
 	useEffect(() => {
 		const fetchData = async () => {
 			try {
-				const response = await fetch(
-					`http://80.87.109.70/api/v1/establishments`
-				);
+				const response = await fetch(`${API_URL}/api/v1/establishments`);
 				const data = await response.json();
-
-				const updatedData = data.results.map((item: Restaurant) => {
-					const updatedPoster = item.poster.replace(
-						'backend:8000',
-						'80.87.109.70'
-					);
-					return {
-						...item,
-						poster: updatedPoster,
-					};
-				});
-				setAllEstablishments(updatedData);
+				setAllEstablishments(data.results);
 			} catch (error) {
 				console.error('Error fetching data:', error);
 			}
@@ -62,20 +54,20 @@ function App() {
 		fetchData();
 	}, []);
 
-
 	// Логин
 	const handleLogin = (data: ILoginFormData, rememberMe: boolean) => {
 		usersApi
 			.authorize(data)
 			.then((res) => {
-				if (res.token) {
+				if (res.access) {
 					if (rememberMe) {
-						console.log('Saving token', res.token);
-						localStorage.setItem('jwt', res.token);
-						console.log('Token saved');
+						localStorage.setItem('access-token', res.access);
+						localStorage.setItem('refresh-token', res.refresh);
+						console.log('Токен сохранен');
 					}
 				}
 				setIsLoggedIn(true);
+				navigate('/', { replace: true });
 			})
 			.catch((err) => {
 				if (err === ERROR_401) {
@@ -110,7 +102,9 @@ function App() {
 				is_agreement,
 				confirm_code_send_method,
 			})
-			.then(() => {})
+			.then(() => {
+				setIsSuccessRegister(true);
+			})
 			.catch((err) => {
 				console.log('register-error:', err);
 				if (err === ERROR_409) {
@@ -121,27 +115,18 @@ function App() {
 					setRegErrorMessage(REG_ERROR_MESSAGE);
 				}
 			});
+	};
 
 	function handleSearchEstablishments() {
 		setIsSearching(true);
 		const fetchData = async () => {
 			try {
 				const response = await fetch(
-					`http://80.87.109.70/api/v1/establishments/?search=${query}`
+					`${API_URL}/api/v1/establishments/?search=${query}`
 				);
 				const data = await response.json();
 
-				const updatedData = data.results.map((item: Restaurant) => {
-					const updatedPoster = item.poster.replace(
-						'backend:8000',
-						'80.87.109.70'
-					);
-					return {
-						...item,
-						poster: updatedPoster,
-					};
-				});
-				setSearchEstablishments(updatedData);
+				setSearchEstablishments(data.results);
 			} catch (error) {
 				console.error('Error fetching data:', error);
 			}
@@ -211,7 +196,26 @@ function App() {
 						element={<BookingPage id={item.id} />}
 					/>
 				))}
-				<Route path="add-restaurant" element={<AddRestaurant />}></Route>
+				<Route path="/add-restaurant" element={<AddRestaurant />}></Route>
+				<Route
+					path="/user-signup"
+					element={
+						<RegisterFormUser
+							requestErrorMessage={regErrorMessage}
+							isSuccessRegister={isSuccessRegister}
+							onRegistration={handleRegistration}
+						/>
+					}
+				/>
+				<Route
+					path="/signin"
+					element={
+						<LoginForm
+							requestErrorMessage={authErrorMessage}
+							onLogin={handleLogin}
+						/>
+					}
+				/>
 			</Routes>
 		</div>
 	);

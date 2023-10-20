@@ -1,4 +1,5 @@
 import { IRegisterFormData, ILoginFormData } from '../types/commonTypes';
+import { API_URL } from './constants';
 
 class UsersApi {
 	private _baseUrl: string;
@@ -15,14 +16,14 @@ class UsersApi {
 		this._headers = headers;
 	}
 
-	private _handleResponse(responce: Response): Promise<Response> {
-		if (!responce.ok) {
-			throw new Error(`Request failed with status ${responce.status}`);
+	private async _handleResponse<T>(res: Response): Promise<T> {
+		if (!res.ok) {
+			throw new Error(`Request failed with status ${res.status}`);
 		}
-		return responce.json();
+		return res.json();
 	}
 
-	registerUser({
+	async registerUser({
 		telephone,
 		email,
 		firstName,
@@ -36,19 +37,22 @@ class UsersApi {
 			method: 'POST',
 			headers: this._headers,
 			body: JSON.stringify({
-				telephone: telephone,
-				email: email,
+				telephone,
+				email,
 				first_name: firstName,
 				last_name: lastName,
-				role: role,
-				password: password,
-				is_agreement: is_agreement,
-				confirm_code_send_method: confirm_code_send_method,
+				role,
+				password,
+				is_agreement,
+				confirm_code_send_method,
 			}),
-		}).then(this._handleResponse);
+		}).then((res) => this._handleResponse<Response>(res));
 	}
 
-	authorize({ email, password }: ILoginFormData): Promise<{ token: string }> {
+	async authorize({
+		email,
+		password,
+	}: ILoginFormData): Promise<{ access: string; refresh: string }> {
 		return fetch(`${this._baseUrl}/api/v1/login/jwt/create/`, {
 			method: 'POST',
 			headers: this._headers,
@@ -56,24 +60,14 @@ class UsersApi {
 				email,
 				password,
 			}),
-		})
-			.then(this._handleResponse)
-			.then((response) => response.json())
-			.then((data) => {
-				if (!data || !data.token) {
-					return Promise.reject('В ответе нет токена');
-				}
-				return { token: data.token };
-			})
-			.catch((error) => {
-				console.error('Ошибка авторизации:', error);
-				return Promise.reject('Ошибка авторизации');
-			});
+		}).then((res) =>
+			this._handleResponse<{ access: string; refresh: string }>(res)
+		);
 	}
 }
 
 const usersApi = new UsersApi({
-	baseUrl: 'http://80.87.109.70',
+	baseUrl: API_URL,
 	headers: {
 		'Content-Type': 'application/json',
 	},
