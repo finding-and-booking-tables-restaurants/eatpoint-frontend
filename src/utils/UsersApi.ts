@@ -1,5 +1,5 @@
 import { IRegisterFormData, ILoginFormData } from '../types/commonTypes';
-import { API_URL } from './constants';
+import { API_URL, UserData } from './constants';
 
 class UsersApi {
 	private _baseUrl: string;
@@ -16,11 +16,11 @@ class UsersApi {
 		this._headers = headers;
 	}
 
-	private _handleResponse(responce: Response): Promise<Response> {
-		if (!responce.ok) {
-			throw new Error(`Request failed with status ${responce.status}`);
+	private _handleResponse(res: Response): Promise<Response> {
+		if (!res.ok) {
+			throw new Error(`Request failed with status ${res.status}`);
 		}
-		return responce.json();
+		return res.json();
 	}
 
 	registerUser({
@@ -49,17 +49,6 @@ class UsersApi {
 		}).then(this._handleResponse);
 	}
 
-	// authorize({ email, password }: ILoginFormData): Promise<{ token: string }> {
-	// 	return fetch(`${this._baseUrl}/api/v1/login/jwt/create/`, {
-	// 		method: 'POST',
-	// 		headers: this._headers,
-	// 		body: JSON.stringify({
-	// 			email: email,
-	// 			password: password,
-	// 		}),
-	// 	}).then(this._handleResponse);
-	// }
-
 	authorize({ email, password }: ILoginFormData): Promise<{ token: string }> {
 		return fetch(`${this._baseUrl}/api/v1/login/jwt/create/`, {
 			method: 'POST',
@@ -81,6 +70,15 @@ class UsersApi {
 				console.error('Ошибка авторизации:', error);
 				return Promise.reject('Ошибка авторизации');
 			});
+	}
+
+	getUserInfo(): Promise<any> {
+		return fetch(`${this._baseUrl}/api/v1/users/me/`, {
+			headers: {
+				authorization: 'Bearer ' + localStorage.getItem('access-token'),
+				'Content-Type': 'application/json',
+			},
+		}).then((res) => this._handleResponse(res));
 	}
 }
 

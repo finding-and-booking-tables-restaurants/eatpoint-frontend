@@ -4,7 +4,7 @@ import Recomended from '../Recomended/Recomended';
 import SearchResults from '../SearchResults/SearchResults';
 import AddRestaurant from '../AddRestaurant/AddRestaurant';
 import { useEffect, useState } from 'react';
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, Navigate } from 'react-router-dom';
 import RestaurantPage from '../RestaurantPage/RestaurantPage';
 import BookingPage from '../BookingPage/BookingPage';
 
@@ -24,8 +24,12 @@ import {
 import { Restaurant } from '../../utils/constants';
 import RegisterFormUser from '../RegisterFormUser/RegisterFormUser';
 import LoginForm from '../LoginForm/LoginForm';
+import Profile from '../Profile/Profile';
+import CurrentUserContext from '../../contexts/CurrentUserContext';
 
 function App() {
+	const [currentUser, setCurrentUser] = useState({});
+	const [currentRole, setCurrentRole] = useState('');
 	const [authErrorMessage, setAuthErrorMessage] = useState('');
 	const [regErrorMessage, setRegErrorMessage] = useState('');
 	const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -37,6 +41,32 @@ function App() {
 	const [query, setQuery] = useState('');
 
 	const [isSearching, setIsSearching] = useState(false);
+
+	useEffect(() => {
+		const token = localStorage.getItem('access-token');
+		if (token) {
+			usersApi
+				.getUserInfo()
+				.then(() => {
+					setIsLoggedIn(true);
+					console.log('я залогинен');
+				})
+				.catch((err) => console.log(err));
+		}
+	}, []);
+
+	useEffect(() => {
+		if (isLoggedIn) {
+			usersApi
+				.getUserInfo()
+				.then((data) => {
+					setCurrentUser(data);
+					setCurrentRole(data.role);
+					console.log('я сохранил данные юзера');
+				})
+				.catch((err) => console.log(err));
+		}
+	}, [isLoggedIn]);
 
 	useEffect(() => {
 		const fetchData = async () => {
@@ -134,67 +164,75 @@ function App() {
 
 	return (
 		<div className="App">
-			<Routes>
-				<Route
-					path="/"
-					element={
-						<>
-							<Header handleRestart={handleRestart} />
-							<SearchResults
-								searchEstablishments={searchEstablishments}
-								setAllEstablishments={setSearchEstablishments}
-								onSubmit={handleSearchEstablishments}
-								query={query}
-								setQuery={setQuery}
-								isSearching={isSearching}
-							/>
-							{!isSearching && (
-								<>
-									<Recomended
-										establishments={allEstablishments}
-										nearest={false}
-										link="Все"
-										title="Рекомендации"
-									/>
-									<Recomended
-										establishments={allEstablishments}
-										nearest
-										link="На карте"
-										title="Ближайшие"
-									/>
-								</>
-							)}
-							<Footer />
-						</>
-					}
-				/>
-				{allEstablishments.map((item: Restaurant) => (
+			<CurrentUserContext.Provider
+				value={{ currentUser, isLoggedIn, currentRole }}
+			>
+				<Routes>
 					<Route
-						key={item.id}
-						path={`/establishment/${item.id}`}
-						element={<RestaurantPage id={item.id} />}
+						path="/"
+						element={
+							<>
+								<Header handleRestart={handleRestart} />
+								<SearchResults
+									searchEstablishments={searchEstablishments}
+									setAllEstablishments={setSearchEstablishments}
+									onSubmit={handleSearchEstablishments}
+									query={query}
+									setQuery={setQuery}
+									isSearching={isSearching}
+								/>
+								{!isSearching && (
+									<>
+										<Recomended
+											establishments={allEstablishments}
+											nearest={false}
+											link="Все"
+											title="Рекомендации"
+										/>
+										<Recomended
+											establishments={allEstablishments}
+											nearest
+											link="На карте"
+											title="Ближайшие"
+										/>
+									</>
+								)}
+								<Footer />
+							</>
+						}
 					/>
-				))}
-				{allEstablishments.map((item: Restaurant) => (
-					<Route
-						key={item.id}
-						path={`/booking/${item.id}`}
-						element={<BookingPage id={item.id} />}
-					/>
-				))}
-				<Route path="/add-restaurant" element={<AddRestaurant />}></Route>
-				<Route
-					path="/user-signup"
-					element={
-						<RegisterFormUser
-							requestErrorMessage={regErrorMessage}
-							isSuccessRegister={isSuccessRegister}
-							onRegistration={handleRegistration}
+					{allEstablishments.map((item: Restaurant) => (
+						<Route
+							key={item.id}
+							path={`/establishment/${item.id}`}
+							element={<RestaurantPage id={item.id} />}
 						/>
-					}
-				/>
-				<Route path="/signin" element={<LoginForm onLogin={handleLogin} />} />
-			</Routes>
+					))}
+					{allEstablishments.map((item: Restaurant) => (
+						<Route
+							key={item.id}
+							path={`/booking/${item.id}`}
+							element={<BookingPage id={item.id} />}
+						/>
+					))}
+					<Route path="/add-restaurant" element={<AddRestaurant />}></Route>
+					<Route
+						path="/user-signup"
+						element={
+							<RegisterFormUser
+								requestErrorMessage={regErrorMessage}
+								isSuccessRegister={isSuccessRegister}
+								onRegistration={handleRegistration}
+							/>
+						}
+					/>
+					<Route path="/signin" element={<LoginForm onLogin={handleLogin} />} />
+					<Route
+						path="/user-profile"
+						element={isLoggedIn ? <Profile /> : <Navigate to="/" />}
+					/>
+				</Routes>
+			</CurrentUserContext.Provider>
 		</div>
 	);
 }

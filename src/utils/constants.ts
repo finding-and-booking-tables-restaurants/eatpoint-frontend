@@ -106,6 +106,14 @@ export interface Review {
 	text: string;
 }
 
+export interface UserData {
+	telephone: string;
+	email: string;
+	first_name: string;
+	last_name: string;
+	role: string;
+}
+
 export const featuresLang: Record<string, string> = {
 	parking: 'Парковка',
 	wifi: 'Wi-Fi',
