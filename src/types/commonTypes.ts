@@ -21,7 +21,7 @@ interface ILoginFormData {
 }
 
 interface ILoginFormProps {
-	onLogin: (data: ILoginFormData) => void;
+	onLogin: (data: ILoginFormData, rememberMe: boolean) => void;
 	requestErrorMessage: string;
 }
 

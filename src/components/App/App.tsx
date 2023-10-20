@@ -56,12 +56,16 @@ function App() {
 	}, []);
 
 	// Логин
-	const handleLogin = (data: ILoginFormData) => {
+	const handleLogin = (data: ILoginFormData, rememberMe: boolean) => {
 		usersApi
 			.authorize(data)
 			.then((res) => {
 				if (res.token) {
-					localStorage.setItem('jwt', res.token);
+					if (rememberMe) {
+						console.log('Saving token', res.token);
+						localStorage.setItem('jwt', res.token);
+						console.log('Token saved');
+					}
 				}
 				setIsLoggedIn(true);
 			})
@@ -110,6 +114,13 @@ function App() {
 				}
 			});
 	};
+
+	useEffect(() => {
+		const token = localStorage.getItem('jwt');
+		if (token) {
+			setIsLoggedIn(true);
+		}
+	}, []);
 
 	return (
 		<div className="App">

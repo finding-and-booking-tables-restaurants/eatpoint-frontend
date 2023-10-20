@@ -48,17 +48,6 @@ class UsersApi {
 		}).then(this._handleResponse);
 	}
 
-	// authorize({ email, password }: ILoginFormData): Promise<{ token: string }> {
-	// 	return fetch(`${this._baseUrl}/api/v1/login/jwt/create/`, {
-	// 		method: 'POST',
-	// 		headers: this._headers,
-	// 		body: JSON.stringify({
-	// 			email: email,
-	// 			password: password,
-	// 		}),
-	// 	}).then(this._handleResponse);
-	// }
-
 	authorize({ email, password }: ILoginFormData): Promise<{ token: string }> {
 		return fetch(`${this._baseUrl}/api/v1/login/jwt/create/`, {
 			method: 'POST',
