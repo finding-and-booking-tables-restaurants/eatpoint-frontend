@@ -10,19 +10,19 @@ interface SelectWorkTimeProps {
 }
 
 const ITEM_HEIGHT = 48;
-const ITEM_PADDING_TOP = 8;
+const ITEM_PADDING_TOP = 5;
 const MenuProps = {
 	PaperProps: {
 		style: {
 			maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-			width: 250,
+			width: 150,
 		},
 	},
 };
 
 function SelectWorkTime({ text }: SelectWorkTimeProps) {
-	const [timeStart, setTimeStart] = React.useState<string[]>([]);
-	const [timeEnd, setTimeEnd] = React.useState<string[]>([]);
+	const [timeStart, setTimeStart] = React.useState<string[]>([times[0]]);
+	const [timeEnd, setTimeEnd] = React.useState<string[]>([times[0]]);
 
 	const handleChangeTimeStart = (
 		event: SelectChangeEvent<typeof timeStart>

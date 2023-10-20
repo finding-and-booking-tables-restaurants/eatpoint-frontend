@@ -257,7 +257,7 @@ export const inputs = [
 ];
 
 export const times = [
-	'00-00',
+	`00-00`,
 	'00-30',
 	'01-00',
 	'01-30',
