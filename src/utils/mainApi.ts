@@ -1,3 +1,5 @@
+import { API_URL } from './constants';
+
 class MainApi {
 	private _baseUrl: string;
 	private _headers: Record<string, string>;
@@ -23,7 +25,7 @@ class MainApi {
 }
 
 export const mainApi = new MainApi({
-	baseUrl: 'http://80.87.109.70/api/v1',
+	baseUrl: API_URL,
 	headers: {
 		'Content-Type': 'application/json',
 	},

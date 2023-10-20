@@ -341,4 +341,4 @@ export {
 	INVALID_AUTH_DATA_ERROR_MESSAGE,
 };
 
-export const API_URL = 'http://eatpoint.sytes.net';
+export const API_URL = 'https://eatpoint.sytes.net';
