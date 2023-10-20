@@ -142,7 +142,7 @@ export const getDayAbbreviation = (day: string) => {
 
 function replaceBackendUrl(data: any): any {
 	const replaceUrl = (url: string) =>
-		url.replace('backend:8000', '80.87.109.70');
+		url.replace('backend:8000', 'eatpoint.sytes.net');
 
 	if (typeof data === 'string') {
 		return replaceUrl(data);
@@ -161,9 +161,7 @@ function replaceBackendUrl(data: any): any {
 
 export const fetchRestaurantData = async (id: number) => {
 	try {
-		const response = await fetch(
-			`http://80.87.109.70/api/v1/establishments/${id}`
-		);
+		const response = await fetch(`${API_URL}/api/v1/establishments/${id}`);
 		const data = await response.json();
 
 		const updatedData = replaceBackendUrl(data);
@@ -226,8 +224,6 @@ export const zones = [
 ];
 
 export const formValues: any = {
-	// last_name: '',
-	// end_time_reservation: '',
 	reminder_one_day: true,
 	reminder_three_hours: true,
 	reminder_half_on_hour: true,
@@ -237,22 +233,31 @@ export const inputs = [
 	{
 		label: 'Имя',
 		id: 'first_name',
+		type: 'text',
 		required: true,
+		maxLength: 30,
+		errorMessage: 'Введите корректное имя фамилию',
 	},
 	{
 		label: 'Моб. телефон',
 		id: 'telephone',
 		required: true,
+		type: 'number',
+		errorMessage: 'Введите корректный номер моб. телефона',
 	},
 	{
 		label: 'Эл. почта',
+		type: 'email',
 		id: 'email',
-		required: true,
+		errorMessage: 'Введите корректный адрес эл. почты',
 	},
 	{
 		label: 'Комментарий',
+		type: 'text',
 		id: 'comment',
 		required: false,
+		maxLength: 1500,
+		errorMessage: 'Длина введённого текста превышает 1500 символов',
 	},
 ];
 
@@ -305,3 +310,35 @@ export const times = [
 	'23-00',
 	'23-30',
 ];
+
+const EMAIL_REGEX = '^[a-zA-Z0-9+_.\\-]+@[a-zA-Z0-9]+\\.[a-zA-Z0-9]{2,4}$';
+const NAME_REGEX = '^[a-zA-Z\u0430-\u044f\u0410-\u042f]+$';
+const PHONE_NUMBER_REGEX =
+	'/^(+?d{1,4}[s-]?)?(()?(d{1,4})(?(2)))?[s-]?d{1,4}[s-]?d{1,9}$/';
+
+const ERROR = 'Ошибка';
+const ERROR_400 = 400;
+const ERROR_401 = 401;
+const ERROR_409 = 409;
+
+const EMAIL_ALREADY_REGISTERED_MESSAGE =
+	'Пользователь с таким email уже существует.';
+const INCORRECT_ADD_USER_DATA = 'Переданы некорректные данные при регистрации';
+const REG_ERROR_MESSAGE = 'При регистрации пользователя произошла ошибка.';
+const INVALID_AUTH_DATA_ERROR_MESSAGE =
+	'Вы ввели неправильный логин или пароль.';
+const AUTH_ERROR_MESSAGE = 'При авторизации пользователя произошла ошибка.';
+
+export {
+	ERROR,
+	ERROR_400,
+	ERROR_401,
+	ERROR_409,
+	EMAIL_ALREADY_REGISTERED_MESSAGE,
+	INCORRECT_ADD_USER_DATA,
+	REG_ERROR_MESSAGE,
+	AUTH_ERROR_MESSAGE,
+	INVALID_AUTH_DATA_ERROR_MESSAGE,
+};
+
+export const API_URL = 'https://eatpoint.sytes.net';

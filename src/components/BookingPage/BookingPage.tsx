@@ -9,6 +9,7 @@ import Checkbox from '@mui/material/Checkbox';
 import TodayIcon from '@mui/icons-material/Today';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import {
+	API_URL,
 	Restaurant,
 	fetchRestaurantData,
 	formValues,
@@ -69,16 +70,13 @@ const BookingPage: FC<BookingPageProps> = ({ id }) => {
 		mergedFormData.number_guests = Number(mergedFormData.number_guests);
 		setDataToSend(mergedFormData);
 
-		return fetch(
-			`http://80.87.109.70/api/v1/establishments/${id}/reservations/`,
-			{
-				method: 'POST',
-				headers: {
-					'Content-Type': 'application/json',
-				},
-				body: JSON.stringify(mergedFormData),
-			}
-		)
+		return fetch(`${API_URL}/api/v1/establishments/${id}/reservations/`, {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+			},
+			body: JSON.stringify(mergedFormData),
+		})
 			.then((res) => {
 				if (res.ok) {
 					console.log('success');
@@ -158,6 +156,8 @@ const BookingPage: FC<BookingPageProps> = ({ id }) => {
 						{inputs.map((option, index) => (
 							<TextField
 								required={option.required}
+								type={option.type}
+								inputProps={{ max: option.maxLength }}
 								name={option.id}
 								key={index}
 								id="outlined-select-currency"

@@ -8,7 +8,11 @@ import cities from '../../fakeData/cities';
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import { useNavigate } from 'react-router-dom';
 
-const Header = () => {
+const Header = ({
+	handleRestart,
+}: {
+	handleRestart?: (value: boolean) => void;
+}) => {
 	const navigate = useNavigate();
 
 	const [city, setCity] = useState('Москва');
@@ -42,7 +46,8 @@ const Header = () => {
 	};
 
 	const hadleLogoClick = () => {
-		navigate('/', { replace: true });
+		navigate('/');
+		handleRestart && handleRestart(true);
 	};
 
 	return (
@@ -88,13 +93,13 @@ const Header = () => {
 					'aria-labelledby': 'basic-button',
 				}}
 			>
-				<MenuItem id="/sign-in" onClick={handleNavClose}>
+				<MenuItem id="/signin" onClick={handleNavClose}>
 					<KeyboardArrowRightIcon /> Вход
 				</MenuItem>
-				<MenuItem id="/sign-up" onClick={handleNavClose}>
+				<MenuItem id="/user-signup" onClick={handleNavClose}>
 					<KeyboardArrowRightIcon /> Регистрация
 				</MenuItem>
-				<MenuItem id="/for-restaurants" onClick={handleNavClose}>
+				<MenuItem id="/business-signup" onClick={handleNavClose}>
 					<KeyboardArrowRightIcon /> Для ресторанов
 				</MenuItem>
 			</Menu>
