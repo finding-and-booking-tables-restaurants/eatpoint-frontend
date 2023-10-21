@@ -44,23 +44,35 @@ const UserBookings = () => {
 			<div className="user-bookings">
 				<h2 className="user-bookings-title">Мои бронирования</h2>
 				<div className="user-bookings-container">
-					<p className="user-bookings-closest">Ближайшие бронирования</p>
-					{userBookings.map((booking, index) => (
-						<UserBooking
-							key={index}
-							poster={
-								'https://resizer.otstatic.com/v2/photos/wide-medium/3/51998483.webp'
-							}
-							name={booking.establishment}
-							date={booking.date_reservation}
-							time={booking.start_time_reservation}
-							people={booking.number_guests}
-							zone={'Основной зал (болванка)'}
-							adress={'Пример адреса (ждём бэк)'}
-							id={booking.id}
-							handleDeleteBooking={handleDeleteBooking}
-						/>
-					))}
+					<p
+						className={`user-bookings-closest ${
+							!userBookings.length && 'user-bookings-none'
+						}`}
+					>
+						{`${
+							userBookings.length
+								? 'Ближайшие бронирования'
+								: 'У вас пока нет бронирований'
+						}`}
+					</p>
+
+					{UserBooking.length &&
+						userBookings.map((booking, index) => (
+							<UserBooking
+								key={index}
+								poster={
+									'https://resizer.otstatic.com/v2/photos/wide-medium/3/51998483.webp'
+								}
+								name={booking.establishment}
+								date={booking.date_reservation}
+								time={booking.start_time_reservation}
+								people={booking.number_guests}
+								zone={'Основной зал (болванка)'}
+								adress={'Пример адреса (ждём бэк)'}
+								id={booking.id}
+								handleDeleteBooking={handleDeleteBooking}
+							/>
+						))}
 				</div>
 			</div>
 			<Footer />

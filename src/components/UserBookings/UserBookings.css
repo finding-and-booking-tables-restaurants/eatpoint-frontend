@@ -33,3 +33,7 @@
 	letter-spacing: 0.2px;
 	align-self: flex-start;
 }
+
+.user-bookings-none {
+	margin-bottom: 365px;
+}
