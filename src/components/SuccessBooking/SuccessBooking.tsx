@@ -5,6 +5,7 @@ import Stack from '@mui/material/Stack';
 import '../BookingPage/BookingPage.css';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { useNavigate } from 'react-router-dom';
+import usersApi from '../../utils/UsersApi';
 
 interface SuccessBookingProps {
 	restName?: string;
@@ -14,6 +15,7 @@ interface SuccessBookingProps {
 	numOfPeople?: string;
 	id?: number;
 	unBook: (value: boolean) => void;
+	bookingId: string;
 }
 
 const SuccessBooking: FC<SuccessBookingProps> = ({
@@ -24,12 +26,21 @@ const SuccessBooking: FC<SuccessBookingProps> = ({
 	numOfPeople,
 	id,
 	unBook,
+	bookingId,
 }) => {
 	const [isBooked, setIsBooked] = useState(true);
 	const navigate = useNavigate();
 
 	const handleUnBook = () => {
-		setIsBooked(false);
+		usersApi
+			.deleteBooking(bookingId)
+			.then((res) => {
+				if (res.ok) {
+					setIsBooked(false);
+				}
+				throw new Error(`Request failed with status ${res.status}`);
+			})
+			.catch((err) => console.log(err));
 	};
 
 	const handleBackBtnClick = () => {
@@ -37,7 +48,11 @@ const SuccessBooking: FC<SuccessBookingProps> = ({
 	};
 
 	const handleToMainClick = () => {
-		navigate('/', { replace: true });
+		navigate('/');
+	};
+
+	const handleToBookingsClick = () => {
+		navigate('/user-bookings');
 	};
 
 	return (
@@ -105,6 +120,7 @@ const SuccessBooking: FC<SuccessBookingProps> = ({
 					На главную
 				</Button>
 				<Button
+					onClick={handleToBookingsClick}
 					sx={{
 						display: `${!isBooked && 'none'}`,
 						borderRadius: 100,

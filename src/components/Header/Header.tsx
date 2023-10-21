@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import logo from '../../images/logo.svg';
 import place from '../../images/place.svg';
 import './Header.css';
@@ -7,6 +7,7 @@ import MenuItem from '@mui/material/MenuItem';
 import cities from '../../fakeData/cities';
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import { useNavigate } from 'react-router-dom';
+import CurrentUserContext from '../../contexts/CurrentUserContext';
 
 const Header = ({
 	handleRestart,
@@ -14,6 +15,10 @@ const Header = ({
 	handleRestart?: (value: boolean) => void;
 }) => {
 	const navigate = useNavigate();
+
+	const isLoggedIn = useContext(CurrentUserContext).isLoggedIn;
+	const role = useContext(CurrentUserContext).currentRole;
+	const handleLogOut = useContext(CurrentUserContext).handleLogOut;
 
 	const [city, setCity] = useState('Москва');
 	const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
@@ -84,25 +89,64 @@ const Header = ({
 
 			<button onClick={handleSearchClick} className="header__srch-btn"></button>
 			<button onClick={handleNavClick} className="header__nav-btn"></button>
-			<Menu
-				id="basic-menu"
-				anchorEl={anchorElNav}
-				open={openNav}
-				onClose={handleNavClose}
-				MenuListProps={{
-					'aria-labelledby': 'basic-button',
-				}}
-			>
-				<MenuItem id="/signin" onClick={handleNavClose}>
-					<KeyboardArrowRightIcon /> Вход
-				</MenuItem>
-				<MenuItem id="/user-signup" onClick={handleNavClose}>
-					<KeyboardArrowRightIcon /> Регистрация
-				</MenuItem>
-				<MenuItem id="/business-signup" onClick={handleNavClose}>
-					<KeyboardArrowRightIcon /> Для ресторанов
-				</MenuItem>
-			</Menu>
+			{!isLoggedIn ? (
+				<Menu
+					id="basic-menu"
+					anchorEl={anchorElNav}
+					open={openNav}
+					onClose={handleNavClose}
+					MenuListProps={{
+						'aria-labelledby': 'basic-button',
+					}}
+				>
+					<MenuItem id="/signin" onClick={handleNavClose}>
+						<KeyboardArrowRightIcon /> Вход
+					</MenuItem>
+					<MenuItem id="/user-signup" onClick={handleNavClose}>
+						<KeyboardArrowRightIcon /> Регистрация
+					</MenuItem>
+					<MenuItem id="/business" onClick={handleNavClose}>
+						<KeyboardArrowRightIcon /> Для ресторанов
+					</MenuItem>
+				</Menu>
+			) : role === 'client' ? (
+				<Menu
+					id="basic-menu"
+					anchorEl={anchorElNav}
+					open={openNav}
+					onClose={handleNavClose}
+					MenuListProps={{
+						'aria-labelledby': 'basic-button',
+					}}
+				>
+					<MenuItem id="/user-profile" onClick={handleNavClose}>
+						<KeyboardArrowRightIcon /> Профиль
+					</MenuItem>
+					<MenuItem id="/user-bookings" onClick={handleNavClose}>
+						<KeyboardArrowRightIcon /> Мои брони
+					</MenuItem>
+					<MenuItem id="signout" onClick={handleLogOut}>
+						<KeyboardArrowRightIcon /> Выход
+					</MenuItem>
+				</Menu>
+			) : (
+				<Menu
+					id="basic-menu"
+					anchorEl={anchorElNav}
+					open={openNav}
+					onClose={handleNavClose}
+					MenuListProps={{
+						'aria-labelledby': 'basic-button',
+					}}
+				>
+					<MenuItem id="/business-profile" onClick={handleNavClose}>
+						<KeyboardArrowRightIcon /> Личный кабинет
+					</MenuItem>
+					<MenuItem id="signout" onClick={handleLogOut}>
+						<KeyboardArrowRightIcon /> Выход
+					</MenuItem>
+				</Menu>
+			)}
 		</header>
 	);
 };

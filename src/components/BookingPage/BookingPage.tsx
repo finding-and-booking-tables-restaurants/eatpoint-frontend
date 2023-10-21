@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useState } from 'react';
+import React, { FC, useContext, useEffect, useState } from 'react';
 import MapOutlinedIcon from '@mui/icons-material/MapOutlined';
 import '../RestaurantPage/RestaurantPage.css';
 import BookingForm from '../BookingForm/BookingForm';
@@ -11,6 +11,7 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import {
 	API_URL,
 	Restaurant,
+	UserData,
 	fetchRestaurantData,
 	formValues,
 	inputs,
@@ -19,16 +20,19 @@ import { useNavigate } from 'react-router-dom';
 import SuccessBooking from '../SuccessBooking/SuccessBooking';
 import Header from '../Header/Header';
 import Footer from '../Footer/Footer';
+import CurrentUserContext from '../../contexts/CurrentUserContext';
 
 interface BookingPageProps {
 	id: number;
+	userData?: UserData;
 }
 
-const BookingPage: FC<BookingPageProps> = ({ id }) => {
+const BookingPage: FC<BookingPageProps> = ({ id, userData }) => {
 	const navigate = useNavigate();
 
 	const [isSuccessBooking, setIsSuccessBooking] = useState(false);
 	const [currentRestaurant, setcurrentRestaurant] = useState<Restaurant>();
+	const [bookingId, setBookingId] = useState('');
 	const [dataToSend, setDataToSend] = useState({
 		comment: '',
 		date_reservation: '',
@@ -74,6 +78,7 @@ const BookingPage: FC<BookingPageProps> = ({ id }) => {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json',
+				authorization: 'Bearer ' + localStorage.getItem('access-token'),
 			},
 			body: JSON.stringify(mergedFormData),
 		})
@@ -81,8 +86,10 @@ const BookingPage: FC<BookingPageProps> = ({ id }) => {
 				if (res.ok) {
 					console.log('success');
 					setIsSuccessBooking(true);
+					return res.json();
 				}
 			})
+			.then((data) => setBookingId(data.id))
 			.catch((err) => console.log(err));
 	};
 	const handleBackBtnClick = () => {
@@ -93,6 +100,7 @@ const BookingPage: FC<BookingPageProps> = ({ id }) => {
 		<div className="booking-page">
 			{isSuccessBooking ? (
 				<SuccessBooking
+					bookingId={bookingId}
 					unBook={() => {
 						setIsSuccessBooking(false);
 					}}
@@ -160,8 +168,8 @@ const BookingPage: FC<BookingPageProps> = ({ id }) => {
 								inputProps={{ max: option.maxLength }}
 								name={option.id}
 								key={index}
-								id="outlined-select-currency"
 								label={option.label}
+								defaultValue={userData ? userData[option.id] : ''}
 								sx={{
 									backgroundColor: '#FCF8EA',
 									maxWidth: 328,

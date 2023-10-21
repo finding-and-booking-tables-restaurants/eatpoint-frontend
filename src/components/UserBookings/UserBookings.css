@@ -1,0 +1,35 @@
+.user-bookings {
+	display: flex;
+	flex-direction: column;
+}
+
+.user-bookings-title {
+	color: #000;
+	font-family: 'Ubuntu';
+	font-size: 30px;
+	font-style: normal;
+	font-weight: 400;
+	line-height: 36px;
+	margin: 16px;
+}
+
+.user-bookings-container {
+	display: flex;
+	flex-direction: column;
+	gap: 16px;
+	align-items: center;
+	justify-content: center;
+	padding: 16px;
+	background-color: #d5ede4;
+}
+
+.user-bookings-closest {
+	color: #000;
+	font-family: 'Ubuntu';
+	font-size: 20px;
+	font-style: normal;
+	font-weight: 500;
+	line-height: 26px;
+	letter-spacing: 0.2px;
+	align-self: flex-start;
+}
