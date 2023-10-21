@@ -253,7 +253,10 @@ function App() {
 						path="/user-profile"
 						element={isLoggedIn ? <Profile /> : <Navigate to="/" />}
 					/>
-					<Route path="/user-bookings" element={<UserBookings />} />
+					<Route
+						path="/user-bookings"
+						element={isLoggedIn ? <UserBookings /> : <Navigate to="/" />}
+					/>
 					<Route
 						path="/signin"
 						element={
