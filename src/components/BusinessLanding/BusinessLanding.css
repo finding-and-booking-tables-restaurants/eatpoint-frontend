@@ -1,0 +1,175 @@
+.business__title {
+	color: #1d1b20;
+	text-align: center;
+	font-size: 24px;
+	font-weight: 500;
+	line-height: 20px;
+	letter-spacing: 0.1px;
+}
+
+.business__title-image {
+	margin-left: 8px;
+}
+
+.business__text-accent {
+	color: #c41a68;
+}
+
+.promo {
+	min-height: 425px;
+	background-image: url('../../images/BusinessLanding/promo-bg.png');
+}
+
+.promo__container {
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+	gap: 24px;
+	padding: 24px 16px;
+}
+
+.promo__title {
+	color: #fff;
+	font-size: 25px;
+	font-style: normal;
+	font-weight: 700;
+	line-height: 24px;
+	letter-spacing: 0.1px;
+}
+
+.promo__button {
+	border: none;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	width: 130px;
+	height: 40px;
+	border-radius: 30px;
+	background: #c41a68;
+	font-size: 14px;
+	color: #fff;
+	font-style: normal;
+	font-weight: 500;
+	line-height: 20px;
+	letter-spacing: 0.1px;
+}
+
+.advantages {
+	padding: 42px 15px 15px 32px;
+}
+
+.advantages__list {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+	display: flex;
+	flex-direction: column;
+	gap: 16px;
+	margin-top: 24px;
+}
+
+.advantages__item {
+	padding: 24px 12px 31px 12px;
+	background: #fffdf5;
+}
+
+.advantages__text-container {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	gap: 16px;
+}
+
+.advantages__item-title {
+	color: #1d1b20;
+	text-align: center;
+	font-size: 18px;
+	font-weight: 500;
+	line-height: 24px;
+	letter-spacing: 0.2px;
+}
+
+.advantages__text {
+	color: #1d1b20;
+	text-align: center;
+	font-size: 14px;
+	font-weight: 400;
+	line-height: 20px;
+	letter-spacing: 0.25px;
+}
+
+.support {
+	position: relative;
+}
+
+.support__title {
+	color: #05887b;
+	font-size: 16px;
+	font-weight: 700;
+	line-height: 20px;
+	letter-spacing: 0.1px;
+	text-align: center;
+	padding: 17px 50px;
+}
+
+.support__image {
+	background-image: url('../../images/BusinessLanding/Croissant.svg');
+	width: 80px;
+	height: 85px;
+	position: absolute;
+	top: -15px;
+}
+
+.faq {
+	margin: 0 15px;
+	padding: 24px 15px;
+	background: #fffdf5;
+}
+
+.faq__list {
+	list-style: none;
+	margin: 0;
+	margin-top: 18px;
+	padding: 0;
+	display: flex;
+	flex-direction: column;
+	gap: 16px;
+}
+
+.faq__text {
+	margin: 0;
+	display: flex;
+	align-items: flex-start;
+	gap: 10px;
+	color: #1d1b20;
+	font-size: 16px;
+	font-weight: 400;
+	line-height: 24px;
+	letter-spacing: 0.5px;
+}
+
+.register__title {
+	margin-top: 32px;
+	color: #1d1b20;
+	text-align: center;
+	font-size: 20px;
+	font-weight: 500;
+	line-height: 20px;
+	letter-spacing: 0.1px;
+}
+
+.register__button {
+	display: block;
+	height: 48px;
+	border-radius: 30px;
+	background-color: #05887b;
+	border: none;
+	width: calc(100% - 30px);
+	margin: 24px auto 40px auto;
+	font-size: 14px;
+	font-weight: 500;
+	line-height: 20px;
+	letter-spacing: 0.1px;
+	color: #fff;
+}
