@@ -4,7 +4,7 @@ import Recomended from '../Recomended/Recomended';
 import SearchResults from '../SearchResults/SearchResults';
 import AddRestaurant from '../AddRestaurant/AddRestaurant';
 import { useEffect, useState } from 'react';
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, useNavigate } from 'react-router-dom';
 import RestaurantPage from '../RestaurantPage/RestaurantPage';
 import BookingPage from '../BookingPage/BookingPage';
 
@@ -36,6 +36,8 @@ function App() {
 	>([]);
 	const [query, setQuery] = useState('');
 
+	const navigate = useNavigate();
+
 	const [isSearching, setIsSearching] = useState(false);
 
 	useEffect(() => {
@@ -53,14 +55,19 @@ function App() {
 	}, []);
 
 	// Логин
-	const handleLogin = (data: ILoginFormData) => {
+	const handleLogin = (data: ILoginFormData, rememberMe: boolean) => {
 		usersApi
 			.authorize(data)
 			.then((res) => {
-				if (res.token) {
-					localStorage.setItem('jwt', res.token);
+				if (res.access) {
+					if (rememberMe) {
+						localStorage.setItem('access-token', res.access);
+						localStorage.setItem('refresh-token', res.refresh);
+						console.log('Токен сохранен');
+					}
 				}
 				setIsLoggedIn(true);
+				navigate('/', { replace: true });
 			})
 			.catch((err) => {
 				if (err === ERROR_401) {
@@ -132,6 +139,13 @@ function App() {
 		setIsSearching(!value);
 	};
 
+	useEffect(() => {
+		const token = localStorage.getItem('jwt');
+		if (token) {
+			setIsLoggedIn(true);
+		}
+	}, []);
+
 	return (
 		<div className="App">
 			<Routes>
@@ -193,7 +207,15 @@ function App() {
 						/>
 					}
 				/>
-				<Route path="/signin" element={<LoginForm onLogin={handleLogin} />} />
+				<Route
+					path="/signin"
+					element={
+						<LoginForm
+							requestErrorMessage={authErrorMessage}
+							onLogin={handleLogin}
+						/>
+					}
+				/>
 			</Routes>
 		</div>
 	);
