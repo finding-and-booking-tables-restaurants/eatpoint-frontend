@@ -1,5 +1,3 @@
-import Header from '../Header/Header';
-import Footer from '../Footer/Footer';
 import {
 	Container,
 	Typography,
@@ -10,9 +8,10 @@ import {
 	FormControlLabel,
 	Checkbox,
 } from '@mui/material';
-import './LoginForm.css';
 import React, { useEffect, useState } from 'react';
 import { ILoginFormData, ILoginFormProps } from '../../types/commonTypes';
+import Header from '../Header/Header';
+import Footer from '../Footer/Footer';
 
 const LoginForm: React.FC<ILoginFormProps> = ({
 	onLogin,
@@ -20,8 +19,8 @@ const LoginForm: React.FC<ILoginFormProps> = ({
 }) => {
 	const [email, setEmail] = useState('');
 	const [password, setPassword] = useState('');
-	const [forgotPassword, setForgotPassword] = useState(false);
 	const [isFormValid, setIsFormValid] = useState(false);
+	const [rememberMe, setRememberMe] = useState(false);
 
 	const handleLogin = (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
@@ -30,7 +29,7 @@ const LoginForm: React.FC<ILoginFormProps> = ({
 			password,
 		};
 
-		onLogin(data);
+		onLogin(data, rememberMe);
 	};
 
 	const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -118,8 +117,8 @@ const LoginForm: React.FC<ILoginFormProps> = ({
 					<FormControlLabel
 						control={
 							<Checkbox
-								checked={forgotPassword}
-								onChange={(e) => setForgotPassword(e.target.checked)}
+								checked={rememberMe}
+								onChange={(e) => setRememberMe(e.target.checked)}
 							/>
 						}
 						sx={{

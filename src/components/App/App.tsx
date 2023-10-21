@@ -4,7 +4,7 @@ import Recomended from '../Recomended/Recomended';
 import SearchResults from '../SearchResults/SearchResults';
 import AddRestaurant from '../AddRestaurant/AddRestaurant';
 import { useEffect, useState } from 'react';
-import { Routes, Route, Navigate } from 'react-router-dom';
+import { Routes, Route, useNavigate, Navigate } from 'react-router-dom';
 import RestaurantPage from '../RestaurantPage/RestaurantPage';
 import BookingPage from '../BookingPage/BookingPage';
 
@@ -20,15 +20,17 @@ import {
 	AUTH_ERROR_MESSAGE,
 	INVALID_AUTH_DATA_ERROR_MESSAGE,
 	API_URL,
+	UserData,
 } from '../../utils/constants';
 import { Restaurant } from '../../utils/constants';
 import RegisterFormUser from '../RegisterFormUser/RegisterFormUser';
 import LoginForm from '../LoginForm/LoginForm';
 import Profile from '../Profile/Profile';
 import CurrentUserContext from '../../contexts/CurrentUserContext';
+import UserBookings from '../UserBookings/UserBookings';
 
 function App() {
-	const [currentUser, setCurrentUser] = useState({});
+	const [currentUser, setCurrentUser] = useState<UserData>();
 	const [currentRole, setCurrentRole] = useState('');
 	const [authErrorMessage, setAuthErrorMessage] = useState('');
 	const [regErrorMessage, setRegErrorMessage] = useState('');
@@ -40,6 +42,8 @@ function App() {
 	>([]);
 	const [query, setQuery] = useState('');
 
+	const navigate = useNavigate();
+
 	const [isSearching, setIsSearching] = useState(false);
 
 	useEffect(() => {
@@ -49,7 +53,6 @@ function App() {
 				.getUserInfo()
 				.then(() => {
 					setIsLoggedIn(true);
-					console.log('я залогинен');
 				})
 				.catch((err) => console.log(err));
 		}
@@ -62,7 +65,6 @@ function App() {
 				.then((data) => {
 					setCurrentUser(data);
 					setCurrentRole(data.role);
-					console.log('я сохранил данные юзера');
 				})
 				.catch((err) => console.log(err));
 		}
@@ -83,14 +85,19 @@ function App() {
 	}, []);
 
 	// Логин
-	const handleLogin = (data: ILoginFormData) => {
+	const handleLogin = (data: ILoginFormData, rememberMe: boolean) => {
 		usersApi
 			.authorize(data)
 			.then((res) => {
-				if (res.token) {
-					localStorage.setItem('jwt', res.token);
+				if (res.access) {
+					if (rememberMe) {
+						localStorage.setItem('access-token', res.access);
+						localStorage.setItem('refresh-token', res.refresh);
+						console.log('Токен сохранен');
+					}
 				}
 				setIsLoggedIn(true);
+				navigate('/', { replace: true });
 			})
 			.catch((err) => {
 				if (err === ERROR_401) {
@@ -162,10 +169,25 @@ function App() {
 		setIsSearching(!value);
 	};
 
+	useEffect(() => {
+		const token = localStorage.getItem('jwt');
+		if (token) {
+			setIsLoggedIn(true);
+		}
+	}, []);
+
+	const handleLogOut = () => {
+		localStorage.clear();
+		setIsLoggedIn(false);
+		setCurrentRole('');
+		setCurrentUser({});
+		navigate('/');
+	};
+
 	return (
 		<div className="App">
 			<CurrentUserContext.Provider
-				value={{ currentUser, isLoggedIn, currentRole }}
+				value={{ currentUser, isLoggedIn, currentRole, handleLogOut }}
 			>
 				<Routes>
 					<Route
@@ -212,7 +234,7 @@ function App() {
 						<Route
 							key={item.id}
 							path={`/booking/${item.id}`}
-							element={<BookingPage id={item.id} />}
+							element={<BookingPage userData={currentUser} id={item.id} />}
 						/>
 					))}
 					<Route path="/add-restaurant" element={<AddRestaurant />}></Route>
@@ -230,6 +252,16 @@ function App() {
 					<Route
 						path="/user-profile"
 						element={isLoggedIn ? <Profile /> : <Navigate to="/" />}
+					/>
+					<Route path="/user-bookings" element={<UserBookings />} />
+					<Route
+						path="/signin"
+						element={
+							<LoginForm
+								requestErrorMessage={authErrorMessage}
+								onLogin={handleLogin}
+							/>
+						}
 					/>
 				</Routes>
 			</CurrentUserContext.Provider>

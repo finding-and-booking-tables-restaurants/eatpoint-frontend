@@ -107,11 +107,7 @@ export interface Review {
 }
 
 export interface UserData {
-	telephone: string;
-	email: string;
-	first_name: string;
-	last_name: string;
-	role: string;
+	[key: string]: any;
 }
 
 export const featuresLang: Record<string, string> = {
@@ -244,13 +240,13 @@ export const inputs = [
 		type: 'text',
 		required: true,
 		maxLength: 30,
-		errorMessage: 'Введите корректное имя фамилию',
+		errorMessage: 'Введите корректное имя',
 	},
 	{
 		label: 'Моб. телефон',
 		id: 'telephone',
 		required: true,
-		type: 'number',
+		type: 'text',
 		errorMessage: 'Введите корректный номер моб. телефона',
 	},
 	{

@@ -7,7 +7,7 @@ import usersApi from '../../utils/UsersApi';
 import CurrentUserContext from '../../contexts/CurrentUserContext';
 
 const Profile: React.FC = () => {
-	const userData = useContext(CurrentUserContext);
+	const userData = useContext(CurrentUserContext).currentUser;
 
 	const [isVisible, setIsVisible] = useState(false);
 	const [isSuccess, setIsSuccess] = useState(false);
@@ -15,23 +15,13 @@ const Profile: React.FC = () => {
 
 	const handleChangePassword = (): void => setIsVisible(!isVisible);
 
-	const handleFieldChange = (fieldName: string, value: string): void => {
-		setFormData({
-			...formData,
-			[fieldName]: value,
-		});
-	};
-
 	function handleChange() {
-		if (isVisible) {
-			setIsVisible(!isVisible);
-		}
-
 		setTimeout(() => {
 			setIsSuccess(true);
 
 			setTimeout(() => {
 				setIsSuccess(false);
+				setIsVisible(true);
 			}, 2000);
 		}, 2000);
 	}
@@ -66,32 +56,27 @@ const Profile: React.FC = () => {
 					sx={{
 						'& > :not(style)': { m: 1, width: '100%', ml: 0, mb: 0 },
 					}}
-					noValidate
-					autoComplete="off"
 				>
 					<TextField
-						id="outlined-basic"
 						variant="outlined"
-						value={userData.first_name + ' ' + userData.last_name}
-						type="name"
+						defaultValue={userData.first_name + ' ' + userData.last_name}
+						name="first_name, last_name"
 						style={{ backgroundColor: '#FDFAF2' }}
-						onChange={(e) => handleFieldChange('name', e.target.value)}
 					/>
 					<TextField
-						id="outlined-basic"
 						variant="outlined"
-						value={userData.telephone}
-						type="phone"
+						defaultValue={userData.telephone}
+						name="telephone"
+						required
 						style={{ backgroundColor: '#FDFAF2' }}
-						onChange={(e) => handleFieldChange('phone', e.target.value)}
 					/>
 					<TextField
-						id="outlined-basic"
 						type="email"
+						name="email"
 						variant="outlined"
-						value={userData.email}
+						required
+						defaultValue={userData.email}
 						style={{ backgroundColor: '#FDFAF2' }}
-						onChange={(e) => handleFieldChange('email', e.target.value)}
 					/>
 					<Button
 						onClick={handleChangePassword}
@@ -118,7 +103,6 @@ const Profile: React.FC = () => {
 						autoComplete="off"
 					>
 						<TextField
-							id="outlined-basic"
 							type="password"
 							variant="outlined"
 							disabled={true}
@@ -128,7 +112,6 @@ const Profile: React.FC = () => {
 							placeholder="Текущий пароль"
 						/>
 						<TextField
-							id="outlined-basic"
 							type="password"
 							variant="outlined"
 							disabled={true}
@@ -138,7 +121,6 @@ const Profile: React.FC = () => {
 							placeholder="Новый пароль"
 						/>
 						<TextField
-							id="outlined-basic"
 							type="password"
 							variant="outlined"
 							disabled={true}
@@ -160,7 +142,7 @@ const Profile: React.FC = () => {
 						textAlign="center"
 						mb="26px"
 					>
-						Изменения успешно сохранены
+						{`Изменения успешно сохранены (болванка)`}
 					</Typography>
 				) : (
 					<Button
@@ -172,6 +154,7 @@ const Profile: React.FC = () => {
 							width: '100%',
 							mt: 1,
 							mb: 3,
+							padding: '10px 24px 10px 16px',
 						}}
 						onClick={handleChange}
 						disabled={false}
