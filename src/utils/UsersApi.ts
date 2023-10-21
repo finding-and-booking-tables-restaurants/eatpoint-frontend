@@ -1,5 +1,5 @@
 import { IRegisterFormData, ILoginFormData } from '../types/commonTypes';
-import { API_URL } from './constants';
+import { API_URL, UserData } from './constants';
 
 class UsersApi {
 	private _baseUrl: string;
@@ -63,6 +63,34 @@ class UsersApi {
 		}).then((res) =>
 			this._handleResponse<{ access: string; refresh: string }>(res)
 		);
+	}
+
+	getUserInfo(): Promise<any> {
+		return fetch(`${this._baseUrl}/api/v1/users/me/`, {
+			headers: {
+				authorization: 'Bearer ' + localStorage.getItem('access-token'),
+				'Content-Type': 'application/json',
+			},
+		}).then((res) => this._handleResponse(res));
+	}
+
+	deleteBooking(id: string): Promise<any> {
+		return fetch(`${this._baseUrl}/api/v1/reservations/${id}/`, {
+			method: 'DELETE',
+			headers: {
+				authorization: 'Bearer ' + localStorage.getItem('access-token'),
+				'Content-Type': 'application/json',
+			},
+		});
+	}
+
+	getUserBookings(): Promise<any> {
+		return fetch(`${this._baseUrl}/api/v1/reservations/`, {
+			headers: {
+				authorization: 'Bearer ' + localStorage.getItem('access-token'),
+				'Content-Type': 'application/json',
+			},
+		}).then((res) => this._handleResponse(res));
 	}
 }
 

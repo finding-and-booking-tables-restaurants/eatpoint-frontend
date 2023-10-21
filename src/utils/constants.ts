@@ -106,6 +106,10 @@ export interface Review {
 	text: string;
 }
 
+export interface UserData {
+	[key: string]: any;
+}
+
 export const featuresLang: Record<string, string> = {
 	parking: 'Парковка',
 	wifi: 'Wi-Fi',
@@ -236,13 +240,13 @@ export const inputs = [
 		type: 'text',
 		required: true,
 		maxLength: 30,
-		errorMessage: 'Введите корректное имя фамилию',
+		errorMessage: 'Введите корректное имя',
 	},
 	{
 		label: 'Моб. телефон',
 		id: 'telephone',
 		required: true,
-		type: 'number',
+		type: 'text',
 		errorMessage: 'Введите корректный номер моб. телефона',
 	},
 	{

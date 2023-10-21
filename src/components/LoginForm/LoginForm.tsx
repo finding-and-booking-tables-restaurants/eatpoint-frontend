@@ -10,6 +10,8 @@ import {
 } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { ILoginFormData, ILoginFormProps } from '../../types/commonTypes';
+import Header from '../Header/Header';
+import Footer from '../Footer/Footer';
 
 const LoginForm: React.FC<ILoginFormProps> = ({
 	onLogin,
@@ -45,6 +47,7 @@ const LoginForm: React.FC<ILoginFormProps> = ({
 
 	return (
 		<>
+			<Header />
 			<Container sx={{ mb: 6 }}>
 				<Typography
 					variant="h1"
@@ -198,6 +201,7 @@ const LoginForm: React.FC<ILoginFormProps> = ({
 					Забыли пароль
 				</Button>
 			</Container>
+			<Footer />
 		</>
 	);
 };
