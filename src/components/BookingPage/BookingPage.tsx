@@ -151,8 +151,8 @@ const BookingPage: FC<BookingPageProps> = ({ id, userData }) => {
 						>
 							{currentRestaurant?.zones.map((option) => (
 								<MenuItem
-									key={option.id}
-									value={option.id}
+									key={option.id ? option.id : 'Основной зал'}
+									value={option.id ? option.id : 1}
 									sx={{
 										background: '#FCF8EA',
 									}}

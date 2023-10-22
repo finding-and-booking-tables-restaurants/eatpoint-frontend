@@ -60,15 +60,13 @@ const UserBookings = () => {
 						userBookings.map((booking, index) => (
 							<UserBooking
 								key={index}
-								poster={
-									'https://resizer.otstatic.com/v2/photos/wide-medium/3/51998483.webp'
-								}
-								name={booking.establishment}
+								poster={booking.establishment.poster}
+								name={booking.establishment.name}
 								date={booking.date_reservation}
 								time={booking.start_time_reservation}
 								people={booking.number_guests}
-								zone={'Основной зал (болванка)'}
-								adress={'Пример адреса (ждём бэк)'}
+								zone={booking.zone}
+								adress={booking.establishment.address}
 								id={booking.id}
 								handleDeleteBooking={handleDeleteBooking}
 							/>

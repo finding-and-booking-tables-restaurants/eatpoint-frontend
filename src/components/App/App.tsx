@@ -28,6 +28,7 @@ import LoginForm from '../LoginForm/LoginForm';
 import Profile from '../Profile/Profile';
 import CurrentUserContext from '../../contexts/CurrentUserContext';
 import UserBookings from '../UserBookings/UserBookings';
+import BusinessLanding from '../BusinessLanding/BusinessLanding';
 
 function App() {
 	const [currentUser, setCurrentUser] = useState<UserData>();
@@ -242,6 +243,18 @@ function App() {
 						path="/user-signup"
 						element={
 							<RegisterFormUser
+								role="client"
+								requestErrorMessage={regErrorMessage}
+								isSuccessRegister={isSuccessRegister}
+								onRegistration={handleRegistration}
+							/>
+						}
+					/>
+					<Route
+						path="/business-signup"
+						element={
+							<RegisterFormUser
+								role="restorateur"
 								requestErrorMessage={regErrorMessage}
 								isSuccessRegister={isSuccessRegister}
 								onRegistration={handleRegistration}
@@ -266,6 +279,7 @@ function App() {
 							/>
 						}
 					/>
+					<Route path="/business" element={<BusinessLanding />} />
 				</Routes>
 			</CurrentUserContext.Provider>
 		</div>
