@@ -14,7 +14,7 @@ export default function NotFoundPage() {
 					<img src={coffeeImg} alt="кофе" />
 					<h2 className="not-found-page__title">4</h2>
 				</div>
-				<p className="not-found-page__subtitle">Страница не найдена :(</p>
+				<p className="not-found-page__subtitle">{`Страница не найдена :(`}</p>
 				<p className="not-found-page__text">
 					К сожалению, такой страницы не существует, попробуйте поискать другой
 					ресторан

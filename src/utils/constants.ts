@@ -106,6 +106,10 @@ export interface Review {
 	text: string;
 }
 
+export interface UserData {
+	[key: string]: any;
+}
+
 export const featuresLang: Record<string, string> = {
 	parking: 'Парковка',
 	wifi: 'Wi-Fi',
@@ -236,13 +240,13 @@ export const inputs = [
 		type: 'text',
 		required: true,
 		maxLength: 30,
-		errorMessage: 'Введите корректное имя фамилию',
+		errorMessage: 'Введите корректное имя',
 	},
 	{
 		label: 'Моб. телефон',
 		id: 'telephone',
 		required: true,
-		type: 'number',
+		type: 'text',
 		errorMessage: 'Введите корректный номер моб. телефона',
 	},
 	{
@@ -311,37 +315,55 @@ export const times = [
 	'23:30',
 ];
 
-// export const times = [
-// 	{ id: 0, value: '00:00' },
-// 	{ id: 1, value: '00:30' },
-// 	{ id: 2, value: '01:00' },
-// 	{ id: 3, value: '01:30' },
-// 	{ id: 4, value: '02:00' },
-// 	{ id: 5, value: '02:30' },
-// 	{ id: 6, value: '03:00' },
-// 	{ id: 7, value: '03:30' },
-// 	{ id: 8, value: '04:00' },
-// 	{ id: 9, value: '04:30' },
-// 	{ id: 10, value: '05:00' },
-// 	{ id: 11, value: '05:30' },
-// 	{ id: 12, value: '06:00' },
-// 	{ id: 13, value: '06:30' },
-// 	{ id: 14, value: '07:00' },
-// 	{ id: 15, value: '07:30' },
-// 	{ id: 16, value: '08:00' },
-// 	{ id: 17, value: '08:30' },
-// 	{ id: 18, value: '10:00' },
-// 	{ id: 19, value: '10:30' },
-// 	{ id: 20, value: '11:00' },
-// 	{ id: 21, value: '11-30' },
-// 	{ id: 22, value: '12-00' },
-// 	{ id: 23, value: '12-30' },
-// 	{ id: 24, value: '00-00' },
-// 	{ id: 25, value: '00-30' },
-// 	{ id: 26, value: '00-00' },
-// 	{ id: 27, value: '00-30' },
-// 	{ id: 28, value: '00-00' },
-// ];
+export const timesForTimePicker = [
+	'00:00',
+	'00:30',
+	'01:00',
+	'01:30',
+	'02:00',
+	'02:30',
+	'03:00',
+	'03:30',
+	'04:00',
+	'04:30',
+	'05:00',
+	'05:30',
+	'06:30',
+	'07:00',
+	'07:30',
+	'08:00',
+	'08:30',
+	'09:00',
+	'09:30',
+	'10:00',
+	'10:30',
+	'11:00',
+	'11:30',
+	'12:00',
+	'12:30',
+	'13:00',
+	'13:30',
+	'14:00',
+	'14:30',
+	'15:00',
+	'15:30',
+	'16:00',
+	'16:30',
+	'17:00',
+	'17:30',
+	'18:00',
+	'18:30',
+	'19:00',
+	'19:30',
+	'20:00',
+	'20:30',
+	'21:00',
+	'21:30',
+	'22:00',
+	'22:30',
+	'23:00',
+	'23:30',
+];
 
 const EMAIL_REGEX = '^[a-zA-Z0-9+_.\\-]+@[a-zA-Z0-9]+\\.[a-zA-Z0-9]{2,4}$';
 const NAME_REGEX = '^[a-zA-Z\u0430-\u044f\u0410-\u042f]+$';
@@ -349,9 +371,9 @@ const PHONE_NUMBER_REGEX =
 	'/^(+?d{1,4}[s-]?)?(()?(d{1,4})(?(2)))?[s-]?d{1,4}[s-]?d{1,9}$/';
 
 const ERROR = 'Ошибка';
-const ERROR_400 = 400;
-const ERROR_401 = 401;
-const ERROR_409 = 409;
+const ERROR_400 = 'Error: 400';
+const ERROR_401 = 'Error: 401';
+const ERROR_409 = 'Error: 409';
 
 const EMAIL_ALREADY_REGISTERED_MESSAGE =
 	'Пользователь с таким email уже существует.';

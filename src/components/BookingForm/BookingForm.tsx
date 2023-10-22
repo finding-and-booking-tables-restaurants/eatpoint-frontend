@@ -33,6 +33,10 @@ const BookingForm: FC<BookingFormProps> = ({ children, onSubmit }) => {
 					sx={{
 						backgroundColor: '#FCF8EA',
 						maxWidth: 328,
+						'& .MuiSelect-menu': {
+							minHeight: '100px',
+							maxHeight: '200px',
+						},
 					}}
 				>
 					{numOfPeople.map((option) => (
