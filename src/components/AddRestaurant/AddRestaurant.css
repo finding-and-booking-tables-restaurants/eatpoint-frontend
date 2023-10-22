@@ -263,11 +263,6 @@
 	line-height: 16px;
 }
 
-.input__wrapper {
-	/* width: 100%;
-	position: relative; */
-}
-
 .input__file {
 	opacity: 0;
 	visibility: hidden;
@@ -294,7 +289,6 @@
 }
 
 .input__file-button {
-	/* margin: 0 auto; */
 	width: 156px;
 	height: 40px;
 	background-color: initial;
