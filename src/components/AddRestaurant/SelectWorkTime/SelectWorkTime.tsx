@@ -7,22 +7,41 @@ import { times } from '../../../utils/constants';
 
 interface SelectWorkTimeProps {
 	text: string;
+	onTimeChange?:
+		| ((day: string, start: string, end: string, day_off: boolean) => void)
+		| undefined;
 }
 
 const ITEM_HEIGHT = 48;
-const ITEM_PADDING_TOP = 8;
+const ITEM_PADDING_TOP = 5;
 const MenuProps = {
 	PaperProps: {
 		style: {
 			maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-			width: 250,
+			width: 150,
 		},
 	},
 };
 
-function SelectWorkTime({ text }: SelectWorkTimeProps) {
-	const [timeStart, setTimeStart] = React.useState<string[]>([]);
-	const [timeEnd, setTimeEnd] = React.useState<string[]>([]);
+function SelectWorkTime({ text, onTimeChange }: SelectWorkTimeProps) {
+	const [timeStart, setTimeStart] = React.useState<string>(times[0]);
+	const [timeEnd, setTimeEnd] = React.useState<string>(times[0]);
+
+	// const handleChangeTimeStart = (
+	// 	event: SelectChangeEvent<typeof timeStart>
+	// ) => {
+	// 	const {
+	// 		target: { value },
+	// 	} = event;
+	// 	setTimeStart(value);
+	// };
+
+	// const handleChangeTimeEnd = (event: SelectChangeEvent<typeof timeEnd>) => {
+	// 	const {
+	// 		target: { value },
+	// 	} = event;
+	// 	setTimeEnd(value);
+	// };
 
 	const handleChangeTimeStart = (
 		event: SelectChangeEvent<typeof timeStart>
@@ -30,14 +49,24 @@ function SelectWorkTime({ text }: SelectWorkTimeProps) {
 		const {
 			target: { value },
 		} = event;
-		setTimeStart(typeof value === 'string' ? value.split(',') : value);
+		setTimeStart(value);
+
+		// Вызовите функцию, переданную через `onTimeChange`, для обновления данных в родительском компоненте
+		if (onTimeChange) {
+			onTimeChange(text.toLowerCase(), value, timeEnd, false);
+		}
 	};
 
 	const handleChangeTimeEnd = (event: SelectChangeEvent<typeof timeEnd>) => {
 		const {
 			target: { value },
 		} = event;
-		setTimeEnd(typeof value === 'string' ? value.split(',') : value);
+		setTimeEnd(value);
+
+		// Вызовите функцию, переданную через `onTimeChange`, для обновления данных в родительском компоненте
+		if (onTimeChange) {
+			onTimeChange(text.toLowerCase(), timeStart, value, false);
+		}
 	};
 
 	return (
@@ -53,12 +82,8 @@ function SelectWorkTime({ text }: SelectWorkTimeProps) {
 					MenuProps={MenuProps}
 					sx={{ backgroundColor: '#FDFAF2' }}
 				>
-					{times.map((time) => (
-						<MenuItem
-							key={time}
-							value={time}
-							sx={{ backgroundColor: '#FDFAF2' }}
-						>
+					{times.map((time, i) => (
+						<MenuItem key={i} value={time} sx={{ backgroundColor: '#FDFAF2' }}>
 							{time}
 						</MenuItem>
 					))}
@@ -74,12 +99,8 @@ function SelectWorkTime({ text }: SelectWorkTimeProps) {
 					MenuProps={MenuProps}
 					sx={{ backgroundColor: '#FDFAF2' }}
 				>
-					{times.map((time) => (
-						<MenuItem
-							key={time}
-							value={time}
-							sx={{ backgroundColor: '#FDFAF2' }}
-						>
+					{times.map((time, i) => (
+						<MenuItem key={i} value={time} sx={{ backgroundColor: '#FDFAF2' }}>
 							{time}
 						</MenuItem>
 					))}

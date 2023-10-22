@@ -17,7 +17,8 @@
 
 .promo {
 	min-height: 425px;
-	background-image: url('../../images/BusinessLanding/promo-bg.png');
+	background: url('../../images/BusinessLanding/promo-bg.png') no-repeat center;
+	background-size: cover;
 }
 
 .promo__container {

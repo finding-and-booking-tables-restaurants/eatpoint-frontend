@@ -53,6 +53,12 @@
 	outline: none;
 }
 
+@media screen and (max-width: 340px) {
+	.add-restaurant__input {
+		padding-left: 15px;
+	}
+}
+
 .add-restaurant__category {
 	color: #001f1c;
 	font-family: Ubuntu;
@@ -71,34 +77,44 @@
 	gap: 8px;
 }
 
-.add-restaurant__option-btn {
+.add-restaurant__item {
+	display: flex;
+}
+
+.add-restaurant__label {
 	display: flex;
 	align-items: center;
 	gap: 10px;
-	padding: 6px 16px;
+	padding: 6px 18px;
+	border: 1px solid #006c60;
+	border-radius: 6px;
+	cursor: pointer;
 	font-family: Roboto;
 	font-size: 14px;
 	font-weight: 500;
 	line-height: 20px;
 	letter-spacing: 0.10000000149011612px;
-	border: 1px solid #006c60;
-	border-radius: 4px;
-	background: initial;
-	cursor: pointer;
-	color: #49454f;
+	position: relative;
 }
 
-.add-restaurant__option-btn_active {
-	color: #02332e;
-	background-color: #e4f4f1;
-	border: 1px solid #fff;
-}
-
-.add-restaurant__option-btn_active::before {
-	display: flex;
-	width: 13px;
-	height: 13px;
+.add-restaurant__label::before {
 	content: '';
+	width: 13px;
+	height: 10px;
+	opacity: 0;
+	display: none;
+}
+
+.add-restaurant__option-btn {
+	display: none;
+}
+.add-restaurant__option-btn:checked + .add-restaurant__label {
+	background-color: #e4f4f1;
+}
+
+.add-restaurant__option-btn:checked + .add-restaurant__label::before {
+	opacity: 1;
+	display: flex;
 	background: url('../../images/filter-menu__successMarkGreen.svg') no-repeat;
 }
 
@@ -233,4 +249,74 @@
 
 .add-restaurant__submit-btn:hover {
 	opacity: 0.8;
+}
+
+.add-restaurant__flex-box-file {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+
+.add-restaurant__file-paragraph {
+	font-size: 12px;
+	font-weight: 400;
+	line-height: 16px;
+}
+
+.input__file {
+	opacity: 0;
+	visibility: hidden;
+	position: absolute;
+	left: 0px;
+}
+
+.input__file-icon-wrapper {
+	height: 60px;
+	width: 60px;
+	margin-right: 15px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	border-right: 1px solid #fff;
+}
+
+.input__file-button-text {
+	color: #05887b;
+	line-height: 1;
+	margin-top: 1px;
+	cursor: pointer;
+	align-self: center;
+}
+
+.input__file-button {
+	width: 156px;
+	height: 40px;
+	background-color: initial;
+	color: #fff;
+	font-size: 1.125rem;
+	font-weight: 700;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	border-radius: 100px;
+	border: 1px solid #006c60;
+	cursor: pointer;
+	font-size: 14px;
+	font-weight: 500;
+	line-height: 20px;
+	letter-spacing: 0.10000000149011612px;
+}
+
+.input__file-button:hover {
+	opacity: 0.8;
+}
+
+.input__file-button::before {
+	padding-right: 5px;
+	display: flex;
+	align-items: center;
+	content: '';
+	width: 12px;
+	height: 12px;
+	background: url('../../images/add-restaurant__plus.svg') no-repeat;
 }
