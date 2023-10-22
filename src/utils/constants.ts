@@ -371,9 +371,9 @@ const PHONE_NUMBER_REGEX =
 	'/^(+?d{1,4}[s-]?)?(()?(d{1,4})(?(2)))?[s-]?d{1,4}[s-]?d{1,9}$/';
 
 const ERROR = 'Ошибка';
-const ERROR_400 = 400;
-const ERROR_401 = 401;
-const ERROR_409 = 409;
+const ERROR_400 = 'Error: 400';
+const ERROR_401 = 'Error: 401';
+const ERROR_409 = 'Error: 409';
 
 const EMAIL_ALREADY_REGISTERED_MESSAGE =
 	'Пользователь с таким email уже существует.';

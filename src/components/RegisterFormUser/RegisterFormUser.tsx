@@ -134,7 +134,7 @@ const RegisterFormUser: React.FC<IRegisterFormUserProps> = ({
 							variant="outlined"
 							name="telephone"
 							placeholder="Моб. телефон"
-							type="text"
+							type="number"
 							id="phone"
 							onChange={(e) => setPhone(e.target.value)}
 							required
@@ -148,7 +148,7 @@ const RegisterFormUser: React.FC<IRegisterFormUserProps> = ({
 							variant="outlined"
 							placeholder="Эл. почта"
 							name="email"
-							type="text"
+							type="email"
 							onChange={(e) => setEmail(e.target.value)}
 							required
 							fullWidth
@@ -164,7 +164,7 @@ const RegisterFormUser: React.FC<IRegisterFormUserProps> = ({
 							fullWidth
 							sx={{ backgroundColor: '#FDFAF2' }}
 						/>
-						<TextField
+						{/* <TextField
 							margin="dense"
 							variant="outlined"
 							placeholder="Пароль повторно"
@@ -173,7 +173,18 @@ const RegisterFormUser: React.FC<IRegisterFormUserProps> = ({
 							required
 							fullWidth
 							style={{ backgroundColor: '#FDFAF2' }}
-						/>
+						/> */}
+						<span
+							style={{
+								display: 'block',
+								minHeight: '15px',
+								color: 'red',
+								fontSize: '10px',
+								margin: '5px',
+							}}
+						>
+							{requestErrorMessage}
+						</span>
 						<FormControlLabel
 							control={
 								<Checkbox
@@ -225,7 +236,6 @@ const RegisterFormUser: React.FC<IRegisterFormUserProps> = ({
 							<Button
 								type="submit"
 								variant="contained"
-								disabled={!isFormValid}
 								sx={{
 									backgroundColor: '#05887B',
 									borderRadius: '100px',

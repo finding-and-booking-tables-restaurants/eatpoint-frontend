@@ -18,7 +18,7 @@ class UsersApi {
 
 	private async _handleResponse<T>(res: Response): Promise<T> {
 		if (!res.ok) {
-			throw new Error(`Request failed with status ${res.status}`);
+			return Promise.reject(`Error: ${res.status}`);
 		}
 		return res.json();
 	}

@@ -29,6 +29,7 @@ interface BookingPageProps {
 
 const BookingPage: FC<BookingPageProps> = ({ id, userData }) => {
 	const navigate = useNavigate();
+	const isLoggedIn = useContext(CurrentUserContext).isLoggedIn;
 
 	const [isSuccessBooking, setIsSuccessBooking] = useState(false);
 	const [currentRestaurant, setcurrentRestaurant] = useState<Restaurant>();
@@ -144,6 +145,7 @@ const BookingPage: FC<BookingPageProps> = ({ id, userData }) => {
 							select
 							name="zone"
 							label="Зона"
+							required
 							sx={{
 								backgroundColor: '#FCF8EA',
 								maxWidth: 328,
@@ -151,8 +153,8 @@ const BookingPage: FC<BookingPageProps> = ({ id, userData }) => {
 						>
 							{currentRestaurant?.zones.map((option) => (
 								<MenuItem
-									key={option.id ? option.id : 'Основной зал'}
-									value={option.id ? option.id : 1}
+									key={option.id}
+									value={option.id}
 									sx={{
 										background: '#FCF8EA',
 									}}
@@ -173,6 +175,7 @@ const BookingPage: FC<BookingPageProps> = ({ id, userData }) => {
 								sx={{
 									backgroundColor: '#FCF8EA',
 									maxWidth: 328,
+									display: `${isLoggedIn && option.id === 'email' && 'none'}`,
 								}}
 							/>
 						))}
