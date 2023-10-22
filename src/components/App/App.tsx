@@ -244,7 +244,7 @@ function App() {
 							element={<BookingPage userData={currentUser} id={item.id} />}
 						/>
 					))}
-					<Route path="/add-restaurant" element={<AddRestaurant />}></Route>
+
 					<Route
 						path="/user-signup"
 						element={
@@ -285,6 +285,10 @@ function App() {
 						}
 					/>
 					<Route path="/business" element={<BusinessLanding />} />
+					<Route path="/business-profile" element={<BusinessProfile />} />
+					<Route path="/add-restaurant" element={<AddRestaurant />}></Route>
+					<Route path="/test" element={<TEST></TEST>}></Route>
+					<Route path="*" element={<NotFoundPage></NotFoundPage>}></Route>
 				</Routes>
 			</CurrentUserContext.Provider>
 		</div>

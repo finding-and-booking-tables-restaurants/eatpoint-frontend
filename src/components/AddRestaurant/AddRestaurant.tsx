@@ -10,91 +10,112 @@ import FilterMenuCheckBox from '../FilterMenu/FilterMenuCheckBox/FilterMenuCheck
 import Header from '../Header/Header';
 import Footer from '../Footer/Footer';
 import SelectWorkTime from './SelectWorkTime/SelectWorkTime';
-
-interface Zone {
-	zone?: string;
-	seats?: number;
-	available_seats?: number;
-}
-
-interface RestaurantData {
-	name: string;
-	types: string[];
-	cities: string;
-	address: string;
-	kitchens: string[];
-	services: string[];
-	zones: Zone[];
-	average_check: string;
-	poster: string;
-	email: string;
-	telephone: string;
-	description: string;
-	worked: {
-		day: string;
-		start: string;
-		end: string;
-		day_off?: boolean;
-	}[];
-	socials?: { name: string }[];
-	images?: { name: string; image: string }[];
-}
+import { RestaurantData } from '../../types/addRestaurantTypes';
+import { mainApi } from '../../utils/mainApi';
 
 function AddRestaurant() {
 	const [formData, setFormData] = useState<RestaurantData>({
 		name: '',
-		types: [], // array with checkbox
+		types: [],
 		cities: '',
 		address: '',
-		kitchens: [], // array with checkbox выбор любой
-		services: [], // array with checkbox
-		zones: [{ zone: '', seats: 0, available_seats: 0 }],
-		average_check: '', //checkbox 1 выбор
+		kitchens: [],
+		services: [],
+		zones: [{ zone: '', seats: 0 }],
+		average_check: '',
 		poster: '',
 		email: '',
 		telephone: '',
 		description: '',
-		worked: [{ day: '', start: '', end: '' }], // ???
+		worked: [
+			{ day: 'понедельник', start: '00:00', end: '00:00' },
+			{ day: 'вторник', start: '00:00', end: '00:00' },
+			{ day: 'среда', start: '00:00', end: '00:00' },
+			{ day: 'четверг', start: '00:00', end: '00:00' },
+			{ day: 'пятница', start: '00:00', end: '00:00' },
+			{ day: 'суббота', start: '00:00', end: '00:00' },
+			{ day: 'воскресенье', start: '00:00', end: '00:00' },
+		],
 	});
 
 	const [selectedCheckboxes, setSelectedCheckboxes] = useState<{
 		[key: string]: boolean;
 	}>({});
+	const [selectedCheckFilters, setSelectedCheckFilters] = useState<
+		string | null
+	>(null);
 
 	const handleCheckboxChange = (event: ChangeEvent<HTMLInputElement>) => {
 		const { name, checked } = event.target;
+		const checkboxName = name;
+
+		if (availableType.includes(checkboxName)) {
+			setFormData((prevData) => ({
+				...prevData,
+				types: checked
+					? [...prevData.types, checkboxName]
+					: prevData.types.filter((type) => type !== checkboxName),
+			}));
+		} else if (availableKitchen.includes(checkboxName)) {
+			setFormData((prevData) => ({
+				...prevData,
+				kitchens: checked
+					? [...prevData.kitchens, checkboxName]
+					: prevData.kitchens.filter((kitchen) => kitchen !== checkboxName),
+			}));
+		} else if (availableService.includes(checkboxName)) {
+			setFormData((prevData) => ({
+				...prevData,
+				services: checked
+					? [...prevData.services, checkboxName]
+					: prevData.services.filter((service) => service !== checkboxName),
+			}));
+		}
+
 		setSelectedCheckboxes((prevSelectedTypes) => ({
 			...prevSelectedTypes,
 			[name]: checked,
 		}));
 	};
 
-	function handleSubmit(evt: React.FormEvent) {
-		evt.preventDefault();
-	}
-
-	const handleAddZone = (value: string) => {
+	const handleCheckFilterClick = (filter: string) => {
+		setSelectedCheckFilters(filter);
 		setFormData((prevData) => ({
 			...prevData,
-			zones: [
-				...prevData.zones,
-				{
-					zone: value,
-				},
-			],
+			average_check: filter,
 		}));
 	};
 
+	const handleAddZone = (value: string) => {
+		setFormData((prevData) => {
+			const updatedZones = prevData.zones.map((zone) => {
+				if (zone.seats === 0) {
+					return { ...zone, zone: value };
+				}
+				return zone;
+			});
+
+			return {
+				...prevData,
+				zones: updatedZones,
+			};
+		});
+	};
+
 	const handleAddSeats = (value: number) => {
-		setFormData((prevData) => ({
-			...prevData,
-			zones: [
-				...prevData.zones,
-				{
-					seats: value,
-				},
-			],
-		}));
+		setFormData((prevData) => {
+			const updatedZones = prevData.zones.map((zone, index) => {
+				if (index === 0) {
+					return { ...zone, seats: value };
+				}
+				return zone;
+			});
+
+			return {
+				...prevData,
+				zones: updatedZones,
+			};
+		});
 	};
 
 	const handleInputChange = (
@@ -108,11 +129,74 @@ function AddRestaurant() {
 		}));
 	};
 
-	// const handleCheckFilterClick = (filter: string) => {
-	// 	setSelectedCheckFilters((prevCheckFilter) =>
-	// 		prevCheckFilter === filter ? null : filter
-	// 	);
-	// };
+	function handleFileInputChange(event: ChangeEvent<HTMLInputElement>) {
+		const file = event.target.files?.[0];
+
+		if (file) {
+			const reader = new FileReader();
+
+			reader.onload = function (e: ProgressEvent<FileReader>) {
+				const base64String = e.target?.result as string;
+
+				setFormData({
+					...formData,
+					poster: base64String,
+				});
+				// console.log('Base64-строка изображения:', base64String);
+			};
+			reader.readAsDataURL(file);
+		}
+	}
+
+	const handleTimeChange = (
+		day: string,
+		start: string,
+		end: string,
+		dayOff: boolean
+	) => {
+		setFormData((prevData) => {
+			const updatedWorked = prevData.worked.map((workedDay) => {
+				if (workedDay.day === day) {
+					return { day: day, start, end, dayOff };
+				}
+				return workedDay;
+			});
+
+			return {
+				...prevData,
+				worked: updatedWorked,
+			};
+		});
+	};
+
+	function handleSubmit(evt: React.FormEvent) {
+		evt.preventDefault();
+
+		const formDataSend = {
+			name: formData.name,
+			types: formData.types,
+			cities: formData.cities,
+			address: formData.address,
+			kitchens: formData.kitchens,
+			services: formData.services,
+			zones: formData.zones,
+			average_check: formData.average_check,
+			poster: formData.poster,
+			email: formData.email,
+			telephone: formData.telephone,
+			description: formData.description,
+			worked: formData.worked,
+		};
+
+		mainApi
+			.createEstablishment(formDataSend)
+			.then((res) => {
+				console.log(res);
+			})
+			.catch((err) => {
+				console.log(err);
+			});
+	}
 
 	return (
 		<>
@@ -177,7 +261,6 @@ function AddRestaurant() {
 									type="checkbox"
 									name={item}
 									id={item}
-									checked={selectedCheckboxes[item] || false}
 									onChange={handleCheckboxChange}
 								/>
 								<label htmlFor={item} className="add-restaurant__label">
@@ -195,6 +278,7 @@ function AddRestaurant() {
 									type="checkbox"
 									name={item}
 									id={item}
+									onChange={handleCheckboxChange}
 								/>
 								<label htmlFor={item} className="add-restaurant__label">
 									{item}
@@ -227,21 +311,43 @@ function AddRestaurant() {
 							onChange={(e) => handleAddSeats(parseInt(e.target.value))}
 						/>
 					</div>
-					<button className="add-restaurant__moreBtn">Еще</button>
+					{/* <button className="add-restaurant__moreBtn">Еще</button> */}
 					<h3 className="add-restaurant__category">Режим работы (от, до)</h3>
-					<SelectWorkTime text={'Пн'} />
-					<SelectWorkTime text={'Вт'} />
-					<SelectWorkTime text={'Ср'} />
-					<SelectWorkTime text={'Чт'} />
-					<SelectWorkTime text={'Пт'} />
-					<SelectWorkTime text={'Сб'} />
-					<SelectWorkTime text={'Вс'} />
+					<SelectWorkTime
+						text={'Понедельник'}
+						onTimeChange={handleTimeChange}
+					/>
+					<SelectWorkTime text={'Вторник'} onTimeChange={handleTimeChange} />
+					<SelectWorkTime text={'Среда'} onTimeChange={handleTimeChange} />
+					<SelectWorkTime text={'Четверг'} onTimeChange={handleTimeChange} />
+					<SelectWorkTime text={'Пятница'} onTimeChange={handleTimeChange} />
+					<SelectWorkTime text={'Суббота'} onTimeChange={handleTimeChange} />
+					<SelectWorkTime
+						text={'Воскресенье'}
+						onTimeChange={handleTimeChange}
+					/>
 					<h3 className="add-restaurant__category">Средний чек</h3>
 					<ul className="add-restaurant__radio-list">
-						<FilterMenuCheckBox text={'до 1000'} />
-						<FilterMenuCheckBox text={'1000 - 2000'} />
-						<FilterMenuCheckBox text={'2000 - 3000'} />
-						<FilterMenuCheckBox text={'от 3000'} />
+						<FilterMenuCheckBox
+							text={'до 1000'}
+							isChecked={selectedCheckFilters === 'до 1000'}
+							onChange={() => handleCheckFilterClick('до 1000')}
+						/>
+						<FilterMenuCheckBox
+							text={'1000 - 2000'}
+							isChecked={selectedCheckFilters === '1000 - 2000'}
+							onChange={() => handleCheckFilterClick('1000 - 2000')}
+						/>
+						<FilterMenuCheckBox
+							text={'2000 - 3000'}
+							isChecked={selectedCheckFilters === '2000 - 3000'}
+							onChange={() => handleCheckFilterClick('2000 - 3000')}
+						/>
+						<FilterMenuCheckBox
+							text={'от 3000'}
+							isChecked={selectedCheckFilters === 'от 3000'}
+							onChange={() => handleCheckFilterClick('от 3000')}
+						/>
 					</ul>
 					<h3 className="add-restaurant__category">Услуги</h3>
 					<ul className="add-restaurant__list">
@@ -252,6 +358,7 @@ function AddRestaurant() {
 									type="checkbox"
 									name={item}
 									id={item}
+									onChange={handleCheckboxChange}
 								/>
 								<label htmlFor={item} className="add-restaurant__label">
 									{item}
@@ -266,16 +373,26 @@ function AddRestaurant() {
 						maxLength={500}
 						onChange={handleInputChange}
 					></textarea>
-					<h3 className="add-restaurant__category_padding-bot">Фотографии</h3>
-					<input
-						className="add-restaurant__input"
-						placeholder="Ссылка на фотографию"
-						type="url"
-						name="poster"
-						value={formData.poster}
-						onChange={handleInputChange}
-					></input>
-					<button className="add-restaurant__submit-btn">
+					<h3 className="add-restaurant__category_padding-bot">Фотография</h3>
+					<div className="add-restaurant__flex-box-file">
+						<p className="add-restaurant__file-paragraph">
+							Добавьте фото размером до 5 МБ
+						</p>
+						<div className="input__wrapper">
+							<input
+								className="input__file"
+								name="file"
+								type="file"
+								accept="image/*"
+								id="input__file"
+								onChange={handleFileInputChange}
+							/>
+							<label htmlFor="input__file" className="input__file-button">
+								<span className="input__file-button-text">Добавить фото</span>
+							</label>
+						</div>
+					</div>
+					<button className="add-restaurant__submit-btn" type="submit">
 						Добавить заведение
 					</button>
 				</form>
