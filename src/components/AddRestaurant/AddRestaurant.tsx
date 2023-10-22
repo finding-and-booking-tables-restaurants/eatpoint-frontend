@@ -215,6 +215,7 @@ function AddRestaurant() {
 						name="name"
 						value={formData.name}
 						onChange={handleInputChange}
+						required
 					/>
 					<input
 						className="add-restaurant__input"
@@ -224,6 +225,7 @@ function AddRestaurant() {
 						name="cities"
 						value={formData.cities}
 						onChange={handleInputChange}
+						required
 					/>
 					<input
 						className="add-restaurant__input"
@@ -233,6 +235,7 @@ function AddRestaurant() {
 						name="address"
 						value={formData.address}
 						onChange={handleInputChange}
+						required
 					/>
 					<input
 						className="add-restaurant__input"
@@ -243,6 +246,7 @@ function AddRestaurant() {
 						maxLength={12}
 						value={formData.telephone}
 						onChange={handleInputChange}
+						required
 					/>
 					<input
 						className="add-restaurant__input"
@@ -251,6 +255,7 @@ function AddRestaurant() {
 						name="email"
 						value={formData.email}
 						onChange={handleInputChange}
+						required
 					/>
 					<h3 className="add-restaurant__category">Тип заведения</h3>
 					<ul className="add-restaurant__list">
@@ -301,6 +306,7 @@ function AddRestaurant() {
 							name="zones"
 							maxLength={30}
 							onChange={(evt) => handleAddZone(evt.target.value)}
+							required
 						></input>
 						<input
 							className="add-restaurant__input-place_num"
@@ -309,6 +315,7 @@ function AddRestaurant() {
 							type="text"
 							name="seats"
 							onChange={(e) => handleAddSeats(parseInt(e.target.value))}
+							required
 						/>
 					</div>
 					{/* <button className="add-restaurant__moreBtn">Еще</button> */}
@@ -372,6 +379,7 @@ function AddRestaurant() {
 						name="description"
 						maxLength={500}
 						onChange={handleInputChange}
+						required
 					></textarea>
 					<h3 className="add-restaurant__category_padding-bot">Фотография</h3>
 					<div className="add-restaurant__flex-box-file">
@@ -386,6 +394,7 @@ function AddRestaurant() {
 								accept="image/*"
 								id="input__file"
 								onChange={handleFileInputChange}
+								required
 							/>
 							<label htmlFor="input__file" className="input__file-button">
 								<span className="input__file-button-text">Добавить фото</span>
