@@ -53,12 +53,8 @@ function SelectWorkTime({ text }: SelectWorkTimeProps) {
 					MenuProps={MenuProps}
 					sx={{ backgroundColor: '#FDFAF2' }}
 				>
-					{times.map((time) => (
-						<MenuItem
-							key={time}
-							value={time}
-							sx={{ backgroundColor: '#FDFAF2' }}
-						>
+					{times.map((time, i) => (
+						<MenuItem key={i} value={time} sx={{ backgroundColor: '#FDFAF2' }}>
 							{time}
 						</MenuItem>
 					))}
@@ -74,12 +70,8 @@ function SelectWorkTime({ text }: SelectWorkTimeProps) {
 					MenuProps={MenuProps}
 					sx={{ backgroundColor: '#FDFAF2' }}
 				>
-					{times.map((time) => (
-						<MenuItem
-							key={time}
-							value={time}
-							sx={{ backgroundColor: '#FDFAF2' }}
-						>
+					{times.map((time, i) => (
+						<MenuItem key={i} value={time} sx={{ backgroundColor: '#FDFAF2' }}>
 							{time}
 						</MenuItem>
 					))}

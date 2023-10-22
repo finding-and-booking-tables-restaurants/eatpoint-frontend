@@ -53,6 +53,12 @@
 	outline: none;
 }
 
+@media screen and (max-width: 340px) {
+	.add-restaurant__input {
+		padding-left: 15px;
+	}
+}
+
 .add-restaurant__category {
 	color: #001f1c;
 	font-family: Ubuntu;

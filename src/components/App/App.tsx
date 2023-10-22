@@ -24,6 +24,9 @@ import {
 import { Restaurant } from '../../utils/constants';
 import RegisterFormUser from '../RegisterFormUser/RegisterFormUser';
 import LoginForm from '../LoginForm/LoginForm';
+import NotFoundPage from '../NotFoundPage/NotFoundPage';
+import BusinessProfile from '../BusinessProfile/BusinessProfile';
+import TEST from '../TEST/TEST';
 
 function App() {
 	const [authErrorMessage, setAuthErrorMessage] = useState('');
@@ -182,7 +185,7 @@ function App() {
 						element={<BookingPage id={item.id} />}
 					/>
 				))}
-				<Route path="/add-restaurant" element={<AddRestaurant />}></Route>
+
 				<Route
 					path="/user-signup"
 					element={
@@ -194,6 +197,10 @@ function App() {
 					}
 				/>
 				<Route path="/signin" element={<LoginForm onLogin={handleLogin} />} />
+				<Route path="/add-restaurant" element={<AddRestaurant />} />
+				<Route path="/business-profile" element={<BusinessProfile />} />
+				<Route path="/test" element={<TEST />}></Route>
+				<Route path="*" element={<NotFoundPage />} />
 			</Routes>
 		</div>
 	);

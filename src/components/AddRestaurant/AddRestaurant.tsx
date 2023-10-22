@@ -1,5 +1,6 @@
 import './AddRestaurant.css';
 import { useState, ChangeEvent } from 'react';
+import { Link } from 'react-router-dom';
 import {
 	availableKitchen,
 	availableType,
@@ -11,8 +12,8 @@ import Footer from '../Footer/Footer';
 import SelectWorkTime from './SelectWorkTime/SelectWorkTime';
 
 interface Zone {
-	zone: string;
-	seats: number;
+	zone?: string;
+	seats?: number;
 	available_seats?: number;
 }
 
@@ -60,20 +61,51 @@ function AddRestaurant() {
 		[key: string]: boolean;
 	}>({});
 
+	const handleCheckboxChange = (event: ChangeEvent<HTMLInputElement>) => {
+		const { name, checked } = event.target;
+		setSelectedCheckboxes((prevSelectedTypes) => ({
+			...prevSelectedTypes,
+			[name]: checked,
+		}));
+	};
+
 	function handleSubmit(evt: React.FormEvent) {
 		evt.preventDefault();
 	}
 
-	const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
+	const handleAddZone = (value: string) => {
+		setFormData((prevData) => ({
+			...prevData,
+			zones: [
+				...prevData.zones,
+				{
+					zone: value,
+				},
+			],
+		}));
+	};
+
+	const handleAddSeats = (value: number) => {
+		setFormData((prevData) => ({
+			...prevData,
+			zones: [
+				...prevData.zones,
+				{
+					seats: value,
+				},
+			],
+		}));
+	};
+
+	const handleInputChange = (
+		event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+	) => {
 		const { name, value } = event.target;
+
 		setFormData((prevData) => ({
 			...prevData,
 			[name]: value,
 		}));
-	};
-
-	const handleCheckboxChange = (event: ChangeEvent<HTMLInputElement>) => {
-		const { name, checked } = event.target;
 	};
 
 	// const handleCheckFilterClick = (filter: string) => {
@@ -87,7 +119,7 @@ function AddRestaurant() {
 			<Header />
 			<section className="add-restaurant">
 				<div className="add-restaurant__box">
-					<button className="add-restautant__backBtn"></button>
+					<Link to="/business-profile" className="add-restautant__backBtn" />
 					<h2 className="add-restaurant__title">Новое заведение</h2>
 				</div>
 				<form className="add-restaurant__form" onSubmit={handleSubmit}>
@@ -95,6 +127,7 @@ function AddRestaurant() {
 						className="add-restaurant__input"
 						placeholder="Название"
 						type="text"
+						maxLength={30}
 						name="name"
 						value={formData.name}
 						onChange={handleInputChange}
@@ -103,6 +136,7 @@ function AddRestaurant() {
 						className="add-restaurant__input"
 						placeholder="Город"
 						type="text"
+						maxLength={30}
 						name="cities"
 						value={formData.cities}
 						onChange={handleInputChange}
@@ -111,6 +145,7 @@ function AddRestaurant() {
 						className="add-restaurant__input"
 						placeholder="Адрес"
 						type="text"
+						maxLength={30}
 						name="address"
 						value={formData.address}
 						onChange={handleInputChange}
@@ -120,7 +155,17 @@ function AddRestaurant() {
 						placeholder="Телефон (+7 *** ***-**-**)"
 						type="text"
 						name="telephone"
+						minLength={11}
+						maxLength={12}
 						value={formData.telephone}
+						onChange={handleInputChange}
+					/>
+					<input
+						className="add-restaurant__input"
+						placeholder="Email заведения"
+						type="email"
+						name="email"
+						value={formData.email}
 						onChange={handleInputChange}
 					/>
 					<h3 className="add-restaurant__category">Тип заведения</h3>
@@ -132,6 +177,8 @@ function AddRestaurant() {
 									type="checkbox"
 									name={item}
 									id={item}
+									checked={selectedCheckboxes[item] || false}
+									onChange={handleCheckboxChange}
 								/>
 								<label htmlFor={item} className="add-restaurant__label">
 									{item}
@@ -167,17 +214,17 @@ function AddRestaurant() {
 							className="add-restaurant__input-place"
 							placeholder="Основной зал"
 							type="text"
-							name="zone"
-							// value={formData.zones.zone}
-							onChange={handleInputChange}
+							name="zones"
+							maxLength={30}
+							onChange={(evt) => handleAddZone(evt.target.value)}
 						></input>
 						<input
 							className="add-restaurant__input-place_num"
 							placeholder="Мест"
-							type="number"
+							maxLength={4}
+							type="text"
 							name="seats"
-							// value={formData.zones}
-							onChange={handleInputChange}
+							onChange={(e) => handleAddSeats(parseInt(e.target.value))}
 						/>
 					</div>
 					<button className="add-restaurant__moreBtn">Еще</button>
@@ -213,12 +260,17 @@ function AddRestaurant() {
 						))}
 					</ul>
 					<h3 className="add-restaurant__category_padding-bot">Описание</h3>
-					<textarea className="add-restaurant__text-area"></textarea>
+					<textarea
+						className="add-restaurant__text-area"
+						name="description"
+						maxLength={500}
+						onChange={handleInputChange}
+					></textarea>
 					<h3 className="add-restaurant__category_padding-bot">Фотографии</h3>
 					<input
 						className="add-restaurant__input"
 						placeholder="Ссылка на фотографию"
-						type="text"
+						type="url"
 						name="poster"
 						value={formData.poster}
 						onChange={handleInputChange}

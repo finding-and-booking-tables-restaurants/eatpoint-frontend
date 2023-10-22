@@ -1,0 +1,112 @@
+.business-profile {
+	padding: 16px 16px 0 16px;
+}
+
+.business-profile__box-profile {
+	padding-bottom: 24px;
+	display: flex;
+	justify-content: space-between;
+}
+
+.business-profile__box-info {
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+}
+
+.business-profile__box-info_contacts {
+	display: flex;
+}
+
+.business-profile__user-name {
+	font-family: Roboto;
+	font-size: 14px;
+	font-weight: 400;
+	line-height: 20px;
+}
+
+.business-profile__user-id {
+	font-family: Roboto;
+	font-size: 12px;
+	font-weight: 400;
+	line-height: 20px;
+}
+
+.business-profile__user-email {
+	font-family: Roboto;
+	font-size: 12px;
+	font-weight: 400;
+	line-height: 20px;
+}
+
+.business-profile__user-phone {
+	padding-left: 10px;
+	font-family: Roboto;
+	font-size: 12px;
+	font-weight: 400;
+	line-height: 20px;
+}
+
+.business-profile__user-editBtn {
+	width: 18px;
+	height: 18px;
+	border: none;
+	background: url('../../images/business-profile__editBtn.svg') no-repeat;
+	cursor: pointer;
+}
+
+.business-profile__user-editBtn:hover {
+	opacity: 0.8;
+}
+
+.business-profile__add-restaurantBtn {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	gap: 12px;
+	height: 40px;
+	color: #006c60;
+	width: 100%;
+	border: 1px solid #006c60;
+	border-radius: 100px;
+	background-color: initial;
+	cursor: pointer;
+	font-family: Roboto;
+	font-size: 14px;
+	font-weight: 500;
+	line-height: 20px;
+	letter-spacing: 0.10000000149011612px;
+	text-align: center;
+	text-decoration: none;
+}
+
+.business-profile__add-restaurantBtn::before {
+	width: 12px;
+	height: 12px;
+	content: '';
+	background: url('../../images/business-profile__addBtn_plus.svg') no-repeat;
+}
+
+.business-profile__add-restaurantBtn:hover {
+	opacity: 0.8;
+}
+
+.business-profile__list-title {
+	padding-top: 36px;
+	font-family: Ubuntu;
+	font-size: 30px;
+	font-weight: 400;
+	line-height: 36px;
+	letter-spacing: 0em;
+	text-align: left;
+}
+
+.business-profile__list {
+	margin: 0;
+	padding: 0;
+	padding: 24px 0;
+	list-style: none;
+	display: grid;
+	/* justify-content: center; */
+	grid-template-columns: repeat(1, minmax(0, 328px));
+}

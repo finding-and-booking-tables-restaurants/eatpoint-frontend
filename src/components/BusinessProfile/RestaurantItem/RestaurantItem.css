@@ -1,0 +1,150 @@
+.restaurant {
+	background-color: #fffef9;
+	border-radius: 12px;
+
+	box-shadow: 0px 1px 2px 0px #0000004d;
+}
+
+.restaurant__box-card {
+	padding: 18px;
+	display: flex;
+	flex-direction: column;
+	gap: 16px;
+}
+
+.restaurant__box-info {
+	display: flex;
+	justify-content: space-between;
+}
+
+.restaurant__image {
+	width: 40px;
+	height: 40px;
+	object-fit: cover;
+}
+
+.restaurant__title {
+	color: #1d1b20;
+	font-family: Ubuntu;
+	font-size: 20px;
+	font-style: normal;
+	font-weight: 500;
+	line-height: 26px;
+	letter-spacing: 0.2px;
+}
+
+.restaurant__place {
+	color: #49454f;
+	font-family: Roboto;
+	font-size: 14px;
+	font-style: normal;
+	font-weight: 400;
+	line-height: 20px;
+	letter-spacing: 0.25px;
+}
+
+.restaurant__editBtn {
+	width: 40px;
+	height: 40px;
+	cursor: pointer;
+	border: none;
+	border-radius: 100px;
+	background: url('../../../images/business-profile__editBtn.svg') no-repeat
+		center;
+	background-color: #fcf7e7;
+	background-size: 18px 18px;
+}
+
+.restaurant__editBtn:hover {
+	opacity: 0.7;
+}
+
+.restaurant__box-addition-info {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+}
+
+.restaurant__flex-box {
+	display: flex;
+	align-items: center;
+	gap: 6px;
+}
+
+.restaurant__reviews-num {
+	color: #05887b;
+	font-family: Roboto;
+	font-size: 14px;
+	font-style: normal;
+	font-weight: 500;
+	line-height: 20px;
+	letter-spacing: 0.1px;
+}
+
+.restaurant__rating-num {
+	font-family: Roboto;
+	font-size: 14px;
+	font-weight: 500;
+	line-height: 20px;
+	letter-spacing: 0.10000000149011612px;
+	color: #49454f;
+}
+
+.restaurant__box-optionBtn {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+}
+
+.restaurant__optionBtn {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 11px;
+	width: 144px;
+	height: 40px;
+	border: 1px solid #006c60;
+	border-radius: 100px;
+	background-color: initial;
+	cursor: pointer;
+	color: #006c60;
+	font-family: Roboto;
+	font-size: 14px;
+	font-weight: 500;
+	line-height: 20px;
+	letter-spacing: 0.10000000149011612px;
+}
+
+.restaurant__optionBtn:hover {
+	opacity: 0.8;
+}
+
+.restaurant__optionBtn_reservation::before {
+	width: 12px;
+	height: 17px;
+	content: '';
+	background: url('../../../images/restaurant__optionBtn-reserv.svg') no-repeat;
+}
+
+.restaurant__optionBtn_reviews::before {
+	width: 15px;
+	height: 15px;
+	content: '';
+	background: url('../../../images/restaurant__optionBtn-reviews.svg') no-repeat;
+}
+
+.restaurant__optionBtn_allReservation::before {
+	width: 15px;
+	height: 15px;
+	content: '';
+	background: url('../../../images/restaurant__optionBtn-Allreserv.svg')
+		no-repeat;
+}
+
+.restaurant__optionBtn_analytics::before {
+	width: 15px;
+	height: 15px;
+	content: '';
+	background: url('../../../images/restaurant__optionBtn-analytics.svg')
+		no-repeat;
+}
