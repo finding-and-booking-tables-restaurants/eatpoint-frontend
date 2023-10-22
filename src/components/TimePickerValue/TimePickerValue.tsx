@@ -1,27 +1,10 @@
-import React, { useState, ChangeEvent } from 'react';
-import dayjs, { Dayjs } from 'dayjs';
+import { useState, ChangeEvent } from 'react';
 import TextField from '@mui/material/TextField';
 import { timesForTimePicker as times } from '../../utils/constants';
 import { MenuItem } from '@mui/material';
 import Clocks from '@mui/icons-material/AccessTime';
-import { transform } from 'typescript';
 
 function MyTimePicker() {
-	// const [time, setTime] = useState<Dayjs | null>(dayjs(dayjs()));
-
-	// const handleTimeChange = (event: ChangeEvent<HTMLInputElement>) => {
-	// 	const selectedTime = dayjs(event.target.value, 'HH:mm');
-
-	// 	const roundedTime = roundToNearest(selectedTime, 30); // или roundToNearest(selectedTime, 60) для целых часов
-
-	// 	setTime(roundedTime);
-	// };
-
-	// function roundToNearest(time: Dayjs, minutes: number): Dayjs {
-	// 	const roundedMinutes = Math.round(time.minute() / minutes) * minutes;
-	// 	return time.set('minute', roundedMinutes);
-	// }
-
 	const [time, setTime] = useState<string>(times[23]);
 
 	const handleTimeChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -31,38 +14,10 @@ function MyTimePicker() {
 	};
 
 	return (
-		// <TextField
-		// 	label="Время"
-		// 	type="time"
-		// 	name="start_time_reservation"
-		// 	value={time ? time.format('HH:mm') : ''}
-		// 	onChange={handleTimeChange}
-		// 	InputLabelProps={{
-		// 		shrink: true,
-		// 	}}
-		// 	inputMode="text"
-		// 	inputProps={{
-		// 		step: 1800,
-		// 		type: 'time',
-		// 	}}
-		// 	sx={{
-		// 		backgroundColor: '#FCF8EA',
-		// 		maxWidth: 156,
-		// 		'.MuiInputBase-input': {
-		// 			width: 151,
-		// 			padding: 2.1,
-		// 			paddingRight: 2,
-		// 		},
-		// 		'.MuiInputBase-root': {
-		// 			maxWidth: 130,
-		// 			minHeight: 41,
-		// 		},
-		// 	}}
-		// />
 		<TextField
 			id="outlined-select-currency"
 			select
-			name="time"
+			name="start_time_reservation"
 			label="Время"
 			value={time}
 			onChange={handleTimeChange}
@@ -70,6 +25,7 @@ function MyTimePicker() {
 				backgroundColor: '#FCF8EA',
 				maxWidth: 328,
 				minWidth: 151,
+				ml: 'auto',
 			}}
 			SelectProps={{
 				IconComponent: () => (

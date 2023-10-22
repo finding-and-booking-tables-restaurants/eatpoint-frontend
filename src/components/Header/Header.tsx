@@ -6,7 +6,7 @@ import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import cities from '../../fakeData/cities';
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import CurrentUserContext from '../../contexts/CurrentUserContext';
 
 const Header = ({
@@ -15,6 +15,10 @@ const Header = ({
 	handleRestart?: (value: boolean) => void;
 }) => {
 	const navigate = useNavigate();
+	const location = useLocation();
+	const chechLocation = (path: string) => {
+		return location.pathname === path ? true : false;
+	};
 
 	const isLoggedIn = useContext(CurrentUserContext).isLoggedIn;
 	const role = useContext(CurrentUserContext).currentRole;
@@ -102,12 +106,21 @@ const Header = ({
 					<MenuItem id="/signin" onClick={handleNavClose}>
 						<KeyboardArrowRightIcon /> Вход
 					</MenuItem>
-					<MenuItem id="/user-signup" onClick={handleNavClose}>
+					<MenuItem
+						id={`${
+							chechLocation('/business') || chechLocation('/business-signup')
+								? '/business-signup'
+								: '/user-signup'
+						}`}
+						onClick={handleNavClose}
+					>
 						<KeyboardArrowRightIcon /> Регистрация
 					</MenuItem>
-					<MenuItem id="/business" onClick={handleNavClose}>
-						<KeyboardArrowRightIcon /> Для ресторанов
-					</MenuItem>
+					{!chechLocation('/business') && (
+						<MenuItem id="/business" onClick={handleNavClose}>
+							<KeyboardArrowRightIcon /> Для ресторанов
+						</MenuItem>
+					)}
 				</Menu>
 			) : role === 'client' ? (
 				<Menu
