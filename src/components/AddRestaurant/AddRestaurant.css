@@ -264,30 +264,23 @@
 }
 
 .input__wrapper {
-	width: 100%;
-	position: relative;
-	margin: 15px 0;
-	text-align: center;
+	/* width: 100%;
+	position: relative; */
 }
 
 .input__file {
 	opacity: 0;
 	visibility: hidden;
 	position: absolute;
+	left: 0px;
 }
 
 .input__file-icon-wrapper {
 	height: 60px;
 	width: 60px;
 	margin-right: 15px;
-	display: -webkit-box;
-	display: -ms-flexbox;
 	display: flex;
-	-webkit-box-align: center;
-	-ms-flex-align: center;
 	align-items: center;
-	-webkit-box-pack: center;
-	-ms-flex-pack: center;
 	justify-content: center;
 	border-right: 1px solid #fff;
 }
@@ -301,7 +294,8 @@
 }
 
 .input__file-button {
-	margin: 0 auto;
+	/* margin: 0 auto; */
+	width: 156px;
 	height: 40px;
 	background-color: initial;
 	color: #fff;
@@ -324,7 +318,7 @@
 }
 
 .input__file-button::before {
-	padding-right: 10px;
+	padding-right: 5px;
 	display: flex;
 	align-items: center;
 	content: '';
