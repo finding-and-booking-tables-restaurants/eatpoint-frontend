@@ -3,8 +3,8 @@ import './FilterMenuCheckBox.css';
 
 interface FilterMenuCheckBoxProps {
 	text: string;
-	isChecked?: boolean;
-	onChange?: () => void;
+	isChecked: boolean;
+	onChange: () => void;
 }
 
 function FilterMenuCheckBox({

@@ -25,6 +25,9 @@ import {
 import { Restaurant } from '../../utils/constants';
 import RegisterFormUser from '../RegisterFormUser/RegisterFormUser';
 import LoginForm from '../LoginForm/LoginForm';
+import NotFoundPage from '../NotFoundPage/NotFoundPage';
+import BusinessProfile from '../BusinessProfile/BusinessProfile';
+import TEST from '../TEST/TEST';
 import Profile from '../Profile/Profile';
 import CurrentUserContext from '../../contexts/CurrentUserContext';
 import UserBookings from '../UserBookings/UserBookings';
@@ -241,7 +244,7 @@ function App() {
 							element={<BookingPage userData={currentUser} id={item.id} />}
 						/>
 					))}
-					<Route path="/add-restaurant" element={<AddRestaurant />}></Route>
+
 					<Route
 						path="/user-signup"
 						element={
@@ -282,6 +285,10 @@ function App() {
 						}
 					/>
 					<Route path="/business" element={<BusinessLanding />} />
+					<Route path="/business-profile" element={<BusinessProfile />} />
+					<Route path="/add-restaurant" element={<AddRestaurant />}></Route>
+					<Route path="/test" element={<TEST></TEST>}></Route>
+					<Route path="*" element={<NotFoundPage></NotFoundPage>}></Route>
 				</Routes>
 			</CurrentUserContext.Provider>
 		</div>

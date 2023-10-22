@@ -1,4 +1,5 @@
 import { API_URL } from './constants';
+import { RestaurantData } from '../types/addRestaurantTypes';
 
 class MainApi {
 	private _baseUrl: string;
@@ -20,6 +21,17 @@ class MainApi {
 	searchQuery(query: string) {
 		return this._sendFetchRequest(`/establishments/?search=${query}`, {
 			headers: this._headers,
+		});
+	}
+
+	createEstablishment(data: RestaurantData) {
+		return this._sendFetchRequest(`/api/v1/establishments/`, {
+			method: 'POST',
+			headers: {
+				authorization: 'Bearer ' + localStorage.getItem('access-token'),
+				'Content-Type': 'application/json',
+			},
+			body: JSON.stringify(data),
 		});
 	}
 }
