@@ -74,9 +74,11 @@ function App() {
 	useEffect(() => {
 		const fetchData = async () => {
 			try {
-				const response = await fetch(`${API_URL}/api/v1/establishments`);
+				const response = await fetch(
+					`${API_URL}/api/v1/establishments/?page_size=50`
+				);
 				const data = await response.json();
-				setAllEstablishments(data.results);
+				setAllEstablishments(data.results.reverse());
 			} catch (error) {
 				console.error('Error fetching data:', error);
 			}
@@ -98,6 +100,7 @@ function App() {
 					}
 				}
 				setIsLoggedIn(true);
+				setAuthErrorMessage('');
 				navigate('/', { replace: true });
 			})
 			.catch((err) => {
@@ -135,9 +138,9 @@ function App() {
 			})
 			.then(() => {
 				setIsSuccessRegister(true);
+				setRegErrorMessage('');
 			})
 			.catch((err) => {
-				console.log('register-error:', err);
 				if (err === ERROR_409) {
 					setRegErrorMessage(EMAIL_ALREADY_REGISTERED_MESSAGE);
 				} else if (err === ERROR_400) {
@@ -153,7 +156,7 @@ function App() {
 		const fetchData = async () => {
 			try {
 				const response = await fetch(
-					`${API_URL}/api/v1/establishments/?search=${query}`
+					`${API_URL}/api/v1/establishments/?page_size=50&search=${query}`
 				);
 				const data = await response.json();
 
@@ -261,7 +264,6 @@ function App() {
 							/>
 						}
 					/>
-					<Route path="/signin" element={<LoginForm onLogin={handleLogin} />} />
 					<Route
 						path="/user-profile"
 						element={isLoggedIn ? <Profile /> : <Navigate to="/" />}

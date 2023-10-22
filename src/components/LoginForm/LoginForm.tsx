@@ -114,6 +114,17 @@ const LoginForm: React.FC<ILoginFormProps> = ({
 							backgroundColor: '#FDFAF2',
 						}}
 					/>
+					<span
+						style={{
+							display: 'block',
+							minHeight: '15px',
+							color: 'red',
+							fontSize: '10px',
+							margin: '5px',
+						}}
+					>
+						{requestErrorMessage}
+					</span>
 					<FormControlLabel
 						control={
 							<Checkbox
