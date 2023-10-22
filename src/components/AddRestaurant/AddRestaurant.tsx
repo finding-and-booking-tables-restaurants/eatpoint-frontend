@@ -1,6 +1,6 @@
 import './AddRestaurant.css';
 import { useState, ChangeEvent } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import {
 	availableKitchen,
 	availableType,
@@ -14,6 +14,7 @@ import { RestaurantData } from '../../types/addRestaurantTypes';
 import { mainApi } from '../../utils/mainApi';
 
 function AddRestaurant() {
+	const navigate = useNavigate();
 	const [formData, setFormData] = useState<RestaurantData>({
 		name: '',
 		types: [],
@@ -190,11 +191,12 @@ function AddRestaurant() {
 
 		mainApi
 			.createEstablishment(formDataSend)
-			.then((res) => {
-				console.log(res);
+			.then(() => {
+				navigate('/business-profile');
 			})
 			.catch((err) => {
 				console.log(err);
+				alert('Что-то пошло не так');
 			});
 	}
 
