@@ -57,26 +57,27 @@ const RegisterFormUser: React.FC<IRegisterFormUserProps> = ({
 	};
 
 	useEffect(() => {
-		const requiredFields = [
-			firstName,
-			lastName,
-			telephone,
-			email,
-			password,
-			confirmPassword,
-			isAgreement,
-		];
-		const isFormFilled = requiredFields.every(
-			(field) => field !== '' && field !== false
-		);
-		setIsFormValid(isFormFilled);
+		if (
+			password !== confirmPassword ||
+			!firstName ||
+			!lastName ||
+			!telephone! ||
+			!email ||
+			!password ||
+			!confirmPassword ||
+			!isAgreement
+		) {
+			setIsFormValid(false);
+		} else {
+			setIsFormValid(true);
+		}
 	}, [
-		firstName,
-		lastName,
-		telephone,
-		email,
 		password,
 		confirmPassword,
+		firstName,
+		lastName,
+		email,
+		telephone,
 		isAgreement,
 	]);
 
@@ -164,7 +165,7 @@ const RegisterFormUser: React.FC<IRegisterFormUserProps> = ({
 							fullWidth
 							sx={{ backgroundColor: '#FDFAF2' }}
 						/>
-						{/* <TextField
+						<TextField
 							margin="dense"
 							variant="outlined"
 							placeholder="Пароль повторно"
@@ -173,7 +174,7 @@ const RegisterFormUser: React.FC<IRegisterFormUserProps> = ({
 							required
 							fullWidth
 							style={{ backgroundColor: '#FDFAF2' }}
-						/> */}
+						/>
 						<span
 							style={{
 								display: 'block',
@@ -236,6 +237,7 @@ const RegisterFormUser: React.FC<IRegisterFormUserProps> = ({
 							<Button
 								type="submit"
 								variant="contained"
+								disabled={!isFormValid}
 								sx={{
 									backgroundColor: '#05887B',
 									borderRadius: '100px',
