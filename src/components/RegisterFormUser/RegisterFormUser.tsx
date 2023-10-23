@@ -23,7 +23,6 @@ const RegisterFormUser: React.FC<IRegisterFormUserProps> = ({
 	onRegistration,
 	requestErrorMessage,
 	isSuccessRegister,
-	role,
 }) => {
 	const navigate = useNavigate();
 	const [firstName, setFirstName] = useState('');
@@ -45,7 +44,7 @@ const RegisterFormUser: React.FC<IRegisterFormUserProps> = ({
 			password,
 			confirmPassword,
 			is_agreement: isAgreement,
-			role: role,
+			role: 'client',
 			confirm_code_send_method: 'nothing',
 		};
 
@@ -135,7 +134,7 @@ const RegisterFormUser: React.FC<IRegisterFormUserProps> = ({
 							variant="outlined"
 							name="telephone"
 							placeholder="Моб. телефон"
-							type="number"
+							type="text"
 							id="phone"
 							onChange={(e) => setPhone(e.target.value)}
 							required
@@ -149,7 +148,7 @@ const RegisterFormUser: React.FC<IRegisterFormUserProps> = ({
 							variant="outlined"
 							placeholder="Эл. почта"
 							name="email"
-							type="email"
+							type="text"
 							onChange={(e) => setEmail(e.target.value)}
 							required
 							fullWidth
