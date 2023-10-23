@@ -56,26 +56,27 @@ const RegisterFormUser: React.FC<IRegisterFormUserProps> = ({
 	};
 
 	useEffect(() => {
-		const requiredFields = [
-			firstName,
-			lastName,
-			telephone,
-			email,
-			password,
-			confirmPassword,
-			isAgreement,
-		];
-		const isFormFilled = requiredFields.every(
-			(field) => field !== '' && field !== false
-		);
-		setIsFormValid(isFormFilled);
+		if (
+			password !== confirmPassword ||
+			!firstName ||
+			!lastName ||
+			!telephone! ||
+			!email ||
+			!password ||
+			!confirmPassword ||
+			!isAgreement
+		) {
+			setIsFormValid(false);
+		} else {
+			setIsFormValid(true);
+		}
 	}, [
-		firstName,
-		lastName,
-		telephone,
-		email,
 		password,
 		confirmPassword,
+		firstName,
+		lastName,
+		email,
+		telephone,
 		isAgreement,
 	]);
 
@@ -173,6 +174,17 @@ const RegisterFormUser: React.FC<IRegisterFormUserProps> = ({
 							fullWidth
 							style={{ backgroundColor: '#FDFAF2' }}
 						/>
+						<span
+							style={{
+								display: 'block',
+								minHeight: '15px',
+								color: 'red',
+								fontSize: '10px',
+								margin: '5px',
+							}}
+						>
+							{requestErrorMessage}
+						</span>
 						<FormControlLabel
 							control={
 								<Checkbox
