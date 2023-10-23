@@ -1,5 +1,7 @@
 import './SearchInput.css';
 import { MouseEvent, ChangeEvent } from 'react';
+import SearchIcon from '@mui/icons-material/Search';
+import Button from '@mui/material/Button';
 interface SearchInputProps {
 	handleFilterClick: (evt: MouseEvent<HTMLButtonElement>) => void;
 	query: string;
@@ -26,7 +28,23 @@ function SearchInput({
 				onChange={handleInputChange}
 				required
 			/>
-			{isSearching && (
+			{!isSearching ? (
+				<Button
+					sx={{
+						padding: '0',
+						minWidth: '0',
+						color: '#49454F',
+						position: 'absolute',
+						width: '24px',
+						height: '24px',
+						right: '10px',
+						top: '13px',
+					}}
+					type="submit"
+				>
+					<SearchIcon />
+				</Button>
+			) : (
 				<button
 					className="search-input__filter-btn"
 					type="button"

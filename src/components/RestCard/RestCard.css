@@ -1,8 +1,8 @@
 .card {
 	display: flex;
 	flex-direction: column;
-	border: 1px #79747e solid;
-	box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+	/* border: 1px #79747e solid; */
+	/* box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1); */
 	border-radius: 2px;
 	background-color: white;
 	position: relative;
@@ -75,6 +75,7 @@
 .card__adress {
 	margin: 0;
 	overflow: hidden;
+	text-wrap: nowrap;
 	color: #49454f;
 	text-overflow: ellipsis;
 	font-size: 14px;
