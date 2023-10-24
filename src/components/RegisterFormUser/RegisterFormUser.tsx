@@ -23,6 +23,7 @@ const RegisterFormUser: React.FC<IRegisterFormUserProps> = ({
 	onRegistration,
 	requestErrorMessage,
 	isSuccessRegister,
+	role,
 }) => {
 	const navigate = useNavigate();
 	const [firstName, setFirstName] = useState('');
@@ -44,7 +45,7 @@ const RegisterFormUser: React.FC<IRegisterFormUserProps> = ({
 			password,
 			confirmPassword,
 			is_agreement: isAgreement,
-			role: 'client',
+			role: role,
 			confirm_code_send_method: 'nothing',
 		};
 
