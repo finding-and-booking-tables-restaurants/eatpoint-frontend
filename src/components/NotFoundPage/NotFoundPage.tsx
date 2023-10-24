@@ -1,7 +1,6 @@
 import './NotFoundPage.css';
 import coffeeImg from '../../images/coffee.png';
-import Stack from '@mui/material/Stack';
-import Button from '@mui/material/Button';
+import { Button, Typography, Stack } from '@mui/material';
 import Header from '../Header/Header';
 
 export default function NotFoundPage() {
@@ -24,16 +23,36 @@ export default function NotFoundPage() {
 						<Button
 							href="/"
 							variant="contained"
-							style={{ backgroundColor: '#00645A' }}
+							style={{ backgroundColor: '#05887B', borderRadius: '50px' }}
 						>
-							Новый Поиск
+							<Typography
+								textTransform="none"
+								fontSize="14px"
+								fontWeight="500"
+								lineHeight="20px"
+								letterSpacing="0.1px"
+							>
+								Новый Поиск
+							</Typography>
 						</Button>
 						<Button
 							href="/"
 							variant="outlined"
-							style={{ color: '#00645A', borderColor: '#00645A' }}
+							style={{
+								color: '#05887B',
+								borderColor: '#05887B',
+								borderRadius: '50px',
+							}}
 						>
-							Вернуться на Главную
+							<Typography
+								textTransform="none"
+								fontSize="14px"
+								fontWeight="500"
+								lineHeight="20px"
+								letterSpacing="0.1px"
+							>
+								Вернуться на Главную
+							</Typography>
 						</Button>
 					</Stack>
 				</div>
