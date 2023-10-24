@@ -2,8 +2,6 @@ import { TextField, Button, Typography, Box, Container } from '@mui/material';
 import React, { useContext, useEffect, useState } from 'react';
 import Header from '../Header/Header';
 import Footer from '../Footer/Footer';
-import { mainApi } from '../../utils/mainApi';
-import usersApi from '../../utils/UsersApi';
 import CurrentUserContext from '../../contexts/CurrentUserContext';
 
 const Profile: React.FC = () => {

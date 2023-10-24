@@ -21,7 +21,8 @@ const Header = ({
 	};
 
 	const isLoggedIn = useContext(CurrentUserContext).isLoggedIn;
-	const role = useContext(CurrentUserContext).currentRole;
+	let role = useContext(CurrentUserContext).currentRole;
+	if (!role) role = 'client';
 	const handleLogOut = useContext(CurrentUserContext).handleLogOut;
 
 	const [city, setCity] = useState('Москва');
