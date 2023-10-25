@@ -24,8 +24,7 @@ function MyTimePicker() {
 			sx={{
 				backgroundColor: '#FCF8EA',
 				maxWidth: 328,
-				minWidth: 151,
-				ml: 'auto',
+				minWidth: 160,
 			}}
 			SelectProps={{
 				IconComponent: () => (

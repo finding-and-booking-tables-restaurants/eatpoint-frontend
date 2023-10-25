@@ -8,7 +8,7 @@
 
 .search-results__flex-box {
 	display: flex;
-	gap: 46px;
+	gap: 8px;
 }
 
 .search-results__title {

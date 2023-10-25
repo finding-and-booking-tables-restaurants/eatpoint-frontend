@@ -53,7 +53,7 @@ export default function DatePickerValue() {
 							maxWidth: 160,
 						},
 						'.MuiInputBase-root': {
-							maxWidth: 151,
+							maxWidth: 160,
 							minHeight: 56,
 							backgroundColor: '#FCF8EA',
 						},
