@@ -91,7 +91,7 @@ class UsersApi {
 				email: email,
 				first_name: firstName,
 				last_name: lastName,
-				role: 'client',
+				role: role,
 			}),
 		}).then(this._handleResponse);
 	}
