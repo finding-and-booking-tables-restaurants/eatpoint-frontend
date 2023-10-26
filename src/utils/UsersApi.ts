@@ -1,5 +1,5 @@
 import { IRegisterFormData, ILoginFormData } from '../types/commonTypes';
-import { API_URL, UserData } from './constants';
+import { API_URL } from './constants';
 
 class UsersApi {
 	private _baseUrl: string;
@@ -63,6 +63,37 @@ class UsersApi {
 		}).then((res) =>
 			this._handleResponse<{ access: string; refresh: string }>(res)
 		);
+	}
+
+	updateUserInfo({
+		telephone,
+		email,
+		firstName,
+		lastName,
+		role,
+	}: {
+		telephone: string;
+		email: string;
+		firstName: string;
+		lastName: string;
+		role: string;
+	}): Promise<any> {
+		const token = localStorage.getItem('access-token');
+
+		return fetch(`${this._baseUrl}/api/v1/users/me/`, {
+			method: 'PATCH',
+			headers: {
+				authorization: `Bearer ${token}`,
+				...this._headers,
+			},
+			body: JSON.stringify({
+				telephone: telephone,
+				email: email,
+				first_name: firstName,
+				last_name: lastName,
+				role: 'client',
+			}),
+		}).then(this._handleResponse);
 	}
 
 	getUserInfo(): Promise<any> {

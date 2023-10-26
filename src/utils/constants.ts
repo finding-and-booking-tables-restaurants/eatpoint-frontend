@@ -365,11 +365,6 @@ export const timesForTimePicker = [
 	'23:30',
 ];
 
-const EMAIL_REGEX = '^[a-zA-Z0-9+_.\\-]+@[a-zA-Z0-9]+\\.[a-zA-Z0-9]{2,4}$';
-const NAME_REGEX = '^[a-zA-Z\u0430-\u044f\u0410-\u042f]+$';
-const PHONE_NUMBER_REGEX =
-	'/^(+?d{1,4}[s-]?)?(()?(d{1,4})(?(2)))?[s-]?d{1,4}[s-]?d{1,9}$/';
-
 const ERROR = 'Ошибка';
 const ERROR_400 = 'Error: 400';
 const ERROR_401 = 'Error: 401';
@@ -382,6 +377,9 @@ const REG_ERROR_MESSAGE = 'При регистрации пользовател�
 const INVALID_AUTH_DATA_ERROR_MESSAGE =
 	'Вы ввели неправильный логин или пароль.';
 const AUTH_ERROR_MESSAGE = 'При авторизации пользователя произошла ошибка.';
+const UPDATE_USER_INFO_ERROR_MESSAGE =
+	'При обновлении профиля произошла ошибка.';
+const UPDATE_USER_INFO_MESSAGE = 'Данные успешно обновлены';
 
 export {
 	ERROR,
@@ -393,6 +391,8 @@ export {
 	REG_ERROR_MESSAGE,
 	AUTH_ERROR_MESSAGE,
 	INVALID_AUTH_DATA_ERROR_MESSAGE,
+	UPDATE_USER_INFO_ERROR_MESSAGE,
+	UPDATE_USER_INFO_MESSAGE,
 };
 
 export const API_URL = 'https://eatpoint.sytes.net';

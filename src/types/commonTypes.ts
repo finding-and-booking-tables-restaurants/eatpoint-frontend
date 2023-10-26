@@ -27,9 +27,25 @@ interface ILoginFormProps {
 	requestErrorMessage?: string;
 }
 
+interface IUserFormData {
+	telephone: string;
+	email: string;
+	firstName: string;
+	lastName: string;
+	role: string;
+}
+
+interface IUserFormProps {
+	onUpdateUserInfo: (formData: IUserFormData) => void;
+	isSuccessUpdateUser: boolean;
+	setIsSuccessUpdateUser: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
 export type {
 	IRegisterFormData,
 	IRegisterFormUserProps,
 	ILoginFormData,
 	ILoginFormProps,
+	IUserFormData,
+	IUserFormProps,
 };

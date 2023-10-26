@@ -7,10 +7,14 @@ import { useEffect, useState } from 'react';
 import { Routes, Route, useNavigate, Navigate } from 'react-router-dom';
 import RestaurantPage from '../RestaurantPage/RestaurantPage';
 import BookingPage from '../BookingPage/BookingPage';
-
-import { ILoginFormData, IRegisterFormData } from '../../types/commonTypes';
+import {
+	ILoginFormData,
+	IRegisterFormData,
+	IUserFormData,
+} from '../../types/commonTypes';
 import usersApi from '../../utils/UsersApi';
 import {
+	ERROR,
 	ERROR_400,
 	ERROR_401,
 	ERROR_409,
@@ -38,6 +42,7 @@ function App() {
 	const [currentRole, setCurrentRole] = useState('');
 	const [authErrorMessage, setAuthErrorMessage] = useState('');
 	const [regErrorMessage, setRegErrorMessage] = useState('');
+	const [isSuccessUpdateUser, setIsSuccessUpdateUser] = useState(false);
 	const [isLoggedIn, setIsLoggedIn] = useState(false);
 	const [isSuccessRegister, setIsSuccessRegister] = useState(false);
 	const [allEstablishments, setAllEstablishments] = useState<Restaurant[]>([]);
@@ -151,6 +156,24 @@ function App() {
 				} else {
 					setRegErrorMessage(REG_ERROR_MESSAGE);
 				}
+			});
+	};
+
+	// Обновление профиля
+	const handleUpdateUserInfo = (userInfo: IUserFormData) => {
+		usersApi
+			.updateUserInfo(userInfo)
+			.then((user) => {
+				setCurrentUser(user);
+				setIsSuccessUpdateUser(true);
+			})
+			.catch((error) => {
+				if (error === ERROR_409) {
+					setIsSuccessUpdateUser(false);
+				} else {
+					setIsSuccessUpdateUser(false);
+				}
+				console.log(`${ERROR}: ${error}`);
 			});
 	};
 
@@ -269,7 +292,17 @@ function App() {
 					/>
 					<Route
 						path="/user-profile"
-						element={isLoggedIn ? <Profile /> : <Navigate to="/" />}
+						element={
+							isLoggedIn ? (
+								<Profile
+									onUpdateUserInfo={handleUpdateUserInfo}
+									isSuccessUpdateUser={isSuccessUpdateUser}
+									setIsSuccessUpdateUser={setIsSuccessUpdateUser}
+								/>
+							) : (
+								<Navigate to="/" />
+							)
+						}
 					/>
 					<Route
 						path="/user-bookings"
