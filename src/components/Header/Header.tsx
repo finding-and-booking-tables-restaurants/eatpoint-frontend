@@ -82,11 +82,7 @@ const Header = ({
 				}}
 			>
 				{cities.map((city: string, index: number) => (
-					<MenuItem
-						style={{ backgroundColor: '#FCF7E4' }}
-						key={index}
-						onClick={handleCityMenuClose}
-					>
+					<MenuItem key={index} onClick={handleCityMenuClose}>
 						{city}
 					</MenuItem>
 				))}

@@ -92,7 +92,11 @@
 }
 
 .restaurant-page__average-check {
-	color: #49454f;
+	color: #49454f81;
+}
+
+.restaurant-page__average-check_black {
+	color: #000;
 }
 
 .restaurant-page__address-container {
@@ -105,6 +109,7 @@
 	justify-content: space-between;
 	box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.15);
 	padding: 8px;
+	border-radius: 8px;
 }
 
 .restaurant-page__address-text {
@@ -140,6 +145,7 @@
 	flex-wrap: wrap;
 	gap: 8px;
 	width: 100%;
+	margin-bottom: 24px;
 }
 
 .restaurant-page__feature {
@@ -157,9 +163,9 @@
 .restaurant-page__description {
 	display: flex;
 	flex-direction: column;
-	align-items: flex-end;
-	overflow: hidden;
 	max-width: 100%;
+	word-break: break-all;
+	margin-bottom: 24px;
 }
 
 .restaurant-page__description-text {
@@ -167,7 +173,6 @@
 	font-weight: 400;
 	line-height: 24px;
 	letter-spacing: 0.5px;
-	margin-bottom: 11px;
 }
 
 .restaurant-page__description-more-btn {
@@ -178,6 +183,8 @@
 	font-weight: 500;
 	line-height: 20px;
 	letter-spacing: 0.1px;
+	width: fit-content;
+	align-self: flex-end;
 }
 
 .restaurant-page__description-more-btn:hover {
@@ -197,6 +204,7 @@
 	line-height: 32px;
 	padding-left: 5px;
 	margin-bottom: 29px;
+	margin-top: 24px;
 }
 
 .restaurant-page__zone-container {

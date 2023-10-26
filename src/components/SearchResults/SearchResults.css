@@ -1,14 +1,22 @@
 .search-results {
-	padding: 0 16px;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
 }
 
 .search-results__bg-box {
-	max-width: 360px;
+	width: 100%;
+	margin: auto;
+	display: flex;
+	flex-direction: column;
+	align-content: center;
 }
 
 .search-results__flex-box {
 	display: flex;
-	gap: 46px;
+	gap: 8px;
+	margin: auto;
 }
 
 .search-results__title {

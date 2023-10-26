@@ -6,6 +6,7 @@ import plusIcon from '../../images/plus-icon.svg';
 import calenderIcon from '../../images/calender-icon.svg';
 import messageIcon from '../../images/message-icon.svg';
 import { useNavigate } from 'react-router';
+import { calculateBlackRubles } from '../../utils/calculateBlackRubles';
 
 const RestCard: React.FC<RestCardProps> = ({
 	img,
@@ -15,6 +16,7 @@ const RestCard: React.FC<RestCardProps> = ({
 	reviews,
 	search,
 	id,
+	average_check,
 }) => {
 	const navigate = useNavigate();
 
@@ -42,6 +44,18 @@ const RestCard: React.FC<RestCardProps> = ({
 		navigate(`/establishment/${id}`);
 	};
 
+	const blackRublesCount = calculateBlackRubles(average_check);
+
+	const rubles = Array.from({ length: 4 }).map((_, index) => (
+		<span
+			key={index}
+			className={`card__average-bill
+				} ${index < blackRublesCount ? 'card__average-bill_black' : ''}`}
+		>
+			₽
+		</span>
+	));
+
 	return (
 		<div
 			className={`card ${
@@ -65,18 +79,14 @@ const RestCard: React.FC<RestCardProps> = ({
 						<img src={starIcon} alt="иконка рейтинга" />
 						<p className="card__rating">{rating}</p>
 					</div>
+					<div className={`${search && 'card__average-bill_search'}`}>
+						{rubles}
+					</div>
 					<div onClick={handeReviewsClick} className="card__reviews-contaner">
-						<img src={search ? messageIcon : plusIcon} alt="плюсик" />
+						<img src={messageIcon} alt="плюсик" />
 						<p className="card__reviews">{reviews}</p>
 					</div>
 					{search && bookButton}
-					<p
-						className={`${
-							search ? 'card__average-bill_search' : 'card__average-bill'
-						}`}
-					>
-						₽₽₽
-					</p>
 				</div>
 				{!search && bookButton}
 			</div>

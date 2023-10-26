@@ -5,8 +5,11 @@ import Header from '../Header/Header';
 import Footer from '../Footer/Footer';
 
 import './UserBookings.css';
+import { Button } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
 
 const UserBookings = () => {
+	const navigate = useNavigate();
 	const [userBookings, setUserBookings] = useState<any[]>([]);
 	const [isBokingsChanged, setIsBookingsChanged] = useState(false);
 
@@ -55,6 +58,21 @@ const UserBookings = () => {
 								: 'У вас пока нет бронирований'
 						}`}
 					</p>
+					{!userBookings.length && (
+						<Button
+							onClick={() => navigate('/')}
+							sx={{
+								background: '#05887B',
+								width: '328px',
+								borderRadius: '100px',
+								textTransform: 'none',
+								padding: '10px 24px',
+							}}
+							variant="contained"
+						>
+							К поиску ресторанов
+						</Button>
+					)}
 
 					{UserBooking.length &&
 						userBookings.map((booking, index) => (
