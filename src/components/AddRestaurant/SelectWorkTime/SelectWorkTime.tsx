@@ -1,15 +1,13 @@
-import './SelectTime.css';
+import './SelectWorkTime.css';
 import * as React from 'react';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
-import { times } from '../../../utils/constants';
+import { timesForTimePicker } from '../../../utils/constants';
 
 interface SelectWorkTimeProps {
 	text: string;
-	onTimeChange?:
-		| ((day: string, start: string, end: string, day_off: boolean) => void)
-		| undefined;
+	onTimeChange?: ((start: string, end: string) => void) | undefined;
 }
 
 const ITEM_HEIGHT = 48;
@@ -24,24 +22,10 @@ const MenuProps = {
 };
 
 function SelectWorkTime({ text, onTimeChange }: SelectWorkTimeProps) {
-	const [timeStart, setTimeStart] = React.useState<string>(times[0]);
-	const [timeEnd, setTimeEnd] = React.useState<string>(times[0]);
-
-	// const handleChangeTimeStart = (
-	// 	event: SelectChangeEvent<typeof timeStart>
-	// ) => {
-	// 	const {
-	// 		target: { value },
-	// 	} = event;
-	// 	setTimeStart(value);
-	// };
-
-	// const handleChangeTimeEnd = (event: SelectChangeEvent<typeof timeEnd>) => {
-	// 	const {
-	// 		target: { value },
-	// 	} = event;
-	// 	setTimeEnd(value);
-	// };
+	const [timeStart, setTimeStart] = React.useState<string>(
+		timesForTimePicker[0]
+	);
+	const [timeEnd, setTimeEnd] = React.useState<string>(timesForTimePicker[0]);
 
 	const handleChangeTimeStart = (
 		event: SelectChangeEvent<typeof timeStart>
@@ -51,9 +35,8 @@ function SelectWorkTime({ text, onTimeChange }: SelectWorkTimeProps) {
 		} = event;
 		setTimeStart(value);
 
-		// Вызовите функцию, переданную через `onTimeChange`, для обновления данных в родительском компоненте
 		if (onTimeChange) {
-			onTimeChange(text.toLowerCase(), value, timeEnd, false);
+			onTimeChange(value, timeEnd);
 		}
 	};
 
@@ -63,9 +46,8 @@ function SelectWorkTime({ text, onTimeChange }: SelectWorkTimeProps) {
 		} = event;
 		setTimeEnd(value);
 
-		// Вызовите функцию, переданную через `onTimeChange`, для обновления данных в родительском компоненте
 		if (onTimeChange) {
-			onTimeChange(text.toLowerCase(), timeStart, value, false);
+			onTimeChange(timeStart, value);
 		}
 	};
 
@@ -82,7 +64,7 @@ function SelectWorkTime({ text, onTimeChange }: SelectWorkTimeProps) {
 					MenuProps={MenuProps}
 					sx={{ backgroundColor: '#FDFAF2' }}
 				>
-					{times.map((time, i) => (
+					{timesForTimePicker.map((time, i) => (
 						<MenuItem key={i} value={time} sx={{ backgroundColor: '#FDFAF2' }}>
 							{time}
 						</MenuItem>
@@ -99,7 +81,7 @@ function SelectWorkTime({ text, onTimeChange }: SelectWorkTimeProps) {
 					MenuProps={MenuProps}
 					sx={{ backgroundColor: '#FDFAF2' }}
 				>
-					{times.map((time, i) => (
+					{timesForTimePicker.map((time, i) => (
 						<MenuItem key={i} value={time} sx={{ backgroundColor: '#FDFAF2' }}>
 							{time}
 						</MenuItem>

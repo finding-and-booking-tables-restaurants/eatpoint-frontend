@@ -3,15 +3,31 @@ import RestaurantImage from '../../../images/business-profile__restaurant-image.
 import RatingIcon from '../../../images/star-icon.svg';
 import ReviewsIcon from '../../../images/message-icon.svg';
 
-function RestaurantItem() {
+interface RestaurantItemProps {
+	id?: number;
+	name: string;
+	cities: string;
+	address: string;
+	poster: string;
+	avarage_check: string;
+}
+
+function RestaurantItem({
+	id,
+	name,
+	cities,
+	address,
+	poster,
+	avarage_check,
+}: RestaurantItemProps) {
 	return (
 		<li className="restaurant">
 			<div className="restaurant__box-card">
 				<div className="restaurant__box-info">
-					<img src={RestaurantImage} className="restaurant__image" />
+					<img src={poster} className="restaurant__image" />
 					<div>
-						<p className="restaurant__title">Бахрома 1</p>
-						<p className="restaurant__place">{`${'Москва'}, ул. Такая-то д.15`}</p>
+						<p className="restaurant__title">{name}</p>
+						<p className="restaurant__place">{`${cities}, ${address}`}</p>
 					</div>
 					<button className="restaurant__editBtn"></button>
 				</div>
@@ -24,7 +40,7 @@ function RestaurantItem() {
 						<img src={ReviewsIcon}></img>
 						<span className="restaurant__reviews-num">76</span>
 					</div>
-					<p>₽₽₽</p>
+					<p>{`${avarage_check}`} ₽</p>
 				</div>
 				<div className="restaurant__box-optionBtn">
 					<button className="restaurant__optionBtn restaurant__optionBtn_reservation">

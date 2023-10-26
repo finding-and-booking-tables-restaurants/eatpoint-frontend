@@ -130,7 +130,7 @@ const BookingPage: FC<BookingPageProps> = ({ id, userData }) => {
 								{currentRestaurant?.cities}, {currentRestaurant?.address}
 							</p>
 							<p className="restaurant-page__phone">
-								+{currentRestaurant?.telephone}
+								{currentRestaurant?.telephone}
 							</p>
 						</div>
 						<div className="restaurant-page__map-icon">
