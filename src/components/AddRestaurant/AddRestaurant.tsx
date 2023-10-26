@@ -149,19 +149,13 @@ function AddRestaurant() {
 		}
 	}
 
-	const handleTimeChange = (
-		day: string,
-		start: string,
-		end: string,
-		dayOff: boolean
-	) => {
+	const handleTimeChange = (start: string, end: string) => {
 		setFormData((prevData) => {
-			const updatedWorked = prevData.worked.map((workedDay) => {
-				if (workedDay.day === day) {
-					return { day: day, start, end, dayOff };
-				}
-				return workedDay;
-			});
+			const updatedWorked = prevData.worked.map((workedDay) => ({
+				...workedDay,
+				start,
+				end,
+			}));
 
 			return {
 				...prevData,
@@ -322,19 +316,13 @@ function AddRestaurant() {
 					</div>
 					{/* <button className="add-restaurant__moreBtn">Еще</button> */}
 					<h3 className="add-restaurant__category">Режим работы (от, до)</h3>
-					<SelectWorkTime
-						text={'Понедельник'}
-						onTimeChange={handleTimeChange}
-					/>
-					<SelectWorkTime text={'Вторник'} onTimeChange={handleTimeChange} />
-					<SelectWorkTime text={'Среда'} onTimeChange={handleTimeChange} />
-					<SelectWorkTime text={'Четверг'} onTimeChange={handleTimeChange} />
-					<SelectWorkTime text={'Пятница'} onTimeChange={handleTimeChange} />
-					<SelectWorkTime text={'Суббота'} onTimeChange={handleTimeChange} />
-					<SelectWorkTime
-						text={'Воскресенье'}
-						onTimeChange={handleTimeChange}
-					/>
+					<SelectWorkTime text={'Пн'} onTimeChange={handleTimeChange} />
+					<SelectWorkTime text={'Вт'} onTimeChange={handleTimeChange} />
+					<SelectWorkTime text={'Ср'} onTimeChange={handleTimeChange} />
+					<SelectWorkTime text={'Чт'} onTimeChange={handleTimeChange} />
+					<SelectWorkTime text={'Пт'} onTimeChange={handleTimeChange} />
+					<SelectWorkTime text={'Сб'} onTimeChange={handleTimeChange} />
+					<SelectWorkTime text={'Вс'} onTimeChange={handleTimeChange} />
 					<h3 className="add-restaurant__category">Средний чек</h3>
 					<ul className="add-restaurant__radio-list">
 						<FilterMenuCheckBox
