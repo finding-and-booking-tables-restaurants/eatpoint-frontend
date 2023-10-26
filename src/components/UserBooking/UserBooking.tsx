@@ -4,6 +4,7 @@ import Button from '@mui/material/Button';
 import CloseIcon from '@mui/icons-material/Close';
 import placeIcon from '../../images/place-icon-black.svg';
 import notifIcon from '../../images/notification-icon.svg';
+import { pluralizePeople } from '../../utils/pluralizePeople';
 
 interface UserBookingProps {
 	poster: string;
@@ -46,7 +47,7 @@ const UserBooking: FC<UserBookingProps> = ({
 				<div className="user-booking__info-container">
 					<p className="user-booking__time">{date + ', ' + time}</p>
 					<p className="user-booking__people">
-						{people + ' человек(а), ' + zone}
+						{pluralizePeople(people) + ', ' + zone}
 					</p>
 				</div>
 				<div className="user-booking__adress-container">

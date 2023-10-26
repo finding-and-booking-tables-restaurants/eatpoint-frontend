@@ -3,8 +3,6 @@
 	display: flex;
 	flex-direction: column;
 	gap: 16px;
-	align-items: center;
-	background: linear-gradient(white 51vh, #fff3c8 51vh 100vh);
 }
 
 .rating-and-reviews__heading {
@@ -28,6 +26,7 @@
 	text-decoration: none;
 	width: 328px;
 	height: 40px;
+	border-radius: 100px;
 }
 
 .rating-and-reviews__container {
