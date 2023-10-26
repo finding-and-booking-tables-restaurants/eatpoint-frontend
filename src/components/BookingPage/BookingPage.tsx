@@ -109,12 +109,11 @@ const BookingPage: FC<BookingPageProps> = ({ id, userData }) => {
 					adress={currentRestaurant?.address}
 					date={dataToSend.date_reservation}
 					time={dataToSend.start_time_reservation}
-					numOfPeople={dataToSend.number_guests}
+					numOfPeople={Number(dataToSend.number_guests)}
 					id={currentRestaurant?.id}
 				/>
 			) : (
 				<>
-					<Header />
 					<div className="booking-page__heading">
 						<button
 							className="booking-page__back-btn"
@@ -124,7 +123,6 @@ const BookingPage: FC<BookingPageProps> = ({ id, userData }) => {
 						</button>
 						<h1 className="booking-page__title">Бронирование</h1>
 					</div>
-
 					<div className="restaurant-page__address-container restaurant-page__address-container-booking">
 						<div>
 							<p className="restaurant-page__address-text">Адрес</p>
@@ -139,7 +137,7 @@ const BookingPage: FC<BookingPageProps> = ({ id, userData }) => {
 							<MapOutlinedIcon fontSize="medium" style={{ color: '#05887B' }} />
 						</div>
 					</div>
-					<BookingForm onSubmit={handleSubmit}>
+					<BookingForm booking onSubmit={handleSubmit}>
 						<TextField
 							id="outlined-select-currency"
 							select
@@ -179,9 +177,7 @@ const BookingPage: FC<BookingPageProps> = ({ id, userData }) => {
 								}}
 							/>
 						))}
-						<p className="booking-page__comment">
-							Сообщите нам о ваших пожеланиях
-						</p>
+						<p className="booking-page__comment">Введите ваши пожелания</p>
 						<div className="checkbox-container">
 							<Checkbox
 								required
@@ -198,7 +194,6 @@ const BookingPage: FC<BookingPageProps> = ({ id, userData }) => {
 							{<TodayIcon />} Забронировать
 						</button>
 					</BookingForm>
-					<Footer />
 				</>
 			)}
 		</div>

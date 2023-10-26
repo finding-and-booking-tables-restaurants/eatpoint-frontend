@@ -1,11 +1,14 @@
 .search-form {
-	max-width: 328px;
 	display: flex;
 	flex-direction: column;
 	gap: 16px;
-	padding-top: 32px;
-	justify-content: center;
-	margin: auto;
+	padding: 30px 4.45vw;
+	background-color: #991a55;
+}
+
+.search-form_booking {
+	background-color: white;
+	padding: 24px 0;
 }
 
 .search-form__btn {
@@ -13,4 +16,6 @@
 	align-items: center;
 	justify-content: center;
 	gap: 8px;
+	border: none;
+	margin: auto;
 }

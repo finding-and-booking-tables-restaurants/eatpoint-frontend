@@ -1,19 +1,32 @@
-import React, { useState } from 'react';
+import React, { FC, useEffect, useState } from 'react';
 import selectedIcon from '../../images/selected-icon.svg';
 import './Reviews.css';
 import Review from '../Review/Review';
-import fakeReviews from '../../fakeData/fakeReviews';
+import { ReviewType } from '../../types/Reviews';
+import { pluralizeReviews } from '../../utils/pluralizeReviews';
 
-const Reviews = () => {
+interface ReviewsProps {
+	reviews: ReviewType[];
+}
+
+const Reviews: FC<ReviewsProps> = ({ reviews }) => {
 	const [isDateFilter, setIsDateFilter] = useState(true);
 	const [isRatingFilter, setRatingFilter] = useState(false);
 	const [displayedReviews, setDisplayedReviews] = useState(3);
-	const [filteredReviews, setFilteredReviews] = useState(fakeReviews);
+	const [filteredReviews, setFilteredReviews] = useState<ReviewType[]>([]);
+
+	function formatReviewDate(dateString: string) {
+		const date = new Date(dateString);
+		const day = date.getDate().toString().padStart(2, '0');
+		const month = (date.getMonth() + 1).toString().padStart(2, '0');
+		const year = date.getFullYear();
+		return `${day}.${month}.${year}`;
+	}
 
 	const filterByDate = () => {
-		const sortedReviews = [...fakeReviews].sort((a, b) => {
-			const dateA = new Date(b.date.split('.').reverse().join('-')).getTime();
-			const dateB = new Date(a.date.split('.').reverse().join('-')).getTime();
+		const sortedReviews = [...reviews].sort((a, b) => {
+			const dateA = new Date(b.created).getTime();
+			const dateB = new Date(a.created).getTime();
 			return dateA - dateB;
 		});
 		setFilteredReviews(sortedReviews);
@@ -22,7 +35,7 @@ const Reviews = () => {
 	};
 
 	const filterByRating = () => {
-		const sortedReviews = [...fakeReviews].sort((a, b) => b.rating - a.rating);
+		const sortedReviews = [...reviews].sort((a, b) => b.score - a.score);
 		setFilteredReviews(sortedReviews);
 		setIsDateFilter(false);
 		setRatingFilter(true);
@@ -32,15 +45,22 @@ const Reviews = () => {
 		setDisplayedReviews((prev) => prev + 3);
 	};
 
+	const handleFilterbyDate = () => {
+		filterByDate();
+	};
+
+	const handleFilterByRating = () => {
+		filterByRating();
+	};
+
 	return (
 		<section className="reviews">
 			<div className="reviews__heading">
 				<div className="reviews__amount">
-					<p>{fakeReviews.length}</p>
-					<p>отзывов</p>
+					<p>{pluralizeReviews(reviews.length)}</p>
 				</div>
 				<button
-					onClick={filterByDate}
+					onClick={handleFilterbyDate}
 					className={`reviews__filter-btn ${
 						isDateFilter && 'reviews__filter-btn_selected'
 					}`}
@@ -49,7 +69,7 @@ const Reviews = () => {
 					По дате
 				</button>
 				<button
-					onClick={filterByRating}
+					onClick={handleFilterByRating}
 					className={`reviews__filter-btn ${
 						isRatingFilter && 'reviews__filter-btn_selected'
 					}`}
@@ -59,17 +79,31 @@ const Reviews = () => {
 				</button>
 			</div>
 
-			{filteredReviews.slice(0, displayedReviews).map((review, index) => (
-				<Review
-					key={index}
-					name={review.name}
-					date={review.date}
-					text={review.text}
-					rating={review.rating}
-				/>
-			))}
+			{filteredReviews.length
+				? filteredReviews
+						.slice(0, displayedReviews)
+						.map((review, index) => (
+							<Review
+								key={index}
+								name={review.author.first_name + ' ' + review.author.last_name}
+								date={formatReviewDate(review.created)}
+								text={review.text}
+								rating={review.score}
+							/>
+						))
+				: reviews
+						.slice(0, displayedReviews)
+						.map((review, index) => (
+							<Review
+								key={index}
+								name={review.author.first_name + ' ' + review.author.last_name}
+								date={formatReviewDate(review.created)}
+								text={review.text}
+								rating={review.score}
+							/>
+						))}
 
-			{displayedReviews < filteredReviews.length && (
+			{displayedReviews < reviews.length && (
 				<button
 					onClick={handleLoadMoreReviews}
 					className="reviews__load-reviews-btn"

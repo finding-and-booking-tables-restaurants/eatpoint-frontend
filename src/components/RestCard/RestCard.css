@@ -89,7 +89,7 @@
 .card__additional-info {
 	display: inline-flex;
 	gap: 25px;
-	justify-content: center;
+	justify-content: start;
 	align-items: center;
 	margin: 18px 0;
 }
@@ -166,6 +166,11 @@
 .card__average-bill {
 	position: relative;
 	margin: 0;
+	color: #49454f98;
+}
+
+.card__average-bill_black {
+	color: black;
 }
 
 .card__average-bill_search {

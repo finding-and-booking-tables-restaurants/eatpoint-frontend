@@ -264,7 +264,13 @@ function App() {
 						<Route
 							key={item.id}
 							path={`/booking/${item.id}`}
-							element={<BookingPage userData={currentUser} id={item.id} />}
+							element={
+								<>
+									<Header />
+									<BookingPage userData={currentUser} id={item.id} />
+									<Footer />
+								</>
+							}
 						/>
 					))}
 

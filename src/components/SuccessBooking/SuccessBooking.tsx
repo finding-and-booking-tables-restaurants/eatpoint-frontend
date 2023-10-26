@@ -6,13 +6,14 @@ import '../BookingPage/BookingPage.css';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { useNavigate } from 'react-router-dom';
 import usersApi from '../../utils/UsersApi';
+import { pluralizePeople } from '../../utils/pluralizePeople';
 
 interface SuccessBookingProps {
 	restName?: string;
 	adress?: string;
 	date?: string;
 	time?: string;
-	numOfPeople?: string;
+	numOfPeople: number;
 	id?: number;
 	unBook: (value: boolean) => void;
 	bookingId: string;
@@ -73,7 +74,7 @@ const SuccessBooking: FC<SuccessBookingProps> = ({
 				<p className="success-booking__adress">{adress}</p>
 			</div>
 			<p className="success-booking__time-info">
-				{date} в {time}, {numOfPeople} персоны
+				{date} в {time}, {pluralizePeople(numOfPeople)}
 			</p>
 			{isBooked ? (
 				<Button

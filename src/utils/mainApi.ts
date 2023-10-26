@@ -18,6 +18,12 @@ class MainApi {
 		});
 	}
 
+	getEstablissmentData(id: number) {
+		return this._sendFetchRequest(`/api/v1/establishments/${id}`, {
+			headers: this._headers,
+		});
+	}
+
 	searchQuery(query: string) {
 		return this._sendFetchRequest(`/establishments/?search=${query}`, {
 			headers: this._headers,
@@ -32,6 +38,15 @@ class MainApi {
 				'Content-Type': 'application/json',
 			},
 			body: JSON.stringify(data),
+		});
+	}
+
+	getEstablishmentsReviews(id: number) {
+		return this._sendFetchRequest(`/api/v1/establishments/${id}/reviews/`, {
+			headers: {
+				authorization: 'Bearer ' + localStorage.getItem('access-token'),
+				'Content-Type': 'application/json',
+			},
 		});
 	}
 }

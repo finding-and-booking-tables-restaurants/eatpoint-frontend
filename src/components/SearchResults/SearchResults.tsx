@@ -10,6 +10,7 @@ import SearchBtn from '../SearchFormBtn/SearchBtn';
 import RestCard from '../RestCard/RestCard';
 import FilterMenu from '../FilterMenu/FilterMenu';
 import { Restaurant } from '../../utils/constants';
+import { formatRating } from '../../utils/formatRating';
 
 interface SearchResultsProps {
 	searchEstablishments: Restaurant[];
@@ -201,11 +202,13 @@ function SearchResults({
 							<RestCard
 								key={index}
 								name={restaurant.name}
-								rating={restaurant.rating}
+								rating={formatRating(restaurant.rating)}
 								img={restaurant.poster}
 								search={true}
 								address={restaurant.address}
 								id={restaurant.id}
+								reviews={restaurant.review_count}
+								average_check={restaurant.average_check}
 							/>
 						))}
 					</ul>

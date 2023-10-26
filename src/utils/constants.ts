@@ -97,14 +97,32 @@ export interface Restaurant {
 	socials: Social[];
 	images: Image[];
 	rating: number;
+	review_count: number;
 }
 
-export interface Review {
-	id: number;
-	username: string;
-	rating: number;
-	text: string;
-}
+export const initRestaurant = {
+	id: 0,
+	owner: 0,
+	name: '',
+	types: [],
+	cities: '',
+	address: '',
+	kitchens: [],
+	services: [],
+	zones: [],
+	average_check: '',
+	poster: '',
+	email: '',
+	telephone: '',
+	description: '',
+	is_verified: true,
+	worked: [],
+	is_favorited: true,
+	socials: [],
+	images: [],
+	rating: 0,
+	review_count: 0,
+};
 
 export interface UserData {
 	[key: string]: any;
@@ -262,6 +280,7 @@ export const inputs = [
 		required: false,
 		maxLength: 1500,
 		errorMessage: 'Длина введённого текста превышает 1500 символов',
+		helperText: 'Сообщите нам о ваших пожеланиях',
 	},
 ];
 
