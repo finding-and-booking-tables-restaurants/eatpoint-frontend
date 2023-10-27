@@ -22,7 +22,6 @@ import SuccessRegister from '../SuccessRegister/SuccessRegister';
 const RegisterFormUser: React.FC<IRegisterFormUserProps> = ({
 	onRegistration,
 	requestErrorMessage,
-	// isSuccessRegister,
 	role,
 }) => {
 	const navigate = useNavigate();

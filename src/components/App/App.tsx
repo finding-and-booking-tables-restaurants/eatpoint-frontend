@@ -43,7 +43,6 @@ function App() {
 	const [regErrorMessage, setRegErrorMessage] = useState('');
 	const [isSuccessUpdateUser, setIsSuccessUpdateUser] = useState(false);
 	const [isLoggedIn, setIsLoggedIn] = useState(false);
-	// const [isSuccessRegister, setIsSuccessRegister] = useState(false);
 	const [allEstablishments, setAllEstablishments] = useState<Restaurant[]>([]);
 	const [searchEstablishments, setSearchEstablishments] = useState<
 		Restaurant[]
