@@ -55,14 +55,30 @@ function App() {
 	const [isSearching, setIsSearching] = useState(false);
 
 	useEffect(() => {
-		const token = localStorage.getItem('access-token');
-		if (token) {
+		const accessToken = localStorage.getItem('access-token');
+		const refreshToken = localStorage.getItem('refresh-token');
+
+		if (accessToken) {
 			usersApi
 				.getUserInfo()
 				.then(() => {
 					setIsLoggedIn(true);
 				})
-				.catch((err) => console.log(err));
+				.catch((err) => {
+					console.log(err);
+					if (refreshToken) {
+						usersApi
+							.refreshToken(refreshToken)
+							.then((res) => {
+								if (!res) return;
+								localStorage.setItem('access-token', res.access);
+							})
+							.then(() => {
+								setIsLoggedIn(true);
+							})
+							.catch((err) => console.log(err));
+					}
+				});
 		}
 	}, []);
 
@@ -210,6 +226,7 @@ function App() {
 		setIsLoggedIn(false);
 		setCurrentRole('');
 		setCurrentUser({});
+		setIsSearching(false);
 		navigate('/');
 	};
 
