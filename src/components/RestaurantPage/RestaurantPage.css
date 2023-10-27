@@ -282,3 +282,15 @@
 	letter-spacing: 0.25px;
 	margin: 0;
 }
+
+.restaurant-page__modal-image-container {
+	max-width: 100%;
+	margin: 0 auto;
+}
+
+.restaurant-page__modal-buttons-container {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	align-items: center;
+}

@@ -39,7 +39,6 @@ const Profile: React.FC<IUserFormProps> = ({
 			role: role,
 		};
 		onUpdateUserInfo(formDataWithRole);
-		console.log(formDataWithRole);
 	};
 
 	const handleChangePassword = (): void => setIsVisible(!isVisible);
