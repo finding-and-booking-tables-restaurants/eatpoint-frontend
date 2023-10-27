@@ -100,8 +100,8 @@ function App() {
 			.authorize(data)
 			.then((res) => {
 				if (res.access) {
+					localStorage.setItem('access-token', res.access);
 					if (rememberMe) {
-						localStorage.setItem('access-token', res.access);
 						localStorage.setItem('refresh-token', res.refresh);
 						console.log('Токен сохранен');
 					}
