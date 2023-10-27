@@ -133,6 +133,17 @@ class UsersApi {
 			},
 		}).then((res) => this._handleResponse(res));
 	}
+
+	sendReview(id: number, text: string, score: number): Promise<any> {
+		return fetch(`${this._baseUrl}/api/v1/establishments/${id}/reviews/`, {
+			method: 'POST',
+			headers: {
+				authorization: 'Bearer ' + localStorage.getItem('access-token'),
+				'Content-Type': 'application/json',
+			},
+			body: JSON.stringify({ text, score }),
+		}).then((res) => this._handleResponse(res));
+	}
 }
 
 const usersApi = new UsersApi({

@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useContext, useEffect } from 'react';
 import './RatingAndReviews.css';
 import StarIcon from '@mui/icons-material/Star';
 import StarHalfIcon from '@mui/icons-material/StarHalf';
@@ -8,16 +8,21 @@ import Reviews from '../Reviews/Reviews';
 import { ReviewType } from '../../types/Reviews';
 import Button from '@mui/material/Button';
 import ModeEditOutlineOutlinedIcon from '@mui/icons-material/ModeEditOutlineOutlined';
+import CurrentUserContext from '../../contexts/CurrentUserContext';
 
 interface RatingAndReviewsProps {
 	rating: number;
+	openModal: () => void;
 	reviews: ReviewType[];
 }
 
 const RatingAndReviews: React.FC<RatingAndReviewsProps> = ({
 	rating,
 	reviews,
+	openModal,
 }) => {
+	const isLoggedIn = useContext(CurrentUserContext).isLoggedIn;
+
 	const maxStars = 5;
 	const filledStars = Math.floor(rating);
 	const hasHalfStar = rating - filledStars >= 0.5;
@@ -35,11 +40,10 @@ const RatingAndReviews: React.FC<RatingAndReviewsProps> = ({
 	return (
 		<section className="rating-and-reviews">
 			<h2 className="rating-and-reviews__heading">Рейтинг и отзывы</h2>
-			{/* <button className="rating-and-reviews__review-btn">
-				Оставить свой отзыв
-			</button> */}
 			<Button
+				onClick={openModal}
 				startIcon={<ModeEditOutlineOutlinedIcon />}
+				disabled={!isLoggedIn}
 				variant="outlined"
 				sx={{
 					color: '#006C60',

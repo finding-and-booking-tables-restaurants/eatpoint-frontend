@@ -23,6 +23,7 @@ import TodayIcon from '@mui/icons-material/Today';
 import { useNavigate } from 'react-router';
 import Header from '../Header/Header';
 import Footer from '../Footer/Footer';
+import AddReview from '../AddReview/AddReview';
 import { mainApi } from '../../utils/mainApi';
 import { ReviewType } from '../../types/Reviews';
 import { pluralizeReviews } from '../../utils/pluralizeReviews';
@@ -30,6 +31,7 @@ import { formatRating } from '../../utils/formatRating';
 import { calculateBlackRubles } from '../../utils/calculateBlackRubles';
 
 export default function RestaurantPage({ id }: { id: number }) {
+	const [isModalOpen, setIsModalOpen] = useState(false);
 	const [currentRestaurant, setcurrentRestaurant] =
 		useState<Restaurant>(initRestaurant);
 	const [showFullDescription, setShowFullDescription] = useState(false);
@@ -37,7 +39,7 @@ export default function RestaurantPage({ id }: { id: number }) {
 		ReviewType[]
 	>([]);
 
-	useEffect(() => {
+	const updatePageData = () => {
 		mainApi
 			.getEstablissmentData(id)
 			.then((data) => {
@@ -50,7 +52,15 @@ export default function RestaurantPage({ id }: { id: number }) {
 				setcurrentRestaurantReviews(data);
 			})
 			.catch((err) => console.log(err));
+	};
+
+	useEffect(() => {
+		updatePageData();
 	}, []);
+
+	useEffect(() => {
+		updatePageData();
+	}, [!isModalOpen]);
 
 	const toggleDescription = () => {
 		setShowFullDescription(!showFullDescription);
@@ -74,6 +84,13 @@ export default function RestaurantPage({ id }: { id: number }) {
 		navigate(`/booking/${id}`, { replace: true });
 	};
 
+	const openModal = () => {
+		setIsModalOpen(true);
+	};
+
+	const closeModal = () => {
+		setIsModalOpen(false);
+	};
 	const blackRublesCount = calculateBlackRubles(
 		currentRestaurant.average_check
 	);
@@ -231,11 +248,19 @@ export default function RestaurantPage({ id }: { id: number }) {
 					<div className="restaurant-page__about-line"></div>
 				</div>
 				<RatingAndReviews
+					openModal={openModal}
 					reviews={currentRestaurantReviews}
 					rating={formatRating(currentRestaurant.rating)}
 				/>
 			</main>
 			<Footer />
+			<AddReview
+				isOpen={isModalOpen}
+				onClose={closeModal}
+				restaurantId={currentRestaurant?.id}
+				restaurantName={currentRestaurant?.name}
+				restaurantAddress={currentRestaurant?.address}
+			/>
 		</>
 	);
 }
