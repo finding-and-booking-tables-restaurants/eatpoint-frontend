@@ -55,7 +55,7 @@ const LoginForm: React.FC<ILoginFormProps> = ({
 	return (
 		<>
 			<Header />
-			<Container sx={{ mb: 6 }}>
+			<Container sx={{ mb: 6, minHeight: 'calc(100vh - 219px)' }}>
 				<Typography
 					variant="h1"
 					component="h1"
