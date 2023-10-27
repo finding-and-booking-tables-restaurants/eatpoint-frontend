@@ -65,6 +65,16 @@ class UsersApi {
 		);
 	}
 
+	refreshToken(refresh: string) {
+		return fetch(`${this._baseUrl}/api/v1/login/jwt/refresh/`, {
+			method: 'POST',
+			headers: this._headers,
+			body: JSON.stringify({
+				refresh,
+			}),
+		}).then((res) => this._handleResponse<{ access: string }>(res));
+	}
+
 	updateUserInfo({
 		telephone,
 		email,
@@ -93,7 +103,7 @@ class UsersApi {
 				last_name: lastName,
 				role: role,
 			}),
-		}).then(this._handleResponse);
+		}).then((res) => this._handleResponse(res));
 	}
 
 	getUserInfo(): Promise<any> {
