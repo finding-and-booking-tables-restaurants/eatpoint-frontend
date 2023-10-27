@@ -43,7 +43,7 @@ function App() {
 	const [regErrorMessage, setRegErrorMessage] = useState('');
 	const [isSuccessUpdateUser, setIsSuccessUpdateUser] = useState(false);
 	const [isLoggedIn, setIsLoggedIn] = useState(false);
-	const [isSuccessRegister, setIsSuccessRegister] = useState(false);
+	// const [isSuccessRegister, setIsSuccessRegister] = useState(false);
 	const [allEstablishments, setAllEstablishments] = useState<Restaurant[]>([]);
 	const [searchEstablishments, setSearchEstablishments] = useState<
 		Restaurant[]
@@ -160,7 +160,6 @@ function App() {
 				confirm_code_send_method,
 			})
 			.then(() => {
-				setIsSuccessRegister(true);
 				setRegErrorMessage('');
 			})
 			.catch((err) => {
@@ -296,7 +295,6 @@ function App() {
 							<RegisterFormUser
 								role="client"
 								requestErrorMessage={regErrorMessage}
-								isSuccessRegister={isSuccessRegister}
 								onRegistration={handleRegistration}
 							/>
 						}
@@ -307,7 +305,6 @@ function App() {
 							<RegisterFormUser
 								role="restorateur"
 								requestErrorMessage={regErrorMessage}
-								isSuccessRegister={isSuccessRegister}
 								onRegistration={handleRegistration}
 							/>
 						}
