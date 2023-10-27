@@ -43,7 +43,6 @@ function App() {
 	const [regErrorMessage, setRegErrorMessage] = useState('');
 	const [isSuccessUpdateUser, setIsSuccessUpdateUser] = useState(false);
 	const [isLoggedIn, setIsLoggedIn] = useState(false);
-	const [isSuccessRegister, setIsSuccessRegister] = useState(false);
 	const [allEstablishments, setAllEstablishments] = useState<Restaurant[]>([]);
 	const [searchEstablishments, setSearchEstablishments] = useState<
 		Restaurant[]
@@ -55,14 +54,30 @@ function App() {
 	const [isSearching, setIsSearching] = useState(false);
 
 	useEffect(() => {
-		const token = localStorage.getItem('access-token');
-		if (token) {
+		const accessToken = localStorage.getItem('access-token');
+		const refreshToken = localStorage.getItem('refresh-token');
+
+		if (accessToken) {
 			usersApi
 				.getUserInfo()
 				.then(() => {
 					setIsLoggedIn(true);
 				})
-				.catch((err) => console.log(err));
+				.catch((err) => {
+					console.log(err);
+					if (refreshToken) {
+						usersApi
+							.refreshToken(refreshToken)
+							.then((res) => {
+								if (!res) return;
+								localStorage.setItem('access-token', res.access);
+							})
+							.then(() => {
+								setIsLoggedIn(true);
+							})
+							.catch((err) => console.log(err));
+					}
+				});
 		}
 	}, []);
 
@@ -143,7 +158,6 @@ function App() {
 				confirm_code_send_method,
 			})
 			.then(() => {
-				setIsSuccessRegister(true);
 				setRegErrorMessage('');
 			})
 			.catch((err) => {
@@ -209,6 +223,7 @@ function App() {
 		setIsLoggedIn(false);
 		setCurrentRole('');
 		setCurrentUser({});
+		setIsSearching(false);
 		navigate('/');
 	};
 
@@ -278,7 +293,6 @@ function App() {
 							<RegisterFormUser
 								role="client"
 								requestErrorMessage={regErrorMessage}
-								isSuccessRegister={isSuccessRegister}
 								onRegistration={handleRegistration}
 							/>
 						}
@@ -289,7 +303,6 @@ function App() {
 							<RegisterFormUser
 								role="restorateur"
 								requestErrorMessage={regErrorMessage}
-								isSuccessRegister={isSuccessRegister}
 								onRegistration={handleRegistration}
 							/>
 						}

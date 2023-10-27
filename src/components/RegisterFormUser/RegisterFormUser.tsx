@@ -22,7 +22,6 @@ import SuccessRegister from '../SuccessRegister/SuccessRegister';
 const RegisterFormUser: React.FC<IRegisterFormUserProps> = ({
 	onRegistration,
 	requestErrorMessage,
-	isSuccessRegister,
 	role,
 }) => {
 	const navigate = useNavigate();
@@ -34,6 +33,7 @@ const RegisterFormUser: React.FC<IRegisterFormUserProps> = ({
 	const [confirmPassword, setConfirmPassword] = useState('');
 	const [isAgreement, setIsAgreement] = useState(false);
 	const [isFormValid, setIsFormValid] = useState(false);
+	const [isSuccessRegister, setIsSuccessRegister] = useState(false);
 
 	const handleRegistration = (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
@@ -50,6 +50,7 @@ const RegisterFormUser: React.FC<IRegisterFormUserProps> = ({
 		};
 
 		onRegistration(userData);
+		setIsSuccessRegister(true);
 	};
 
 	const handleGoBack = () => {
@@ -84,7 +85,11 @@ const RegisterFormUser: React.FC<IRegisterFormUserProps> = ({
 	return (
 		<>
 			<Header />
-			<Container fixed maxWidth="sm" sx={{ mb: 5 }}>
+			<Container
+				fixed
+				maxWidth="sm"
+				sx={{ mb: 5, minHeight: 'calc(100vh - 216px)' }}
+			>
 				<Typography
 					variant="h1"
 					component="h1"

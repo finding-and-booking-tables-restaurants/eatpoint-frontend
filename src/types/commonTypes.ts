@@ -13,7 +13,7 @@ interface IRegisterFormData {
 interface IRegisterFormUserProps {
 	onRegistration: (data: IRegisterFormData) => void;
 	requestErrorMessage?: string;
-	isSuccessRegister: boolean;
+	isSuccessRegister?: boolean;
 	role: string;
 }
 
