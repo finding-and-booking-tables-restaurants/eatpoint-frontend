@@ -1,4 +1,5 @@
 import React from 'react';
+import { Button } from '@mui/material';
 import './SuccessRegister.css';
 
 const SuccessRegister = ({ userEmail }: { userEmail: string }) => {
@@ -9,6 +10,7 @@ const SuccessRegister = ({ userEmail }: { userEmail: string }) => {
 				Сообщение с данными регистрации было отправлено Вам на почту
 			</p>
 			<p className="success-register__user-email">{userEmail}</p>
+			<Button></Button>
 		</div>
 	);
 };

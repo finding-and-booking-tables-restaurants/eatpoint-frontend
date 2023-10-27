@@ -7,10 +7,15 @@ import {
 	fetchRestaurantData,
 	initRestaurant,
 } from '../../utils/constants';
-import Checkbox from '@mui/material/Checkbox';
-import FavoriteBorder from '@mui/icons-material/FavoriteBorder';
-import Favorite from '@mui/icons-material/Favorite';
-import Button, { ButtonProps } from '@mui/material/Button';
+import {
+	Checkbox,
+	Button,
+	ButtonProps,
+	Dialog,
+	DialogContent,
+} from '@mui/material';
+import CloseIcon from '@mui/icons-material/Close';
+import { FavoriteBorder, Favorite } from '@mui/icons-material';
 import { styled } from '@mui/material/styles';
 import ChatBubbleOutlineOutlinedIcon from '@mui/icons-material/ChatBubbleOutlineOutlined';
 import DeckOutlinedIcon from '@mui/icons-material/DeckOutlined';
@@ -33,15 +38,18 @@ export default function RestaurantPage({ id }: { id: number }) {
 	const [currentRestaurant, setcurrentRestaurant] =
 		useState<Restaurant>(initRestaurant);
 	const [showFullDescription, setShowFullDescription] = useState(false);
+	const [isModalOpen, setIsModalOpen] = useState(false);
 	const [currentRestaurantReviews, setcurrentRestaurantReviews] = useState<
 		ReviewType[]
 	>([]);
+	const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
 	useEffect(() => {
 		mainApi
 			.getEstablissmentData(id)
 			.then((data) => {
 				setcurrentRestaurant(data);
+				console.log(currentRestaurant.images);
 			})
 			.catch((err) => console.log(err));
 		mainApi
@@ -52,6 +60,15 @@ export default function RestaurantPage({ id }: { id: number }) {
 			.catch((err) => console.log(err));
 	}, []);
 
+	const openModal = () => {
+		setCurrentImageIndex(0);
+		setIsModalOpen(true);
+	};
+
+	const closeModal = () => {
+		setIsModalOpen(false);
+	};
+
 	const toggleDescription = () => {
 		setShowFullDescription(!showFullDescription);
 	};
@@ -61,6 +78,7 @@ export default function RestaurantPage({ id }: { id: number }) {
 		backgroundColor: '#fcf7e7',
 		textTransform: 'none',
 		width: '93px',
+		cursor: 'pointer',
 	}));
 
 	const descriptionToShow = showFullDescription
@@ -106,9 +124,98 @@ export default function RestaurantPage({ id }: { id: number }) {
 						/>
 					</div>
 					<div className="restaurant-page__more-photo-btn">
-						<AllPhotosButton variant="text" size="small">
-							Все фото
-						</AllPhotosButton>
+						{currentRestaurant.images.length > 0 && (
+							<AllPhotosButton onClick={openModal} variant="text" size="small">
+								Все фото
+							</AllPhotosButton>
+						)}
+						<Dialog
+							open={isModalOpen}
+							onClose={closeModal}
+							fullWidth
+							maxWidth="lg"
+							PaperProps={{
+								style: {
+									display: 'flex',
+									flexDirection: 'column',
+									alignItems: 'center',
+									backgroundColor: 'rgba(0, 0, 0, 0.5)',
+									position: 'relative',
+								},
+							}}
+						>
+							<Button
+								onClick={closeModal}
+								style={{
+									position: 'absolute',
+									top: '10px',
+									right: '10px',
+									color: '#fff',
+									zIndex: 100,
+								}}
+							>
+								<CloseIcon />
+							</Button>
+							<DialogContent style={{ padding: 0, position: 'relative' }}>
+								{currentRestaurant.images.map((image, index) => (
+									<figure
+										key={index}
+										className="restaurant-page__modal-image-container"
+										style={{
+											display: index === currentImageIndex ? 'block' : 'none',
+											position: 'relative',
+											width: '100%',
+											padding: 0,
+										}}
+									>
+										<img
+											src={image.image}
+											alt={image.name}
+											style={{ width: '100%', height: 'auto' }}
+										/>
+										<figcaption>{`Фото ${index + 1} из ${
+											currentRestaurant.images.length
+										}`}</figcaption>
+										<div
+											className="restaurant-page__modal-buttons-container"
+											style={{
+												textAlign: 'center',
+												position: 'absolute',
+												top: '50%',
+												width: '100%',
+											}}
+										>
+											{currentRestaurant.images.length > 1 && (
+												<>
+													<Button
+														sx={{}}
+														onClick={() =>
+															setCurrentImageIndex((prev) =>
+																prev > 0 ? prev - 1 : 0
+															)
+														}
+													>
+														←
+													</Button>
+													<Button
+														style={{ position: 'absolute', right: 0 }}
+														onClick={() =>
+															setCurrentImageIndex((prev) =>
+																prev < currentRestaurant.images.length - 1
+																	? prev + 1
+																	: prev
+															)
+														}
+													>
+														Вперед
+													</Button>
+												</>
+											)}
+										</div>
+									</figure>
+								))}
+							</DialogContent>
+						</Dialog>
 					</div>
 				</div>
 				<div className="restaurant-page__info-container">

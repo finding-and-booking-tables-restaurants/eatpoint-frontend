@@ -103,7 +103,6 @@ function App() {
 					localStorage.setItem('access-token', res.access);
 					if (rememberMe) {
 						localStorage.setItem('refresh-token', res.refresh);
-						console.log('Токен сохранен');
 					}
 				}
 				setIsLoggedIn(true);
