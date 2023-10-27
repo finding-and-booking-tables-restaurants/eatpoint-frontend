@@ -22,9 +22,11 @@ import TodayIcon from '@mui/icons-material/Today';
 import { useNavigate } from 'react-router';
 import Header from '../Header/Header';
 import Footer from '../Footer/Footer';
+import AddReview from '../AddReview/AddReview';
 
 export default function RestaurantPage({ id }: { id: number }) {
 	const [currentRestaurant, setcurrentRestaurant] = useState<Restaurant>();
+	const [isModalOpen, setIsModalOpen] = useState(false);
 
 	useEffect(() => {
 		const fetchData = async () => {
@@ -78,6 +80,14 @@ export default function RestaurantPage({ id }: { id: number }) {
 	const handleBookBtnClick = (event: React.FormEvent<HTMLFormElement>) => {
 		event.preventDefault();
 		navigate(`/booking/${id}`, { replace: true });
+	};
+
+	const openModal = () => {
+		setIsModalOpen(true);
+	};
+
+	const closeModal = () => {
+		setIsModalOpen(false);
 	};
 
 	return (
@@ -217,9 +227,16 @@ export default function RestaurantPage({ id }: { id: number }) {
 					</div>
 					<div className="restaurant-page__about-line"></div>
 				</div>
-				<RatingAndReviews rating={4.5} />
+				<RatingAndReviews rating={4.5} openModal={openModal} />
 			</main>
 			<Footer />
+			<AddReview
+				isOpen={isModalOpen}
+				onClose={closeModal}
+				restaurantId={currentRestaurant?.id}
+				restaurantName={currentRestaurant?.name}
+				restaurantAddress={currentRestaurant?.address}
+			/>
 		</>
 	);
 }

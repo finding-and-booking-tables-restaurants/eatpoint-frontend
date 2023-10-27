@@ -1,0 +1,16 @@
+.add-review-form {
+	display: flex;
+	flex-direction: column;
+	margin: 24px 16px 0 16px;
+}
+
+.add-review-form__text {
+	margin-top: 24px;
+	color: #1d1b20;
+	font-size: 16px;
+	font-style: normal;
+	font-weight: 400;
+	line-height: 24px;
+	letter-spacing: 0.5px;
+	text-align: center;
+}

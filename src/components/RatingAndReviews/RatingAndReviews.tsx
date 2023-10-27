@@ -8,6 +8,7 @@ import Reviews from '../Reviews/Reviews';
 
 interface RatingAndReviewsProps {
 	rating: number;
+	openModal: () => void;
 }
 
 const fakeReviewsData = {
@@ -18,7 +19,10 @@ const fakeReviewsData = {
 	fiveStar: 120,
 };
 
-const RatingAndReviews: React.FC<RatingAndReviewsProps> = ({ rating }) => {
+const RatingAndReviews: React.FC<RatingAndReviewsProps> = ({
+	rating,
+	openModal,
+}) => {
 	const maxStars = 5;
 	const filledStars = Math.floor(rating);
 	const hasHalfStar = rating - filledStars >= 0.5;
@@ -38,7 +42,7 @@ const RatingAndReviews: React.FC<RatingAndReviewsProps> = ({ rating }) => {
 	return (
 		<section className="rating-and-reviews">
 			<h2 className="rating-and-reviews__heading">Рейтинг и отзывы</h2>
-			<button className="rating-and-reviews__review-btn">
+			<button className="rating-and-reviews__review-btn" onClick={openModal}>
 				Оставить свой отзыв
 			</button>
 			<div className="rating-and-reviews__container">
