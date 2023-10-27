@@ -31,7 +31,7 @@ import { formatRating } from '../../utils/formatRating';
 import { calculateBlackRubles } from '../../utils/calculateBlackRubles';
 
 export default function RestaurantPage({ id }: { id: number }) {
-  const [isModalOpen, setIsModalOpen] = useState(false);
+	const [isModalOpen, setIsModalOpen] = useState(false);
 	const [currentRestaurant, setcurrentRestaurant] =
 		useState<Restaurant>(initRestaurant);
 	const [showFullDescription, setShowFullDescription] = useState(false);
@@ -39,7 +39,7 @@ export default function RestaurantPage({ id }: { id: number }) {
 		ReviewType[]
 	>([]);
 
-	useEffect(() => {
+	const updatePageData = () => {
 		mainApi
 			.getEstablissmentData(id)
 			.then((data) => {
@@ -52,7 +52,15 @@ export default function RestaurantPage({ id }: { id: number }) {
 				setcurrentRestaurantReviews(data);
 			})
 			.catch((err) => console.log(err));
+	};
+
+	useEffect(() => {
+		updatePageData();
 	}, []);
+
+	useEffect(() => {
+		updatePageData();
+	}, [!isModalOpen]);
 
 	const toggleDescription = () => {
 		setShowFullDescription(!showFullDescription);
@@ -240,7 +248,7 @@ export default function RestaurantPage({ id }: { id: number }) {
 					<div className="restaurant-page__about-line"></div>
 				</div>
 				<RatingAndReviews
-          openModal={openModal}
+					openModal={openModal}
 					reviews={currentRestaurantReviews}
 					rating={formatRating(currentRestaurant.rating)}
 				/>
