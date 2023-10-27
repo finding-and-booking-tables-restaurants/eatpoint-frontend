@@ -11,12 +11,14 @@ import ModeEditOutlineOutlinedIcon from '@mui/icons-material/ModeEditOutlineOutl
 
 interface RatingAndReviewsProps {
 	rating: number;
-	reviews: ReviewType[];
+	openModal: () => void;
+  reviews: ReviewType[];
 }
 
 const RatingAndReviews: React.FC<RatingAndReviewsProps> = ({
 	rating,
 	reviews,
+  openModal,
 }) => {
 	const maxStars = 5;
 	const filledStars = Math.floor(rating);
@@ -35,10 +37,8 @@ const RatingAndReviews: React.FC<RatingAndReviewsProps> = ({
 	return (
 		<section className="rating-and-reviews">
 			<h2 className="rating-and-reviews__heading">Рейтинг и отзывы</h2>
-			{/* <button className="rating-and-reviews__review-btn">
-				Оставить свой отзыв
-			</button> */}
 			<Button
+        onClick={openModal}
 				startIcon={<ModeEditOutlineOutlinedIcon />}
 				variant="outlined"
 				sx={{
