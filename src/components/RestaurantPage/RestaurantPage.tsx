@@ -5,6 +5,7 @@ import {
 	Restaurant,
 	getDayAbbreviation,
 	fetchRestaurantData,
+	initRestaurant,
 } from '../../utils/constants';
 import Checkbox from '@mui/material/Checkbox';
 import FavoriteBorder from '@mui/icons-material/FavoriteBorder';
@@ -23,26 +24,35 @@ import { useNavigate } from 'react-router';
 import Header from '../Header/Header';
 import Footer from '../Footer/Footer';
 import AddReview from '../AddReview/AddReview';
+import { mainApi } from '../../utils/mainApi';
+import { ReviewType } from '../../types/Reviews';
+import { pluralizeReviews } from '../../utils/pluralizeReviews';
+import { formatRating } from '../../utils/formatRating';
+import { calculateBlackRubles } from '../../utils/calculateBlackRubles';
 
 export default function RestaurantPage({ id }: { id: number }) {
-	const [currentRestaurant, setcurrentRestaurant] = useState<Restaurant>();
-	const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+	const [currentRestaurant, setcurrentRestaurant] =
+		useState<Restaurant>(initRestaurant);
+	const [showFullDescription, setShowFullDescription] = useState(false);
+	const [currentRestaurantReviews, setcurrentRestaurantReviews] = useState<
+		ReviewType[]
+	>([]);
 
 	useEffect(() => {
-		const fetchData = async () => {
-			try {
-				const data = await fetchRestaurantData(id);
+		mainApi
+			.getEstablissmentData(id)
+			.then((data) => {
 				setcurrentRestaurant(data);
-			} catch (error) {
-				console.error('Error fetching data:', error);
-			}
-		};
-
-		fetchData();
-	}, [id, setcurrentRestaurant]);
-
-	const reviewsCount = 45;
-	const [showFullDescription, setShowFullDescription] = useState(false);
+			})
+			.catch((err) => console.log(err));
+		mainApi
+			.getEstablishmentsReviews(id)
+			.then((data) => {
+				setcurrentRestaurantReviews(data);
+			})
+			.catch((err) => console.log(err));
+	}, []);
 
 	const toggleDescription = () => {
 		setShowFullDescription(!showFullDescription);
@@ -59,22 +69,6 @@ export default function RestaurantPage({ id }: { id: number }) {
 		? currentRestaurant?.description || ''
 		: (currentRestaurant?.description || '').slice(0, 253);
 
-	function pluralizeReviews(count: number) {
-		if (count === 0) {
-			return 'Нет отзывов';
-		} else if (count % 10 === 1 && count % 100 !== 11) {
-			return `${count} отзыв`;
-		} else if (
-			count % 10 >= 2 &&
-			count % 10 <= 4 &&
-			(count % 100 < 10 || count % 100 >= 20)
-		) {
-			return `${count} отзыва`;
-		} else {
-			return `${count} отзывов`;
-		}
-	}
-
 	const navigate = useNavigate();
 
 	const handleBookBtnClick = (event: React.FormEvent<HTMLFormElement>) => {
@@ -89,6 +83,19 @@ export default function RestaurantPage({ id }: { id: number }) {
 	const closeModal = () => {
 		setIsModalOpen(false);
 	};
+	const blackRublesCount = calculateBlackRubles(
+		currentRestaurant.average_check
+	);
+
+	const rubles = Array.from({ length: 4 }).map((_, index) => (
+		<span
+			key={index}
+			className={`restaurant-page__average-check
+				} ${index < blackRublesCount ? 'restaurant-page__average-check_black' : ''}`}
+		>
+			₽
+		</span>
+	));
 
 	return (
 		<>
@@ -120,15 +127,15 @@ export default function RestaurantPage({ id }: { id: number }) {
 					<div className="restaurant-page__info">
 						<p className="restaurant-page__rating">
 							<span className="restaurant-page__rating-star">&#9733;</span>{' '}
-							{currentRestaurant?.rating}
+							{formatRating(currentRestaurant.rating)}
 						</p>
 						<div className="restaurant-page__reviews-container">
 							<ChatBubbleOutlineOutlinedIcon fontSize="small" />
 							<p className="restaurant-page__reviews">
-								{pluralizeReviews(reviewsCount)}
+								{pluralizeReviews(currentRestaurantReviews.length)}
 							</p>
 						</div>
-						<span className="restaurant-page__average-check">{'₽₽₽'}</span>
+						<div>{rubles}</div>
 					</div>
 					<div className="restaurant-page__address-container">
 						<div>
@@ -137,7 +144,7 @@ export default function RestaurantPage({ id }: { id: number }) {
 								{currentRestaurant?.cities}, {currentRestaurant?.address}
 							</p>
 							<p className="restaurant-page__phone">
-								+{currentRestaurant?.telephone}
+								{currentRestaurant?.telephone}
 							</p>
 						</div>
 						<div className="restaurant-page__map-icon">
@@ -164,19 +171,24 @@ export default function RestaurantPage({ id }: { id: number }) {
 					<div className="restaurant-page__description">
 						<p className="restaurant-page__description-text">
 							{descriptionToShow}
-							{descriptionToShow.length <= 330 ? '...' : ''}
+							{currentRestaurant.description.length > 330 &&
+							!showFullDescription
+								? '...'
+								: ''}
 						</p>
-						{!showFullDescription && (
-							<button
-								className="restaurant-page__description-more-btn"
-								onClick={toggleDescription}
-							>
-								Читать далее
-							</button>
-						)}
+						{!showFullDescription &&
+							currentRestaurant.description.length >= 330 && (
+								<button
+									className="restaurant-page__description-more-btn"
+									onClick={toggleDescription}
+								>
+									Читать далее
+								</button>
+							)}
 					</div>
 				</div>
 				<BookingForm
+					booking={false}
 					onSubmit={handleBookBtnClick}
 					children={
 						<button className="search-form__btn">
@@ -227,7 +239,11 @@ export default function RestaurantPage({ id }: { id: number }) {
 					</div>
 					<div className="restaurant-page__about-line"></div>
 				</div>
-				<RatingAndReviews rating={4.5} openModal={openModal} />
+				<RatingAndReviews
+          openModal={openModal}
+					reviews={currentRestaurantReviews}
+					rating={formatRating(currentRestaurant.rating)}
+				/>
 			</main>
 			<Footer />
 			<AddReview

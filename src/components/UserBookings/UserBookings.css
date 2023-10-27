@@ -18,9 +18,10 @@
 	flex-direction: column;
 	gap: 16px;
 	align-items: center;
-	justify-content: center;
+	justify-content: start;
 	padding: 16px;
 	background-color: #d5ede4;
+	min-height: calc(100vh - 250px);
 }
 
 .user-bookings-closest {
@@ -32,8 +33,4 @@
 	line-height: 26px;
 	letter-spacing: 0.2px;
 	align-self: flex-start;
-}
-
-.user-bookings-none {
-	margin-bottom: 365px;
 }

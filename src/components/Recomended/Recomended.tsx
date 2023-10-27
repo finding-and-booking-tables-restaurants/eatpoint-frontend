@@ -12,7 +12,8 @@ import map from '../../images/map-icon.svg';
 import './Recomended.css';
 import { Link } from 'react-router-dom';
 import RecomendedProps from '../../models/propsInterfaces/RecomendedProps';
-import { Restaurant } from '../../models/data/RestData';
+import { Restaurant } from '../../utils/constants';
+import { formatRating } from '../../utils/formatRating';
 
 const Recomended: React.FC<RecomendedProps> = ({
 	title,
@@ -49,10 +50,11 @@ const Recomended: React.FC<RecomendedProps> = ({
 								img={restaurant.poster}
 								name={restaurant.name}
 								address={restaurant.address}
-								rating={restaurant.rating}
-								reviews={45}
+								rating={formatRating(restaurant.rating)}
+								reviews={restaurant.review_count}
 								search={false}
 								id={restaurant.id}
+								average_check={restaurant.average_check}
 							/>
 						</SwiperSlide>
 					))}

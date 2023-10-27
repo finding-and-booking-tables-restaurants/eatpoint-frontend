@@ -7,10 +7,14 @@ import { useEffect, useState } from 'react';
 import { Routes, Route, useNavigate, Navigate } from 'react-router-dom';
 import RestaurantPage from '../RestaurantPage/RestaurantPage';
 import BookingPage from '../BookingPage/BookingPage';
-
-import { ILoginFormData, IRegisterFormData } from '../../types/commonTypes';
+import {
+	ILoginFormData,
+	IRegisterFormData,
+	IUserFormData,
+} from '../../types/commonTypes';
 import usersApi from '../../utils/UsersApi';
 import {
+	ERROR,
 	ERROR_400,
 	ERROR_401,
 	ERROR_409,
@@ -27,7 +31,6 @@ import RegisterFormUser from '../RegisterFormUser/RegisterFormUser';
 import LoginForm from '../LoginForm/LoginForm';
 import NotFoundPage from '../NotFoundPage/NotFoundPage';
 import BusinessProfile from '../BusinessProfile/BusinessProfile';
-import TEST from '../TEST/TEST';
 import Profile from '../Profile/Profile';
 import CurrentUserContext from '../../contexts/CurrentUserContext';
 import UserBookings from '../UserBookings/UserBookings';
@@ -38,6 +41,7 @@ function App() {
 	const [currentRole, setCurrentRole] = useState('');
 	const [authErrorMessage, setAuthErrorMessage] = useState('');
 	const [regErrorMessage, setRegErrorMessage] = useState('');
+	const [isSuccessUpdateUser, setIsSuccessUpdateUser] = useState(false);
 	const [isLoggedIn, setIsLoggedIn] = useState(false);
 	const [isSuccessRegister, setIsSuccessRegister] = useState(false);
 	const [allEstablishments, setAllEstablishments] = useState<Restaurant[]>([]);
@@ -51,14 +55,30 @@ function App() {
 	const [isSearching, setIsSearching] = useState(false);
 
 	useEffect(() => {
-		const token = localStorage.getItem('access-token');
-		if (token) {
+		const accessToken = localStorage.getItem('access-token');
+		const refreshToken = localStorage.getItem('refresh-token');
+
+		if (accessToken) {
 			usersApi
 				.getUserInfo()
 				.then(() => {
 					setIsLoggedIn(true);
 				})
-				.catch((err) => console.log(err));
+				.catch((err) => {
+					console.log(err);
+					if (refreshToken) {
+						usersApi
+							.refreshToken(refreshToken)
+							.then((res) => {
+								if (!res) return;
+								localStorage.setItem('access-token', res.access);
+							})
+							.then(() => {
+								setIsLoggedIn(true);
+							})
+							.catch((err) => console.log(err));
+					}
+				});
 		}
 	}, []);
 
@@ -96,8 +116,8 @@ function App() {
 			.authorize(data)
 			.then((res) => {
 				if (res.access) {
+					localStorage.setItem('access-token', res.access);
 					if (rememberMe) {
-						localStorage.setItem('access-token', res.access);
 						localStorage.setItem('refresh-token', res.refresh);
 						console.log('Токен сохранен');
 					}
@@ -154,6 +174,24 @@ function App() {
 			});
 	};
 
+	// Обновление профиля
+	const handleUpdateUserInfo = (userInfo: IUserFormData) => {
+		usersApi
+			.updateUserInfo(userInfo)
+			.then((user) => {
+				setCurrentUser(user);
+				setIsSuccessUpdateUser(true);
+			})
+			.catch((error) => {
+				if (error === ERROR_409) {
+					setIsSuccessUpdateUser(false);
+				} else {
+					setIsSuccessUpdateUser(false);
+				}
+				console.log(`${ERROR}: ${error}`);
+			});
+	};
+
 	function handleSearchEstablishments() {
 		setIsSearching(true);
 		const fetchData = async () => {
@@ -188,6 +226,7 @@ function App() {
 		setIsLoggedIn(false);
 		setCurrentRole('');
 		setCurrentUser({});
+		setIsSearching(false);
 		navigate('/');
 	};
 
@@ -241,7 +280,13 @@ function App() {
 						<Route
 							key={item.id}
 							path={`/booking/${item.id}`}
-							element={<BookingPage userData={currentUser} id={item.id} />}
+							element={
+								<>
+									<Header />
+									<BookingPage userData={currentUser} id={item.id} />
+									<Footer />
+								</>
+							}
 						/>
 					))}
 
@@ -269,7 +314,17 @@ function App() {
 					/>
 					<Route
 						path="/user-profile"
-						element={isLoggedIn ? <Profile /> : <Navigate to="/" />}
+						element={
+							isLoggedIn ? (
+								<Profile
+									onUpdateUserInfo={handleUpdateUserInfo}
+									isSuccessUpdateUser={isSuccessUpdateUser}
+									setIsSuccessUpdateUser={setIsSuccessUpdateUser}
+								/>
+							) : (
+								<Navigate to="/" />
+							)
+						}
 					/>
 					<Route
 						path="/user-bookings"
@@ -287,7 +342,6 @@ function App() {
 					<Route path="/business" element={<BusinessLanding />} />
 					<Route path="/business-profile" element={<BusinessProfile />} />
 					<Route path="/add-restaurant" element={<AddRestaurant />}></Route>
-					<Route path="/test" element={<TEST></TEST>}></Route>
 					<Route path="*" element={<NotFoundPage></NotFoundPage>}></Route>
 				</Routes>
 			</CurrentUserContext.Provider>

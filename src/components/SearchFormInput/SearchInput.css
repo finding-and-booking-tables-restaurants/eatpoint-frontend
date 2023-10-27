@@ -1,6 +1,7 @@
 .search-input {
 	position: relative;
-	max-width: 328px;
+	width: 328px;
+	margin: auto;
 }
 
 .search-input__input {
@@ -18,6 +19,7 @@
 	line-height: 24px;
 	letter-spacing: 0.5px;
 	outline: none;
+	border-radius: 8px;
 }
 .search-input__input::placeholder {
 	color: #777777;
