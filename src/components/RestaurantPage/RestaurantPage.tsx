@@ -37,6 +37,7 @@ import { calculateBlackRubles } from '../../utils/calculateBlackRubles';
 
 export default function RestaurantPage({ id }: { id: number }) {
 	const [isModalOpen, setIsModalOpen] = useState(false);
+	const [isAddReviewOpen, setIsAddReviewOpen] = useState(false);
 	const [currentRestaurant, setcurrentRestaurant] =
 		useState<Restaurant>(initRestaurant);
 	const [showFullDescription, setShowFullDescription] = useState(false);
@@ -96,8 +97,13 @@ export default function RestaurantPage({ id }: { id: number }) {
 		setIsModalOpen(true);
 	};
 
+	const openAddReviewModal = () => {
+		setIsAddReviewOpen(true);
+	};
+
 	const closeModal = () => {
 		setIsModalOpen(false);
+		setIsAddReviewOpen(false);
 	};
 	const blackRublesCount = calculateBlackRubles(
 		currentRestaurant.average_check
@@ -345,14 +351,14 @@ export default function RestaurantPage({ id }: { id: number }) {
 					<div className="restaurant-page__about-line"></div>
 				</div>
 				<RatingAndReviews
-					openModal={openModal}
+					openModal={openAddReviewModal}
 					reviews={currentRestaurantReviews}
 					rating={formatRating(currentRestaurant.rating)}
 				/>
 			</main>
 			<Footer />
 			<AddReview
-				isOpen={isModalOpen}
+				isOpen={isAddReviewOpen}
 				onClose={closeModal}
 				restaurantId={currentRestaurant?.id}
 				restaurantName={currentRestaurant?.name}
