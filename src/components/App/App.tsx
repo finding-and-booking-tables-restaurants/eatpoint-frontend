@@ -42,8 +42,8 @@ function App() {
 	const [authErrorMessage, setAuthErrorMessage] = useState('');
 	const [regErrorMessage, setRegErrorMessage] = useState('');
 	const [isSuccessUpdateUser, setIsSuccessUpdateUser] = useState(false);
-	const [isLoggedIn, setIsLoggedIn] = useState(false);
 	const [isSuccessRegister, setIsSuccessRegister] = useState(false);
+	const [isLoggedIn, setIsLoggedIn] = useState(false);
 	const [allEstablishments, setAllEstablishments] = useState<Restaurant[]>([]);
 	const [searchEstablishments, setSearchEstablishments] = useState<
 		Restaurant[]
@@ -119,7 +119,6 @@ function App() {
 					localStorage.setItem('access-token', res.access);
 					if (rememberMe) {
 						localStorage.setItem('refresh-token', res.refresh);
-						console.log('Токен сохранен');
 					}
 				}
 				setIsLoggedIn(true);
@@ -160,13 +159,14 @@ function App() {
 				confirm_code_send_method,
 			})
 			.then(() => {
-				setIsSuccessRegister(true);
 				setRegErrorMessage('');
+				setIsSuccessRegister(true);
 			})
 			.catch((err) => {
-				if (err === ERROR_409) {
+				setIsSuccessRegister(false);
+				if (err === ERROR_400) {
 					setRegErrorMessage(EMAIL_ALREADY_REGISTERED_MESSAGE);
-				} else if (err === ERROR_400) {
+				} else if (err === ERROR_409) {
 					setRegErrorMessage(INCORRECT_ADD_USER_DATA);
 				} else {
 					setRegErrorMessage(REG_ERROR_MESSAGE);
@@ -296,8 +296,8 @@ function App() {
 							<RegisterFormUser
 								role="client"
 								requestErrorMessage={regErrorMessage}
-								isSuccessRegister={isSuccessRegister}
 								onRegistration={handleRegistration}
+								isSuccessRegister={isSuccessRegister}
 							/>
 						}
 					/>
@@ -307,8 +307,8 @@ function App() {
 							<RegisterFormUser
 								role="restorateur"
 								requestErrorMessage={regErrorMessage}
-								isSuccessRegister={isSuccessRegister}
 								onRegistration={handleRegistration}
+								isSuccessRegister={isSuccessRegister}
 							/>
 						}
 					/>

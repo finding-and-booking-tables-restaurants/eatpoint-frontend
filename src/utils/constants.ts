@@ -340,7 +340,7 @@ const ERROR_401 = 'Error: 401';
 const ERROR_409 = 'Error: 409';
 
 const EMAIL_ALREADY_REGISTERED_MESSAGE =
-	'Пользователь с таким email уже существует.';
+	'Пользователь с таким email или телефоном уже существует.';
 const INCORRECT_ADD_USER_DATA = 'Переданы некорректные данные при регистрации';
 const REG_ERROR_MESSAGE = 'При регистрации пользователя произошла ошибка.';
 const INVALID_AUTH_DATA_ERROR_MESSAGE =
