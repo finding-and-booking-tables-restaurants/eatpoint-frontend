@@ -23,6 +23,7 @@ const RegisterFormUser: React.FC<IRegisterFormUserProps> = ({
 	onRegistration,
 	requestErrorMessage,
 	role,
+	isSuccessRegister,
 }) => {
 	const navigate = useNavigate();
 	const [firstName, setFirstName] = useState('');
@@ -33,7 +34,7 @@ const RegisterFormUser: React.FC<IRegisterFormUserProps> = ({
 	const [confirmPassword, setConfirmPassword] = useState('');
 	const [isAgreement, setIsAgreement] = useState(false);
 	const [isFormValid, setIsFormValid] = useState(false);
-	const [isSuccessRegister, setIsSuccessRegister] = useState(false);
+	const [isSuccess, setIsSuccess] = useState(false);
 
 	const handleRegistration = (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
@@ -50,7 +51,7 @@ const RegisterFormUser: React.FC<IRegisterFormUserProps> = ({
 		};
 
 		onRegistration(userData);
-		setIsSuccessRegister(true);
+		setIsSuccess(true);
 	};
 
 	const handleGoBack = () => {
@@ -106,7 +107,7 @@ const RegisterFormUser: React.FC<IRegisterFormUserProps> = ({
 				>
 					Регистрация
 				</Typography>
-				{isSuccessRegister ? (
+				{isSuccess && isSuccessRegister ? (
 					<SuccessRegister userEmail={email} />
 				) : (
 					<Box

@@ -42,6 +42,7 @@ function App() {
 	const [authErrorMessage, setAuthErrorMessage] = useState('');
 	const [regErrorMessage, setRegErrorMessage] = useState('');
 	const [isSuccessUpdateUser, setIsSuccessUpdateUser] = useState(false);
+	const [isSuccessRegister, setIsSuccessRegister] = useState(false);
 	const [isLoggedIn, setIsLoggedIn] = useState(false);
 	const [allEstablishments, setAllEstablishments] = useState<Restaurant[]>([]);
 	const [searchEstablishments, setSearchEstablishments] = useState<
@@ -159,11 +160,13 @@ function App() {
 			})
 			.then(() => {
 				setRegErrorMessage('');
+				setIsSuccessRegister(true);
 			})
 			.catch((err) => {
-				if (err === ERROR_409) {
+				setIsSuccessRegister(false);
+				if (err === ERROR_400) {
 					setRegErrorMessage(EMAIL_ALREADY_REGISTERED_MESSAGE);
-				} else if (err === ERROR_400) {
+				} else if (err === ERROR_409) {
 					setRegErrorMessage(INCORRECT_ADD_USER_DATA);
 				} else {
 					setRegErrorMessage(REG_ERROR_MESSAGE);
@@ -294,6 +297,7 @@ function App() {
 								role="client"
 								requestErrorMessage={regErrorMessage}
 								onRegistration={handleRegistration}
+								isSuccessRegister={isSuccessRegister}
 							/>
 						}
 					/>
@@ -304,6 +308,7 @@ function App() {
 								role="restorateur"
 								requestErrorMessage={regErrorMessage}
 								onRegistration={handleRegistration}
+								isSuccessRegister={isSuccessRegister}
 							/>
 						}
 					/>
