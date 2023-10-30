@@ -19,7 +19,7 @@ export const availableType = [
 
 export const availableService = [
 	'Парковка',
-	'Терасса',
+	'Терраса',
 	'Wi-Fi',
 	'Детская комната',
 ];
