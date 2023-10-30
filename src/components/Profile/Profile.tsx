@@ -23,6 +23,7 @@ const Profile: React.FC<IUserFormProps> = ({
 	const [isVisible, setIsVisible] = useState(false);
 
 	const {
+		reset,
 		register,
 		handleSubmit,
 		formState: { errors, isDirty, isValid },
@@ -54,6 +55,7 @@ const Profile: React.FC<IUserFormProps> = ({
 
 	useEffect(() => {
 		handleChangePassword();
+		reset(defaultValues);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
