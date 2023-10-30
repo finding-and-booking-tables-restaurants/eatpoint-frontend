@@ -4,10 +4,13 @@ import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import { timesForTimePicker } from '../../../utils/constants';
+import { getFullDayName } from '../../../utils/constants';
 
 interface SelectWorkTimeProps {
 	text: string;
-	onTimeChange?: ((start: string, end: string) => void) | undefined;
+	onTimeChange?:
+		| ((day: string, start: string, end: string) => void)
+		| undefined;
 }
 
 const ITEM_HEIGHT = 48;
@@ -36,7 +39,7 @@ function SelectWorkTime({ text, onTimeChange }: SelectWorkTimeProps) {
 		setTimeStart(value);
 
 		if (onTimeChange) {
-			onTimeChange(value, timeEnd);
+			onTimeChange(getFullDayName(text), value, timeEnd);
 		}
 	};
 
@@ -47,30 +50,36 @@ function SelectWorkTime({ text, onTimeChange }: SelectWorkTimeProps) {
 		setTimeEnd(value);
 
 		if (onTimeChange) {
-			onTimeChange(timeStart, value);
+			onTimeChange(getFullDayName(text), timeStart, value);
 		}
 	};
 
 	return (
 		<div className="select-work-time">
-			<p className="select-work-time__day">{text}</p>
-			<FormControl sx={{ m: 1, width: 116 }}>
-				<Select
-					labelId="demo-multiple-name-label"
-					id="demo-multiple-name"
-					value={timeStart}
-					onChange={handleChangeTimeStart}
-					inputProps={{ 'aria-label': 'Without label' }}
-					MenuProps={MenuProps}
-					sx={{ backgroundColor: '#FDFAF2' }}
-				>
-					{timesForTimePicker.map((time, i) => (
-						<MenuItem key={i} value={time} sx={{ backgroundColor: '#FDFAF2' }}>
-							{time}
-						</MenuItem>
-					))}
-				</Select>
-			</FormControl>
+			<div className="">
+				<p className="select-work-time__day">{text}</p>
+				<FormControl sx={{ m: 1, width: 116 }}>
+					<Select
+						labelId="demo-multiple-name-label"
+						id="demo-multiple-name"
+						value={timeStart}
+						onChange={handleChangeTimeStart}
+						inputProps={{ 'aria-label': 'Without label' }}
+						MenuProps={MenuProps}
+						sx={{ backgroundColor: '#FDFAF2' }}
+					>
+						{timesForTimePicker.map((time, i) => (
+							<MenuItem
+								key={i}
+								value={time}
+								sx={{ backgroundColor: '#FDFAF2' }}
+							>
+								{time}
+							</MenuItem>
+						))}
+					</Select>
+				</FormControl>
+			</div>
 			<FormControl sx={{ m: 1, width: 116 }}>
 				<Select
 					labelId="demo-multiple-name-label"

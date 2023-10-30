@@ -344,7 +344,7 @@ function App() {
 					<Route path="/business" element={<BusinessLanding />} />
 					<Route path="/business-profile" element={<BusinessProfile />} />
 					<Route path="/add-restaurant" element={<AddRestaurant />}></Route>
-					<Route path="/test" element={<TEST></TEST>}></Route>
+
 					<Route path="/support" element={<SendProblem />} />
 					<Route path="/help" element={<Help />} />
 					<Route path="*" element={<NotFoundPage></NotFoundPage>}></Route>

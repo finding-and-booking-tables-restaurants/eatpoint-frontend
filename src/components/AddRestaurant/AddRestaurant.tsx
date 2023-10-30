@@ -12,6 +12,7 @@ import Footer from '../Footer/Footer';
 import SelectWorkTime from './SelectWorkTime/SelectWorkTime';
 import { RestaurantData } from '../../types/addRestaurantTypes';
 import { mainApi } from '../../utils/mainApi';
+import { workerData } from 'worker_threads';
 
 function AddRestaurant() {
 	const navigate = useNavigate();
@@ -149,13 +150,19 @@ function AddRestaurant() {
 		}
 	}
 
-	const handleTimeChange = (start: string, end: string) => {
+	const handleTimeChange = (day: string, start: string, end: string) => {
 		setFormData((prevData) => {
-			const updatedWorked = prevData.worked.map((workedDay) => ({
-				...workedDay,
-				start,
-				end,
-			}));
+			const updatedWorked = prevData.worked.map((workedDay) => {
+				if (workedDay.day === day) {
+					return {
+						...workedDay,
+						start,
+						end,
+					};
+				} else {
+					return workedDay;
+				}
+			});
 
 			return {
 				...prevData,

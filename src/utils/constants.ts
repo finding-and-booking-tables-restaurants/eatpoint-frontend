@@ -162,6 +162,27 @@ export const getDayAbbreviation = (day: string) => {
 	}
 };
 
+export function getFullDayName(shortName: string): string {
+	switch (shortName) {
+		case 'Пн':
+			return 'понедельник';
+		case 'Вт':
+			return 'вторник';
+		case 'Ср':
+			return 'среда';
+		case 'Чт':
+			return 'четверг';
+		case 'Пт':
+			return 'пятница';
+		case 'Сб':
+			return 'суббота';
+		case 'Вс':
+			return 'воскресенье';
+		default:
+			return shortName;
+	}
+}
+
 function replaceBackendUrl(data: any): any {
 	const replaceUrl = (url: string) =>
 		url.replace('backend:8000', 'eatpoint.sytes.net');
