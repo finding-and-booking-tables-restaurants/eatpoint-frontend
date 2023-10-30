@@ -1,6 +1,10 @@
 .booking-page {
-	max-width: 92%;
 	margin: auto;
+	max-width: 92%;
+	display: flex;
+	flex-direction: column;
+	align-content: center;
+	flex-wrap: wrap;
 }
 
 .restaurant-page__address-container-booking {
@@ -11,7 +15,6 @@
 	display: inline-flex;
 	gap: 10px;
 	align-items: center;
-	justify-content: center;
 }
 
 .booking-page__title {

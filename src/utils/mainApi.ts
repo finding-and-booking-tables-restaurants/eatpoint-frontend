@@ -1,5 +1,6 @@
 import { API_URL } from './constants';
 import { RestaurantData } from '../types/addRestaurantTypes';
+import { ReservationFormValues } from '../types/ReservationFormValues';
 
 class MainApi {
 	private _baseUrl: string;
@@ -54,6 +55,19 @@ class MainApi {
 		return this._sendFetchRequest(`/api/v1/establishments/${id}/reviews/`, {
 			headers: this._headers,
 		});
+	}
+
+	bookEstablishment(id: number, formData: ReservationFormValues) {
+		return this._sendFetchRequest(
+			`/api/v1/establishments/${id}/reservations/`,
+			{
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+				},
+				body: JSON.stringify(formData),
+			}
+		);
 	}
 }
 
