@@ -35,6 +35,7 @@ import Profile from '../Profile/Profile';
 import CurrentUserContext from '../../contexts/CurrentUserContext';
 import UserBookings from '../UserBookings/UserBookings';
 import BusinessLanding from '../BusinessLanding/BusinessLanding';
+import ProtectedRouteElement from '../ProptectedRoute/ProtectedRoute';
 
 function App() {
 	const [currentUser, setCurrentUser] = useState<UserData>();
@@ -312,18 +313,20 @@ function App() {
 							/>
 						}
 					/>
+
 					<Route
 						path="/user-profile"
 						element={
-							isLoggedIn ? (
-								<Profile
-									onUpdateUserInfo={handleUpdateUserInfo}
-									isSuccessUpdateUser={isSuccessUpdateUser}
-									setIsSuccessUpdateUser={setIsSuccessUpdateUser}
-								/>
-							) : (
-								<Navigate to="/" />
-							)
+							<ProtectedRouteElement
+								isLoggedIn={isLoggedIn}
+								element={
+									<Profile
+										onUpdateUserInfo={handleUpdateUserInfo}
+										isSuccessUpdateUser={isSuccessUpdateUser}
+										setIsSuccessUpdateUser={setIsSuccessUpdateUser}
+									/>
+								}
+							/>
 						}
 					/>
 					<Route
