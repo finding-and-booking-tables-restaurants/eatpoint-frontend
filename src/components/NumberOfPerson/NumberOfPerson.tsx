@@ -31,7 +31,7 @@ export default function SelectTextFields() {
 				select
 				name="number_guests"
 				onChange={handleSelectPeople}
-				defaultValue={localStorage.getItem('selected-number-of-people')}
+				defaultValue={localStorage.getItem('selected-number-of-people') || '2'}
 				sx={{
 					backgroundColor: '#FCF8EA',
 					width: 328,
