@@ -1,0 +1,64 @@
+.problem-page {
+	margin: 16px 17px 0;
+	height: calc(100vh - 56px - 112px);
+}
+
+.problem-page__title {
+	font-family: 'Ubuntu', sans-serif;
+	font-style: normal;
+	font-size: 30px;
+	font-weight: 400;
+	line-height: 1.2;
+	text-align: center;
+	width: 100%;
+}
+
+.problem-page__text {
+	font-family: 'Roboto', sans-serif;
+	font-style: normal;
+	font-weight: 400;
+	font-size: 12px;
+	line-height: 1.33;
+	margin: 16px 4px 0;
+	width: 100%;
+	padding-right: 6px;
+	box-sizing: border-box;
+}
+
+.problem-page__text_type_logged {
+	margin-top: 24px;
+}
+
+.problem-page__form {
+	display: flex;
+	flex-direction: column;
+	gap: 16px;
+	margin: 16px 0 225px;
+}
+
+.problem-page__input {
+	all: unset;
+	border-radius: 8px;
+	background-color: #fdfaf2;
+	width: 328px;
+	height: 48px;
+}
+
+.problem-page__input::placeholder {
+	padding: 8px 4px;
+	font-family: 'Roboto', sans-serif;
+	font-weight: 400;
+	font-style: normal;
+	font-size: 16px;
+	line-height: 1.5;
+	letter-spacing: 0.5px;
+	color: #49454f;
+}
+
+.problem-page__textarea {
+	all: unset;
+	width: 328px;
+	height: 174px;
+	background-color: #fdfaf2;
+	border-radius: 8px;
+}
