@@ -7,10 +7,19 @@ import {
 	fetchRestaurantData,
 	initRestaurant,
 } from '../../utils/constants';
-import Checkbox from '@mui/material/Checkbox';
-import FavoriteBorder from '@mui/icons-material/FavoriteBorder';
-import Favorite from '@mui/icons-material/Favorite';
-import Button, { ButtonProps } from '@mui/material/Button';
+import {
+	Checkbox,
+	Button,
+	ButtonProps,
+	Dialog,
+	DialogContent,
+	IconButton,
+	Backdrop,
+} from '@mui/material';
+import CloseIcon from '@mui/icons-material/Close';
+import { FavoriteBorder, Favorite } from '@mui/icons-material';
+import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { styled } from '@mui/material/styles';
 import ChatBubbleOutlineOutlinedIcon from '@mui/icons-material/ChatBubbleOutlineOutlined';
 import DeckOutlinedIcon from '@mui/icons-material/DeckOutlined';
@@ -23,6 +32,7 @@ import TodayIcon from '@mui/icons-material/Today';
 import { useNavigate } from 'react-router';
 import Header from '../Header/Header';
 import Footer from '../Footer/Footer';
+import AddReview from '../AddReview/AddReview';
 import { mainApi } from '../../utils/mainApi';
 import { ReviewType } from '../../types/Reviews';
 import { pluralizeReviews } from '../../utils/pluralizeReviews';
@@ -30,18 +40,22 @@ import { formatRating } from '../../utils/formatRating';
 import { calculateBlackRubles } from '../../utils/calculateBlackRubles';
 
 export default function RestaurantPage({ id }: { id: number }) {
+	const [isModalOpen, setIsModalOpen] = useState(false);
+	const [isAddReviewOpen, setIsAddReviewOpen] = useState(false);
 	const [currentRestaurant, setcurrentRestaurant] =
 		useState<Restaurant>(initRestaurant);
 	const [showFullDescription, setShowFullDescription] = useState(false);
 	const [currentRestaurantReviews, setcurrentRestaurantReviews] = useState<
 		ReviewType[]
 	>([]);
+	const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
-	useEffect(() => {
+	const updatePageData = () => {
 		mainApi
 			.getEstablissmentData(id)
 			.then((data) => {
 				setcurrentRestaurant(data);
+				console.log(currentRestaurant.images);
 			})
 			.catch((err) => console.log(err));
 		mainApi
@@ -50,7 +64,15 @@ export default function RestaurantPage({ id }: { id: number }) {
 				setcurrentRestaurantReviews(data);
 			})
 			.catch((err) => console.log(err));
+	};
+
+	useEffect(() => {
+		updatePageData();
 	}, []);
+
+	useEffect(() => {
+		updatePageData();
+	}, [!isModalOpen]);
 
 	const toggleDescription = () => {
 		setShowFullDescription(!showFullDescription);
@@ -61,6 +83,7 @@ export default function RestaurantPage({ id }: { id: number }) {
 		backgroundColor: '#fcf7e7',
 		textTransform: 'none',
 		width: '93px',
+		cursor: 'pointer',
 	}));
 
 	const descriptionToShow = showFullDescription
@@ -74,6 +97,18 @@ export default function RestaurantPage({ id }: { id: number }) {
 		navigate(`/booking/${id}`, { replace: true });
 	};
 
+	const openModal = () => {
+		setIsModalOpen(true);
+	};
+
+	const openAddReviewModal = () => {
+		setIsAddReviewOpen(true);
+	};
+
+	const closeModal = () => {
+		setIsModalOpen(false);
+		setIsAddReviewOpen(false);
+	};
 	const blackRublesCount = calculateBlackRubles(
 		currentRestaurant.average_check
 	);
@@ -91,6 +126,112 @@ export default function RestaurantPage({ id }: { id: number }) {
 	return (
 		<>
 			<Header />
+			<Dialog
+				open={isModalOpen}
+				onClose={closeModal}
+				PaperProps={{
+					style: {
+						backgroundColor: 'transparent',
+						position: 'relative',
+						color: '#fff',
+						margin: '15px',
+					},
+				}}
+			>
+				<Button
+					onClick={closeModal}
+					style={{
+						position: 'fixed',
+						top: '19px',
+						right: 0,
+						color: '#fff',
+						zIndex: 100,
+						height: '24px',
+						width: '24px',
+					}}
+				>
+					<CloseIcon />
+				</Button>
+				<DialogContent style={{ padding: 0, position: 'relative' }}>
+					{currentRestaurant.images.map((image, index) => (
+						<figure
+							key={index}
+							className="restaurant-page__modal-image-container"
+							style={{
+								display: index === currentImageIndex ? 'block' : 'none',
+								position: 'relative',
+								width: '100%',
+								padding: 0,
+							}}
+						>
+							<img
+								src={image.image}
+								alt={image.name}
+								style={{ width: '100%', height: 'auto' }}
+							/>
+							<figcaption className="restaurant-page__figcaption">{`Фото ${
+								index + 1
+							} из ${currentRestaurant.images.length}`}</figcaption>
+							<div
+								className="restaurant-page__modal-buttons-container"
+								style={{
+									textAlign: 'center',
+									position: 'absolute',
+									top: '50%',
+									width: '100%',
+								}}
+							>
+								{currentRestaurant.images.length > 1 && (
+									<>
+										<IconButton
+											sx={{
+												color: '#fff',
+												backgroundColor: '#05887B',
+												borderRadius: '50%',
+												padding: '8px',
+												position: 'fixed',
+												top: '50%',
+												transform: 'translateY(-50%)',
+												left: 0,
+												margin: '8px',
+											}}
+											onClick={() =>
+												setCurrentImageIndex((prev) =>
+													prev > 0 ? prev - 1 : 0
+												)
+											}
+										>
+											<ArrowBackIcon />
+										</IconButton>
+										<IconButton
+											style={{
+												color: '#fff',
+												backgroundColor: '#05887B',
+												borderRadius: '50%',
+												padding: '8px',
+												position: 'fixed',
+												top: '50%',
+												transform: 'translateY(-50%)',
+												right: 0,
+												margin: '8px',
+											}}
+											onClick={() =>
+												setCurrentImageIndex((prev) =>
+													prev < currentRestaurant.images.length - 1
+														? prev + 1
+														: prev
+												)
+											}
+										>
+											<ArrowForwardIcon />
+										</IconButton>
+									</>
+								)}
+							</div>
+						</figure>
+					))}
+				</DialogContent>
+			</Dialog>
 			<main className="restaurant-page">
 				<div className="restaurant-page__photo-container">
 					<img
@@ -106,9 +247,11 @@ export default function RestaurantPage({ id }: { id: number }) {
 						/>
 					</div>
 					<div className="restaurant-page__more-photo-btn">
-						<AllPhotosButton variant="text" size="small">
-							Все фото
-						</AllPhotosButton>
+						{currentRestaurant.images.length > 0 && (
+							<AllPhotosButton onClick={openModal} variant="text" size="small">
+								Все фото
+							</AllPhotosButton>
+						)}
 					</div>
 				</div>
 				<div className="restaurant-page__info-container">
@@ -231,11 +374,19 @@ export default function RestaurantPage({ id }: { id: number }) {
 					<div className="restaurant-page__about-line"></div>
 				</div>
 				<RatingAndReviews
+					openModal={openAddReviewModal}
 					reviews={currentRestaurantReviews}
 					rating={formatRating(currentRestaurant.rating)}
 				/>
 			</main>
 			<Footer />
+			<AddReview
+				isOpen={isAddReviewOpen}
+				onClose={closeModal}
+				restaurantId={currentRestaurant?.id}
+				restaurantName={currentRestaurant?.name}
+				restaurantAddress={currentRestaurant?.address}
+			/>
 		</>
 	);
 }

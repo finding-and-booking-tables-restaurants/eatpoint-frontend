@@ -13,6 +13,7 @@ const Profile: React.FC<IUserFormProps> = ({
 	setIsSuccessUpdateUser,
 }) => {
 	const userData = useContext(CurrentUserContext).currentUser;
+	const role = useContext(CurrentUserContext).currentRole;
 
 	const [isVisible, setIsVisible] = useState(false);
 
@@ -32,7 +33,12 @@ const Profile: React.FC<IUserFormProps> = ({
 
 	const onSubmit: SubmitHandler<IUserFormData> = async (formData, e) => {
 		e?.preventDefault();
-		onUpdateUserInfo(formData);
+
+		const formDataWithRole = {
+			...formData,
+			role: role,
+		};
+		onUpdateUserInfo(formDataWithRole);
 	};
 
 	const handleChangePassword = (): void => setIsVisible(!isVisible);
@@ -100,9 +106,13 @@ const Profile: React.FC<IUserFormProps> = ({
 							error={!!errors.firstName}
 							helperText={errors.firstName?.message || ''}
 							sx={{
-								backgroundColor: '#FDFAF2',
 								'.css-md26zr-MuiInputBase-root-MuiOutlinedInput-root': {
 									height: '48px',
+								},
+							}}
+							InputProps={{
+								sx: {
+									backgroundColor: '#FDFAF2',
 								},
 							}}
 							fullWidth
@@ -128,10 +138,14 @@ const Profile: React.FC<IUserFormProps> = ({
 							error={!!errors.lastName}
 							helperText={errors.lastName?.message || ''}
 							sx={{
-								backgroundColor: '#FDFAF2',
 								marginTop: 2,
 								'.css-md26zr-MuiInputBase-root-MuiOutlinedInput-root': {
 									height: '48px',
+								},
+							}}
+							InputProps={{
+								sx: {
+									backgroundColor: '#FDFAF2',
 								},
 							}}
 							fullWidth
@@ -160,10 +174,14 @@ const Profile: React.FC<IUserFormProps> = ({
 							error={!!errors.telephone}
 							helperText={errors.telephone?.message || ''}
 							sx={{
-								backgroundColor: '#FDFAF2',
 								marginTop: 2,
 								'.css-md26zr-MuiInputBase-root-MuiOutlinedInput-root': {
 									height: '48px',
+								},
+							}}
+							InputProps={{
+								sx: {
+									backgroundColor: '#FDFAF2',
 								},
 							}}
 							fullWidth
@@ -183,10 +201,14 @@ const Profile: React.FC<IUserFormProps> = ({
 							error={!!errors.email}
 							helperText={errors.email?.message || ''}
 							sx={{
-								backgroundColor: '#FDFAF2',
 								marginTop: 2,
 								'.css-md26zr-MuiInputBase-root-MuiOutlinedInput-root': {
 									height: '48px',
+								},
+							}}
+							InputProps={{
+								sx: {
+									backgroundColor: '#FDFAF2',
 								},
 							}}
 							fullWidth
@@ -216,10 +238,14 @@ const Profile: React.FC<IUserFormProps> = ({
 								variant="outlined"
 								disabled={true}
 								sx={{
-									backgroundColor: '#FDFAF2',
 									marginTop: 2,
 									'.css-md26zr-MuiInputBase-root-MuiOutlinedInput-root': {
 										height: '48px',
+									},
+								}}
+								InputProps={{
+									sx: {
+										backgroundColor: '#FDFAF2',
 									},
 								}}
 								placeholder="Текущий пароль"
@@ -230,10 +256,14 @@ const Profile: React.FC<IUserFormProps> = ({
 								variant="outlined"
 								disabled={true}
 								sx={{
-									backgroundColor: '#FDFAF2',
 									marginTop: 2,
 									'.css-md26zr-MuiInputBase-root-MuiOutlinedInput-root': {
 										height: '48px',
+									},
+								}}
+								InputProps={{
+									sx: {
+										backgroundColor: '#FDFAF2',
 									},
 								}}
 								placeholder="Новый пароль"

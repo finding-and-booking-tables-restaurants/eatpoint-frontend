@@ -101,7 +101,7 @@
 
 .restaurant-page__address-container {
 	margin: 26px auto 24px;
-	width: 94%;
+	width: 314px;
 	display: flex;
 	flex-direction: row;
 	align-items: center;
@@ -281,4 +281,16 @@
 	line-height: 20px;
 	letter-spacing: 0.25px;
 	margin: 0;
+}
+
+.restaurant-page__modal-image-container {
+	max-width: 100%;
+	margin: 0 auto;
+}
+
+.restaurant-page__modal-buttons-container {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	align-items: center;
 }

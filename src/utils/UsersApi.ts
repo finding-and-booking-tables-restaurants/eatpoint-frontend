@@ -65,6 +65,16 @@ class UsersApi {
 		);
 	}
 
+	refreshToken(refresh: string) {
+		return fetch(`${this._baseUrl}/api/v1/login/jwt/refresh/`, {
+			method: 'POST',
+			headers: this._headers,
+			body: JSON.stringify({
+				refresh,
+			}),
+		}).then((res) => this._handleResponse<{ access: string }>(res));
+	}
+
 	updateUserInfo({
 		telephone,
 		email,
@@ -91,9 +101,9 @@ class UsersApi {
 				email: email,
 				first_name: firstName,
 				last_name: lastName,
-				role: 'client',
+				role: role,
 			}),
-		}).then(this._handleResponse);
+		}).then((res) => this._handleResponse(res));
 	}
 
 	getUserInfo(): Promise<any> {
@@ -121,6 +131,17 @@ class UsersApi {
 				authorization: 'Bearer ' + localStorage.getItem('access-token'),
 				'Content-Type': 'application/json',
 			},
+		}).then((res) => this._handleResponse(res));
+	}
+
+	sendReview(id: number, text: string, score: number): Promise<any> {
+		return fetch(`${this._baseUrl}/api/v1/establishments/${id}/reviews/`, {
+			method: 'POST',
+			headers: {
+				authorization: 'Bearer ' + localStorage.getItem('access-token'),
+				'Content-Type': 'application/json',
+			},
+			body: JSON.stringify({ text, score }),
 		}).then((res) => this._handleResponse(res));
 	}
 }
