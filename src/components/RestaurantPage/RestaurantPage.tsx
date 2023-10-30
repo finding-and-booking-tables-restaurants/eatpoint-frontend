@@ -129,6 +129,14 @@ export default function RestaurantPage({ id }: { id: number }) {
 			<Dialog
 				open={isModalOpen}
 				onClose={closeModal}
+				sx={{
+					'.css-yiavyu-MuiBackdrop-root-MuiDialog-backdrop': {
+						backgroundColor: 'rgba(0, 0, 0, 0.8)',
+					},
+					'.css-1t1j96h-MuiPaper-root-MuiDialog-paper': {
+						boxShadow: 'none',
+					},
+				}}
 				PaperProps={{
 					style: {
 						backgroundColor: 'transparent',
