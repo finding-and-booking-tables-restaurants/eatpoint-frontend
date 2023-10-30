@@ -21,6 +21,7 @@ import SuccessBooking from '../SuccessBooking/SuccessBooking';
 import Header from '../Header/Header';
 import Footer from '../Footer/Footer';
 import CurrentUserContext from '../../contexts/CurrentUserContext';
+import { mainApi } from '../../utils/mainApi';
 
 interface BookingPageProps {
 	id: number;
@@ -75,23 +76,11 @@ const BookingPage: FC<BookingPageProps> = ({ id, userData }) => {
 		mergedFormData.number_guests = Number(mergedFormData.number_guests);
 		setDataToSend(mergedFormData);
 
-		return fetch(`${API_URL}/api/v1/establishments/${id}/reservations/`, {
-			method: 'POST',
-			headers: {
-				'Content-Type': 'application/json',
-				authorization: 'Bearer ' + localStorage.getItem('access-token'),
-			},
-			body: JSON.stringify(mergedFormData),
-		})
-			.then((res) => {
-				if (res.ok) {
-					console.log('success');
-					setIsSuccessBooking(true);
-					return res.json();
-				}
-			})
-			.then((data) => setBookingId(data.id))
-			.catch((err) => console.log(err));
+		mainApi.bookEstablishment(id, mergedFormData).then((data) => {
+			if (!data) return;
+			setIsSuccessBooking(true);
+			setBookingId(data.id);
+		});
 	};
 	const handleBackBtnClick = () => {
 		navigate(`/establishment/${id}`, { replace: true });
@@ -109,12 +98,11 @@ const BookingPage: FC<BookingPageProps> = ({ id, userData }) => {
 					adress={currentRestaurant?.address}
 					date={dataToSend.date_reservation}
 					time={dataToSend.start_time_reservation}
-					numOfPeople={dataToSend.number_guests}
+					numOfPeople={Number(dataToSend.number_guests)}
 					id={currentRestaurant?.id}
 				/>
 			) : (
 				<>
-					<Header />
 					<div className="booking-page__heading">
 						<button
 							className="booking-page__back-btn"
@@ -124,7 +112,6 @@ const BookingPage: FC<BookingPageProps> = ({ id, userData }) => {
 						</button>
 						<h1 className="booking-page__title">Бронирование</h1>
 					</div>
-
 					<div className="restaurant-page__address-container restaurant-page__address-container-booking">
 						<div>
 							<p className="restaurant-page__address-text">Адрес</p>
@@ -132,14 +119,14 @@ const BookingPage: FC<BookingPageProps> = ({ id, userData }) => {
 								{currentRestaurant?.cities}, {currentRestaurant?.address}
 							</p>
 							<p className="restaurant-page__phone">
-								+{currentRestaurant?.telephone}
+								{currentRestaurant?.telephone}
 							</p>
 						</div>
 						<div className="restaurant-page__map-icon">
 							<MapOutlinedIcon fontSize="medium" style={{ color: '#05887B' }} />
 						</div>
 					</div>
-					<BookingForm onSubmit={handleSubmit}>
+					<BookingForm booking onSubmit={handleSubmit}>
 						<TextField
 							id="outlined-select-currency"
 							select
@@ -179,9 +166,7 @@ const BookingPage: FC<BookingPageProps> = ({ id, userData }) => {
 								}}
 							/>
 						))}
-						<p className="booking-page__comment">
-							Сообщите нам о ваших пожеланиях
-						</p>
+						<p className="booking-page__comment">Введите ваши пожелания</p>
 						<div className="checkbox-container">
 							<Checkbox
 								required
@@ -198,7 +183,6 @@ const BookingPage: FC<BookingPageProps> = ({ id, userData }) => {
 							{<TodayIcon />} Забронировать
 						</button>
 					</BookingForm>
-					<Footer />
 				</>
 			)}
 		</div>

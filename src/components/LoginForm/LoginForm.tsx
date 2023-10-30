@@ -9,6 +9,7 @@ import {
 	Checkbox,
 } from '@mui/material';
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { ILoginFormData, ILoginFormProps } from '../../types/commonTypes';
 import Header from '../Header/Header';
 import Footer from '../Footer/Footer';
@@ -17,6 +18,8 @@ const LoginForm: React.FC<ILoginFormProps> = ({
 	onLogin,
 	requestErrorMessage,
 }) => {
+	const navigate = useNavigate();
+
 	const [email, setEmail] = useState('');
 	const [password, setPassword] = useState('');
 	const [isFormValid, setIsFormValid] = useState(false);
@@ -30,6 +33,10 @@ const LoginForm: React.FC<ILoginFormProps> = ({
 		};
 
 		onLogin(data, rememberMe);
+	};
+
+	const handleGoBackBtn = () => {
+		navigate(-1);
 	};
 
 	const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -48,7 +55,7 @@ const LoginForm: React.FC<ILoginFormProps> = ({
 	return (
 		<>
 			<Header />
-			<Container sx={{ mb: 6 }}>
+			<Container sx={{ mb: 6, minHeight: 'calc(100vh - 219px)' }}>
 				<Typography
 					variant="h1"
 					component="h1"
@@ -159,6 +166,7 @@ const LoginForm: React.FC<ILoginFormProps> = ({
 								height: '40px',
 								width: '156px',
 							}}
+							onClick={handleGoBackBtn}
 						>
 							<Typography
 								sx={{

@@ -1,5 +1,5 @@
 import { IRegisterFormData, ILoginFormData } from '../types/commonTypes';
-import { API_URL, UserData } from './constants';
+import { API_URL } from './constants';
 
 class UsersApi {
 	private _baseUrl: string;
@@ -65,6 +65,47 @@ class UsersApi {
 		);
 	}
 
+	refreshToken(refresh: string) {
+		return fetch(`${this._baseUrl}/api/v1/login/jwt/refresh/`, {
+			method: 'POST',
+			headers: this._headers,
+			body: JSON.stringify({
+				refresh,
+			}),
+		}).then((res) => this._handleResponse<{ access: string }>(res));
+	}
+
+	updateUserInfo({
+		telephone,
+		email,
+		firstName,
+		lastName,
+		role,
+	}: {
+		telephone: string;
+		email: string;
+		firstName: string;
+		lastName: string;
+		role: string;
+	}): Promise<any> {
+		const token = localStorage.getItem('access-token');
+
+		return fetch(`${this._baseUrl}/api/v1/users/me/`, {
+			method: 'PATCH',
+			headers: {
+				authorization: `Bearer ${token}`,
+				...this._headers,
+			},
+			body: JSON.stringify({
+				telephone: telephone,
+				email: email,
+				first_name: firstName,
+				last_name: lastName,
+				role: role,
+			}),
+		}).then((res) => this._handleResponse(res));
+	}
+
 	getUserInfo(): Promise<any> {
 		return fetch(`${this._baseUrl}/api/v1/users/me/`, {
 			headers: {
@@ -90,6 +131,17 @@ class UsersApi {
 				authorization: 'Bearer ' + localStorage.getItem('access-token'),
 				'Content-Type': 'application/json',
 			},
+		}).then((res) => this._handleResponse(res));
+	}
+
+	sendReview(id: number, text: string, score: number): Promise<any> {
+		return fetch(`${this._baseUrl}/api/v1/establishments/${id}/reviews/`, {
+			method: 'POST',
+			headers: {
+				authorization: 'Bearer ' + localStorage.getItem('access-token'),
+				'Content-Type': 'application/json',
+			},
+			body: JSON.stringify({ text, score }),
 		}).then((res) => this._handleResponse(res));
 	}
 }

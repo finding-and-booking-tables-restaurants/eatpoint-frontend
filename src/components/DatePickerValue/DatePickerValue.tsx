@@ -17,7 +17,7 @@ export default function DatePickerValue() {
 				MuiDateCalendar: {
 					styleOverrides: {
 						root: {
-							backgroundColor: '#FCF8EA',
+							backgroundColor: 'white',
 						},
 					},
 				},
@@ -41,10 +41,10 @@ export default function DatePickerValue() {
 					value={value?.format('YYYY-MM-DD')}
 				/>
 				<DatePicker
-					label="Дата"
 					value={value}
 					onChange={(newValue) => setValue(newValue)}
 					sx={{
+						borderRadius: '8px',
 						'.MuiDateCalendar-root': {
 							backgroundColor: 'black',
 						},
@@ -53,7 +53,7 @@ export default function DatePickerValue() {
 							maxWidth: 160,
 						},
 						'.MuiInputBase-root': {
-							maxWidth: 151,
+							maxWidth: 160,
 							minHeight: 56,
 							backgroundColor: '#FCF8EA',
 						},

@@ -97,14 +97,32 @@ export interface Restaurant {
 	socials: Social[];
 	images: Image[];
 	rating: number;
+	review_count: number;
 }
 
-export interface Review {
-	id: number;
-	username: string;
-	rating: number;
-	text: string;
-}
+export const initRestaurant = {
+	id: 0,
+	owner: 0,
+	name: '',
+	types: [],
+	cities: '',
+	address: '',
+	kitchens: [],
+	services: [],
+	zones: [],
+	average_check: '',
+	poster: '',
+	email: '',
+	telephone: '',
+	description: '',
+	is_verified: true,
+	worked: [],
+	is_favorited: true,
+	socials: [],
+	images: [],
+	rating: 0,
+	review_count: 0,
+};
 
 export interface UserData {
 	[key: string]: any;
@@ -262,57 +280,8 @@ export const inputs = [
 		required: false,
 		maxLength: 1500,
 		errorMessage: 'Длина введённого текста превышает 1500 символов',
+		helperText: 'Сообщите нам о ваших пожеланиях',
 	},
-];
-
-export const times = [
-	'00:00',
-	'00:30',
-	'01:00',
-	'01:30',
-	'02:00',
-	'02:30',
-	'03:00',
-	'03:30',
-	'04:00',
-	'04:30',
-	'05:00',
-	'05:30',
-	'06:30',
-	'07:00',
-	'07:30',
-	'08:00',
-	'08:30',
-	'09:00',
-	'09:30',
-	'10:00',
-	'10:30',
-	'11:00',
-	'11:30',
-	'12:00',
-	'12:30',
-	'13:00',
-	'13:30',
-	'14:00',
-	'14:30',
-	'15:00',
-	'15:30',
-	'16:00',
-	'16:30',
-	'17:00',
-	'17:30',
-	'18:00',
-	'18:30',
-	'19:00',
-	'19:30',
-	'20:00',
-	'20:30',
-	'21:00',
-	'21:30',
-	'22:00',
-	'22:30',
-	'23:00',
-	'23:30',
 ];
 
 export const timesForTimePicker = [
@@ -365,23 +334,21 @@ export const timesForTimePicker = [
 	'23:30',
 ];
 
-const EMAIL_REGEX = '^[a-zA-Z0-9+_.\\-]+@[a-zA-Z0-9]+\\.[a-zA-Z0-9]{2,4}$';
-const NAME_REGEX = '^[a-zA-Z\u0430-\u044f\u0410-\u042f]+$';
-const PHONE_NUMBER_REGEX =
-	'/^(+?d{1,4}[s-]?)?(()?(d{1,4})(?(2)))?[s-]?d{1,4}[s-]?d{1,9}$/';
-
 const ERROR = 'Ошибка';
 const ERROR_400 = 'Error: 400';
 const ERROR_401 = 'Error: 401';
 const ERROR_409 = 'Error: 409';
 
 const EMAIL_ALREADY_REGISTERED_MESSAGE =
-	'Пользователь с таким email уже существует.';
+	'Пользователь с таким email или телефоном уже существует.';
 const INCORRECT_ADD_USER_DATA = 'Переданы некорректные данные при регистрации';
 const REG_ERROR_MESSAGE = 'При регистрации пользователя произошла ошибка.';
 const INVALID_AUTH_DATA_ERROR_MESSAGE =
 	'Вы ввели неправильный логин или пароль.';
 const AUTH_ERROR_MESSAGE = 'При авторизации пользователя произошла ошибка.';
+const UPDATE_USER_INFO_ERROR_MESSAGE =
+	'При обновлении профиля произошла ошибка.';
+const UPDATE_USER_INFO_MESSAGE = 'Данные успешно обновлены';
 
 export {
 	ERROR,
@@ -393,6 +360,8 @@ export {
 	REG_ERROR_MESSAGE,
 	AUTH_ERROR_MESSAGE,
 	INVALID_AUTH_DATA_ERROR_MESSAGE,
+	UPDATE_USER_INFO_ERROR_MESSAGE,
+	UPDATE_USER_INFO_MESSAGE,
 };
 
 export const API_URL = 'https://eatpoint.sytes.net';

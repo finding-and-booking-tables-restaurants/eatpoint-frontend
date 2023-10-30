@@ -18,14 +18,13 @@ function MyTimePicker() {
 			id="outlined-select-currency"
 			select
 			name="start_time_reservation"
-			label="Время"
 			value={time}
 			onChange={handleTimeChange}
 			sx={{
 				backgroundColor: '#FCF8EA',
 				maxWidth: 328,
-				minWidth: 151,
-				ml: 'auto',
+				minWidth: 160,
+				borderRadius: '8px',
 			}}
 			SelectProps={{
 				IconComponent: () => (

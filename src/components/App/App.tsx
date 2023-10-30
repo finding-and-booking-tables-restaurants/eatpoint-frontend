@@ -7,10 +7,14 @@ import { useEffect, useState } from 'react';
 import { Routes, Route, useNavigate, Navigate } from 'react-router-dom';
 import RestaurantPage from '../RestaurantPage/RestaurantPage';
 import BookingPage from '../BookingPage/BookingPage';
-
-import { ILoginFormData, IRegisterFormData } from '../../types/commonTypes';
+import {
+	ILoginFormData,
+	IRegisterFormData,
+	IUserFormData,
+} from '../../types/commonTypes';
 import usersApi from '../../utils/UsersApi';
 import {
+	ERROR,
 	ERROR_400,
 	ERROR_401,
 	ERROR_409,
@@ -27,7 +31,6 @@ import RegisterFormUser from '../RegisterFormUser/RegisterFormUser';
 import LoginForm from '../LoginForm/LoginForm';
 import NotFoundPage from '../NotFoundPage/NotFoundPage';
 import BusinessProfile from '../BusinessProfile/BusinessProfile';
-import TEST from '../TEST/TEST';
 import Profile from '../Profile/Profile';
 import CurrentUserContext from '../../contexts/CurrentUserContext';
 import UserBookings from '../UserBookings/UserBookings';
@@ -40,8 +43,9 @@ function App() {
 	const [currentRole, setCurrentRole] = useState('');
 	const [authErrorMessage, setAuthErrorMessage] = useState('');
 	const [regErrorMessage, setRegErrorMessage] = useState('');
-	const [isLoggedIn, setIsLoggedIn] = useState(false);
+	const [isSuccessUpdateUser, setIsSuccessUpdateUser] = useState(false);
 	const [isSuccessRegister, setIsSuccessRegister] = useState(false);
+	const [isLoggedIn, setIsLoggedIn] = useState(false);
 	const [allEstablishments, setAllEstablishments] = useState<Restaurant[]>([]);
 	const [searchEstablishments, setSearchEstablishments] = useState<
 		Restaurant[]
@@ -53,14 +57,30 @@ function App() {
 	const [isSearching, setIsSearching] = useState(false);
 
 	useEffect(() => {
-		const token = localStorage.getItem('access-token');
-		if (token) {
+		const accessToken = localStorage.getItem('access-token');
+		const refreshToken = localStorage.getItem('refresh-token');
+
+		if (accessToken) {
 			usersApi
 				.getUserInfo()
 				.then(() => {
 					setIsLoggedIn(true);
 				})
-				.catch((err) => console.log(err));
+				.catch((err) => {
+					console.log(err);
+					if (refreshToken) {
+						usersApi
+							.refreshToken(refreshToken)
+							.then((res) => {
+								if (!res) return;
+								localStorage.setItem('access-token', res.access);
+							})
+							.then(() => {
+								setIsLoggedIn(true);
+							})
+							.catch((err) => console.log(err));
+					}
+				});
 		}
 	}, []);
 
@@ -98,10 +118,9 @@ function App() {
 			.authorize(data)
 			.then((res) => {
 				if (res.access) {
+					localStorage.setItem('access-token', res.access);
 					if (rememberMe) {
-						localStorage.setItem('access-token', res.access);
 						localStorage.setItem('refresh-token', res.refresh);
-						console.log('Токен сохранен');
 					}
 				}
 				setIsLoggedIn(true);
@@ -142,17 +161,36 @@ function App() {
 				confirm_code_send_method,
 			})
 			.then(() => {
-				setIsSuccessRegister(true);
 				setRegErrorMessage('');
+				setIsSuccessRegister(true);
 			})
 			.catch((err) => {
-				if (err === ERROR_409) {
+				setIsSuccessRegister(false);
+				if (err === ERROR_400) {
 					setRegErrorMessage(EMAIL_ALREADY_REGISTERED_MESSAGE);
-				} else if (err === ERROR_400) {
+				} else if (err === ERROR_409) {
 					setRegErrorMessage(INCORRECT_ADD_USER_DATA);
 				} else {
 					setRegErrorMessage(REG_ERROR_MESSAGE);
 				}
+			});
+	};
+
+	// Обновление профиля
+	const handleUpdateUserInfo = (userInfo: IUserFormData) => {
+		usersApi
+			.updateUserInfo(userInfo)
+			.then((user) => {
+				setCurrentUser(user);
+				setIsSuccessUpdateUser(true);
+			})
+			.catch((error) => {
+				if (error === ERROR_409) {
+					setIsSuccessUpdateUser(false);
+				} else {
+					setIsSuccessUpdateUser(false);
+				}
+				console.log(`${ERROR}: ${error}`);
 			});
 	};
 
@@ -190,6 +228,7 @@ function App() {
 		setIsLoggedIn(false);
 		setCurrentRole('');
 		setCurrentUser({});
+		setIsSearching(false);
 		navigate('/');
 	};
 
@@ -243,7 +282,13 @@ function App() {
 						<Route
 							key={item.id}
 							path={`/booking/${item.id}`}
-							element={<BookingPage userData={currentUser} id={item.id} />}
+							element={
+								<>
+									<Header />
+									<BookingPage userData={currentUser} id={item.id} />
+									<Footer />
+								</>
+							}
 						/>
 					))}
 
@@ -253,8 +298,8 @@ function App() {
 							<RegisterFormUser
 								role="client"
 								requestErrorMessage={regErrorMessage}
-								isSuccessRegister={isSuccessRegister}
 								onRegistration={handleRegistration}
+								isSuccessRegister={isSuccessRegister}
 							/>
 						}
 					/>
@@ -264,14 +309,24 @@ function App() {
 							<RegisterFormUser
 								role="restorateur"
 								requestErrorMessage={regErrorMessage}
-								isSuccessRegister={isSuccessRegister}
 								onRegistration={handleRegistration}
+								isSuccessRegister={isSuccessRegister}
 							/>
 						}
 					/>
 					<Route
 						path="/user-profile"
-						element={isLoggedIn ? <Profile /> : <Navigate to="/" />}
+						element={
+							isLoggedIn ? (
+								<Profile
+									onUpdateUserInfo={handleUpdateUserInfo}
+									isSuccessUpdateUser={isSuccessUpdateUser}
+									setIsSuccessUpdateUser={setIsSuccessUpdateUser}
+								/>
+							) : (
+								<Navigate to="/" />
+							)
+						}
 					/>
 					<Route
 						path="/user-bookings"

@@ -1,28 +1,24 @@
 import React from 'react';
 import './RatingChart.css';
-
-interface RatingChartData {
-	oneStar: number;
-	twoStar: number;
-	threeStar: number;
-	fourStar: number;
-	fiveStar: number;
-}
+import { ReviewType } from '../../types/Reviews';
 
 interface RatingChartProps {
-	data: RatingChartData;
+	reviews: ReviewType[];
 }
 
-const RatingChart: React.FC<RatingChartProps> = ({ data }) => {
-	const totalReviews =
-		data.oneStar +
-		data.twoStar +
-		data.threeStar +
-		data.fourStar +
-		data.fiveStar;
+const RatingChart: React.FC<RatingChartProps> = ({ reviews }) => {
+	const totalReviews = reviews.length ? reviews.length : 10;
 
 	const calculatePercentage = (value: number) => {
 		return (value / totalReviews) * 100;
+	};
+
+	const countRatings = {
+		oneStar: reviews.filter((review) => review.score === 1).length,
+		twoStar: reviews.filter((review) => review.score === 2).length,
+		threeStar: reviews.filter((review) => review.score === 3).length,
+		fourStar: reviews.filter((review) => review.score === 4).length,
+		fiveStar: reviews.filter((review) => review.score === 5).length,
 	};
 
 	return (
@@ -32,7 +28,7 @@ const RatingChart: React.FC<RatingChartProps> = ({ data }) => {
 					className="fill"
 					style={{
 						backgroundColor: '#C41A68',
-						width: `${calculatePercentage(data.fiveStar)}%`,
+						width: `${calculatePercentage(countRatings.fiveStar)}%`,
 					}}
 				/>
 			</div>
@@ -41,7 +37,7 @@ const RatingChart: React.FC<RatingChartProps> = ({ data }) => {
 					className="fill"
 					style={{
 						backgroundColor: '#C41A68',
-						width: `${calculatePercentage(data.fourStar)}%`,
+						width: `${calculatePercentage(countRatings.fourStar)}%`,
 					}}
 				/>
 			</div>
@@ -50,7 +46,7 @@ const RatingChart: React.FC<RatingChartProps> = ({ data }) => {
 					className="fill"
 					style={{
 						backgroundColor: '#C41A68',
-						width: `${calculatePercentage(data.threeStar)}%`,
+						width: `${calculatePercentage(countRatings.threeStar)}%`,
 					}}
 				/>
 			</div>
@@ -59,7 +55,7 @@ const RatingChart: React.FC<RatingChartProps> = ({ data }) => {
 					className="fill"
 					style={{
 						backgroundColor: '#C41A68',
-						width: `${calculatePercentage(data.twoStar)}%`,
+						width: `${calculatePercentage(countRatings.twoStar)}%`,
 					}}
 				/>
 			</div>
@@ -68,7 +64,7 @@ const RatingChart: React.FC<RatingChartProps> = ({ data }) => {
 					className="fill"
 					style={{
 						backgroundColor: '#C41A68',
-						width: `${calculatePercentage(data.oneStar)}%`,
+						width: `${calculatePercentage(countRatings.oneStar)}%`,
 					}}
 				/>
 			</div>
