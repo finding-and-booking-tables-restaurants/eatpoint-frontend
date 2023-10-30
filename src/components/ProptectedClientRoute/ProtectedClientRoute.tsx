@@ -6,8 +6,11 @@ interface RouteElementProps {
 	element: React.ReactNode;
 }
 
-const ProtectedRouteElement = ({ isLoggedIn, element }: RouteElementProps) => {
+const ProtectedClientRouteElement = ({
+	isLoggedIn,
+	element,
+}: RouteElementProps) => {
 	return isLoggedIn ? <>{element}</> : <Navigate to="/" replace={true} />;
 };
 
-export default ProtectedRouteElement;
+export default ProtectedClientRouteElement;
