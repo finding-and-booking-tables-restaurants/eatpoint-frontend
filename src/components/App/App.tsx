@@ -36,6 +36,8 @@ import CurrentUserContext from '../../contexts/CurrentUserContext';
 import UserBookings from '../UserBookings/UserBookings';
 import BusinessLanding from '../BusinessLanding/BusinessLanding';
 import ProtectedRouteElement from '../ProptectedRoute/ProtectedRoute';
+import SendProblem from '../SendProblem/SendProblem';
+import Help from '../Help/Help';
 
 function App() {
 	const [currentUser, setCurrentUser] = useState<UserData>();
@@ -345,6 +347,9 @@ function App() {
 					<Route path="/business" element={<BusinessLanding />} />
 					<Route path="/business-profile" element={<BusinessProfile />} />
 					<Route path="/add-restaurant" element={<AddRestaurant />}></Route>
+					{/* <Route path="/test" element={<TEST></TEST>}></Route> */}
+					<Route path="/support" element={<SendProblem />} />
+					<Route path="/help" element={<Help />} />
 					<Route path="*" element={<NotFoundPage></NotFoundPage>}></Route>
 				</Routes>
 			</CurrentUserContext.Provider>
