@@ -39,6 +39,7 @@ const Profile: React.FC<IUserFormProps> = ({
 			...formData,
 			role: role,
 		};
+
 		onUpdateUserInfo(formDataWithRole);
 	};
 
@@ -49,13 +50,20 @@ const Profile: React.FC<IUserFormProps> = ({
 			const timer = setTimeout(() => {
 				setIsSuccessUpdateUser(false);
 			}, 3000);
+
+			reset({
+				firstName: userData?.first_name,
+				lastName: userData?.last_name,
+				telephone: userData?.telephone,
+				email: userData?.email,
+			});
+
 			return () => clearTimeout(timer);
 		}
-	}, [isSuccessUpdateUser, setIsSuccessUpdateUser]);
+	}, [isSuccessUpdateUser, setIsSuccessUpdateUser, reset, userData]);
 
 	useEffect(() => {
 		handleChangePassword();
-		reset(defaultValues);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
@@ -161,8 +169,8 @@ const Profile: React.FC<IUserFormProps> = ({
 										'Введите корректный номер телефона в международном формате',
 								},
 								minLength: {
-									value: 7,
-									message: 'Минимальная длина - 7 символов',
+									value: 12,
+									message: 'Минимальная длина - 12 символов',
 								},
 								maxLength: {
 									value: 14,
@@ -315,7 +323,7 @@ const Profile: React.FC<IUserFormProps> = ({
 								mb: 3,
 								padding: '10px 24px 10px 16px',
 							}}
-							disabled={!isDirty || !isValid || isSuccessUpdateUser}
+							disabled={!isDirty || !isValid}
 						>
 							Сохранить изменения
 						</Button>
