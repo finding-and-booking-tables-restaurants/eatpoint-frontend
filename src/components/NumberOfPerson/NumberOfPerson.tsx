@@ -20,13 +20,18 @@ export const selectTheme = (theme: any) =>
 	});
 
 export default function SelectTextFields() {
+	const handleSelectPeople = (event: React.ChangeEvent<HTMLInputElement>) => {
+		localStorage.setItem('selected-number-of-people', event.target.value);
+	};
+
 	return (
 		<ThemeProvider theme={selectTheme}>
 			<TextField
 				id="outlined-select-currency"
 				select
 				name="number_guests"
-				defaultValue="2"
+				onChange={handleSelectPeople}
+				defaultValue={localStorage.getItem('selected-number-of-people')}
 				sx={{
 					backgroundColor: '#FCF8EA',
 					width: 328,
