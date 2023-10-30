@@ -17,6 +17,7 @@
 	display: flex;
 	gap: 8px;
 	margin: auto;
+	width: max-content;
 }
 
 .search-results__title {

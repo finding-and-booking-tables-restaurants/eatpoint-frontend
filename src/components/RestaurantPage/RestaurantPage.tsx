@@ -13,9 +13,13 @@ import {
 	ButtonProps,
 	Dialog,
 	DialogContent,
+	IconButton,
+	Backdrop,
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import { FavoriteBorder, Favorite } from '@mui/icons-material';
+import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { styled } from '@mui/material/styles';
 import ChatBubbleOutlineOutlinedIcon from '@mui/icons-material/ChatBubbleOutlineOutlined';
 import DeckOutlinedIcon from '@mui/icons-material/DeckOutlined';
@@ -122,6 +126,120 @@ export default function RestaurantPage({ id }: { id: number }) {
 	return (
 		<>
 			<Header />
+			<Dialog
+				open={isModalOpen}
+				onClose={closeModal}
+				sx={{
+					'.css-yiavyu-MuiBackdrop-root-MuiDialog-backdrop': {
+						backgroundColor: 'rgba(0, 0, 0, 0.8)',
+					},
+					'.css-1t1j96h-MuiPaper-root-MuiDialog-paper': {
+						boxShadow: 'none',
+					},
+				}}
+				PaperProps={{
+					style: {
+						backgroundColor: 'transparent',
+						position: 'relative',
+						color: '#fff',
+						margin: '15px',
+					},
+				}}
+			>
+				<Button
+					onClick={closeModal}
+					style={{
+						position: 'fixed',
+						top: '19px',
+						right: 0,
+						color: '#fff',
+						zIndex: 100,
+						height: '24px',
+						width: '24px',
+					}}
+				>
+					<CloseIcon />
+				</Button>
+				<DialogContent style={{ padding: 0, position: 'relative' }}>
+					{currentRestaurant.images.map((image, index) => (
+						<figure
+							key={index}
+							className="restaurant-page__modal-image-container"
+							style={{
+								display: index === currentImageIndex ? 'block' : 'none',
+								position: 'relative',
+								width: '100%',
+								padding: 0,
+							}}
+						>
+							<img
+								src={image.image}
+								alt={image.name}
+								style={{ width: '100%', height: 'auto' }}
+							/>
+							<figcaption className="restaurant-page__figcaption">{`Фото ${
+								index + 1
+							} из ${currentRestaurant.images.length}`}</figcaption>
+							<div
+								className="restaurant-page__modal-buttons-container"
+								style={{
+									textAlign: 'center',
+									position: 'absolute',
+									top: '50%',
+									width: '100%',
+								}}
+							>
+								{currentRestaurant.images.length > 1 && (
+									<>
+										<IconButton
+											sx={{
+												color: '#fff',
+												backgroundColor: '#05887B',
+												borderRadius: '50%',
+												padding: '8px',
+												position: 'fixed',
+												top: '50%',
+												transform: 'translateY(-50%)',
+												left: 0,
+												margin: '8px',
+											}}
+											onClick={() =>
+												setCurrentImageIndex((prev) =>
+													prev > 0 ? prev - 1 : 0
+												)
+											}
+										>
+											<ArrowBackIcon />
+										</IconButton>
+										<IconButton
+											style={{
+												color: '#fff',
+												backgroundColor: '#05887B',
+												borderRadius: '50%',
+												padding: '8px',
+												position: 'fixed',
+												top: '50%',
+												transform: 'translateY(-50%)',
+												right: 0,
+												margin: '8px',
+											}}
+											onClick={() =>
+												setCurrentImageIndex((prev) =>
+													prev < currentRestaurant.images.length - 1
+														? prev + 1
+														: prev
+												)
+											}
+										>
+											<ArrowForwardIcon />
+										</IconButton>
+									</>
+								)}
+							</div>
+						</figure>
+					))}
+				</DialogContent>
+			</Dialog>
 			<main className="restaurant-page">
 				<div className="restaurant-page__photo-container">
 					<img
@@ -142,93 +260,6 @@ export default function RestaurantPage({ id }: { id: number }) {
 								Все фото
 							</AllPhotosButton>
 						)}
-						<Dialog
-							open={isModalOpen}
-							onClose={closeModal}
-							fullWidth
-							maxWidth="lg"
-							PaperProps={{
-								style: {
-									display: 'flex',
-									flexDirection: 'column',
-									alignItems: 'center',
-									backgroundColor: 'rgba(0, 0, 0, 0.5)',
-									position: 'relative',
-								},
-							}}
-						>
-							<Button
-								onClick={closeModal}
-								style={{
-									position: 'absolute',
-									top: '10px',
-									right: '10px',
-									color: '#fff',
-									zIndex: 100,
-								}}
-							>
-								<CloseIcon />
-							</Button>
-							<DialogContent style={{ padding: 0, position: 'relative' }}>
-								{currentRestaurant.images.map((image, index) => (
-									<figure
-										key={index}
-										className="restaurant-page__modal-image-container"
-										style={{
-											display: index === currentImageIndex ? 'block' : 'none',
-											position: 'relative',
-											width: '100%',
-											padding: 0,
-										}}
-									>
-										<img
-											src={image.image}
-											alt={image.name}
-											style={{ width: '100%', height: 'auto' }}
-										/>
-										<figcaption>{`Фото ${index + 1} из ${
-											currentRestaurant.images.length
-										}`}</figcaption>
-										<div
-											className="restaurant-page__modal-buttons-container"
-											style={{
-												textAlign: 'center',
-												position: 'absolute',
-												top: '50%',
-												width: '100%',
-											}}
-										>
-											{currentRestaurant.images.length > 1 && (
-												<>
-													<Button
-														sx={{}}
-														onClick={() =>
-															setCurrentImageIndex((prev) =>
-																prev > 0 ? prev - 1 : 0
-															)
-														}
-													>
-														←
-													</Button>
-													<Button
-														style={{ position: 'absolute', right: 0 }}
-														onClick={() =>
-															setCurrentImageIndex((prev) =>
-																prev < currentRestaurant.images.length - 1
-																	? prev + 1
-																	: prev
-															)
-														}
-													>
-														Вперед
-													</Button>
-												</>
-											)}
-										</div>
-									</figure>
-								))}
-							</DialogContent>
-						</Dialog>
 					</div>
 				</div>
 				<div className="restaurant-page__info-container">

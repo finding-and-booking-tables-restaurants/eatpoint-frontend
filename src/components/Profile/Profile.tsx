@@ -14,7 +14,12 @@ const Profile: React.FC<IUserFormProps> = ({
 }) => {
 	const userData = useContext(CurrentUserContext).currentUser;
 	const role = useContext(CurrentUserContext).currentRole;
-
+	const [defaultValues] = useState({
+		firstName: userData?.first_name,
+		lastName: userData?.last_name,
+		telephone: userData?.telephone,
+		email: userData?.email,
+	});
 	const [isVisible, setIsVisible] = useState(false);
 
 	const {
@@ -23,12 +28,7 @@ const Profile: React.FC<IUserFormProps> = ({
 		formState: { errors, isDirty, isValid },
 	} = useForm<IUserFormData>({
 		mode: 'onChange',
-		defaultValues: {
-			firstName: userData.first_name,
-			lastName: userData.last_name,
-			telephone: userData.telephone,
-			email: userData.email,
-		},
+		defaultValues: defaultValues,
 	});
 
 	const onSubmit: SubmitHandler<IUserFormData> = async (formData, e) => {

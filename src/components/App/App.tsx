@@ -4,7 +4,13 @@ import Recomended from '../Recomended/Recomended';
 import SearchResults from '../SearchResults/SearchResults';
 import AddRestaurant from '../AddRestaurant/AddRestaurant';
 import { useEffect, useState } from 'react';
-import { Routes, Route, useNavigate, Navigate } from 'react-router-dom';
+import {
+	Routes,
+	Route,
+	useNavigate,
+	Navigate,
+	useLocation,
+} from 'react-router-dom';
 import RestaurantPage from '../RestaurantPage/RestaurantPage';
 import BookingPage from '../BookingPage/BookingPage';
 import {
@@ -35,6 +41,10 @@ import Profile from '../Profile/Profile';
 import CurrentUserContext from '../../contexts/CurrentUserContext';
 import UserBookings from '../UserBookings/UserBookings';
 import BusinessLanding from '../BusinessLanding/BusinessLanding';
+import ProtectedClientRouteElement from '../ProptectedClientRoute/ProtectedClientRoute';
+import SendProblem from '../SendProblem/SendProblem';
+import Help from '../Help/Help';
+import ProptectedBusinessRouteElement from '../ProptectedBusinessRoute/ProptectedBusinessRoute';
 
 function App() {
 	const [currentUser, setCurrentUser] = useState<UserData>();
@@ -51,6 +61,7 @@ function App() {
 	const [query, setQuery] = useState('');
 
 	const navigate = useNavigate();
+	const location = useLocation();
 
 	const [isSearching, setIsSearching] = useState(false);
 
@@ -63,6 +74,7 @@ function App() {
 				.getUserInfo()
 				.then(() => {
 					setIsLoggedIn(true);
+					navigate(location.pathname);
 				})
 				.catch((err) => {
 					console.log(err);
@@ -312,23 +324,43 @@ function App() {
 							/>
 						}
 					/>
-					<Route
-						path="/user-profile"
-						element={
-							isLoggedIn ? (
-								<Profile
-									onUpdateUserInfo={handleUpdateUserInfo}
-									isSuccessUpdateUser={isSuccessUpdateUser}
-									setIsSuccessUpdateUser={setIsSuccessUpdateUser}
+					{currentUser && currentRole && (
+						<Route
+							path="/user-profile"
+							element={
+								<ProtectedClientRouteElement
+									isLoggedIn={isLoggedIn}
+									element={
+										<Profile
+											onUpdateUserInfo={handleUpdateUserInfo}
+											isSuccessUpdateUser={isSuccessUpdateUser}
+											setIsSuccessUpdateUser={setIsSuccessUpdateUser}
+										/>
+									}
 								/>
-							) : (
-								<Navigate to="/" />
-							)
-						}
-					/>
+							}
+						/>
+					)}
+					{currentUser && currentRole && (
+						<Route
+							path="/business-profile"
+							element={
+								<ProptectedBusinessRouteElement
+									role={currentRole}
+									isLoggedIn={isLoggedIn}
+									element={<BusinessProfile />}
+								/>
+							}
+						/>
+					)}
 					<Route
 						path="/user-bookings"
-						element={isLoggedIn ? <UserBookings /> : <Navigate to="/" />}
+						element={
+							<ProtectedClientRouteElement
+								isLoggedIn={isLoggedIn}
+								element={<UserBookings />}
+							/>
+						}
 					/>
 					<Route
 						path="/signin"
@@ -340,9 +372,10 @@ function App() {
 						}
 					/>
 					<Route path="/business" element={<BusinessLanding />} />
-					<Route path="/business-profile" element={<BusinessProfile />} />
-					<Route path="/add-restaurant" element={<AddRestaurant />}></Route>
-					<Route path="*" element={<NotFoundPage></NotFoundPage>}></Route>
+					<Route path="/add-restaurant" element={<AddRestaurant />} />
+					<Route path="/support" element={<SendProblem />} />
+					<Route path="/help" element={<Help />} />
+					<Route path="*" element={<NotFoundPage />} />
 				</Routes>
 			</CurrentUserContext.Provider>
 		</div>
