@@ -117,8 +117,8 @@ const Profile: React.FC<IUserFormProps> = ({
 									message: 'Минимальная длина - 2 символа',
 								},
 								maxLength: {
-									value: 150,
-									message: 'Максимальная длина - 150 символов',
+									value: 30,
+									message: 'Максимальная длина - 30 символов',
 								},
 								pattern: {
 									value: /^[a-zA-Z\u0430-\u044f\u0410-\u042fёЁ\s]*$/,
@@ -150,8 +150,8 @@ const Profile: React.FC<IUserFormProps> = ({
 									message: 'Минимальная длина - 2 символа',
 								},
 								maxLength: {
-									value: 150,
-									message: 'Максимальная длина - 150 символов',
+									value: 30,
+									message: 'Максимальная длина - 30 символов',
 								},
 								pattern: {
 									value: /^[a-zA-Z\u0430-\u044f\u0410-\u042fёЁ\s]*$/,
