@@ -27,6 +27,7 @@ const Profile: React.FC<IUserFormProps> = ({
 		register,
 		setValue,
 		handleSubmit,
+		reset,
 		formState: { errors, isDirty, isValid },
 	} = useForm<IUserFormData>({
 		mode: 'onChange',
@@ -38,15 +39,22 @@ const Profile: React.FC<IUserFormProps> = ({
 
 		const formDataWithRole = {
 			...formData,
+			firstName: formData.firstName.trim(),
+			lastName: formData.lastName.trim(),
 			email: formData.email.trim(),
 			role: role,
 		};
+
 		onUpdateUserInfo(formDataWithRole);
 	};
 
 	const handleBlur = () => {
 		const emailValue = watch('email').trim();
+		const firstNameValue = watch('firstName').trim();
+		const lastNameValue = watch('lastName').trim();
 		setValue('email', emailValue, { shouldDirty: true });
+		setValue('firstName', firstNameValue, { shouldDirty: true });
+		setValue('lastName', lastNameValue, { shouldDirty: true });
 	};
 
 	const handleChangePassword = (): void =>
@@ -57,9 +65,17 @@ const Profile: React.FC<IUserFormProps> = ({
 			const timer = setTimeout(() => {
 				setIsSuccessUpdateUser(false);
 			}, 3000);
+
+			reset({
+				firstName: userData?.first_name,
+				lastName: userData?.last_name,
+				telephone: userData?.telephone,
+				email: userData?.email,
+			});
+
 			return () => clearTimeout(timer);
 		}
-	}, [isSuccessUpdateUser, setIsSuccessUpdateUser]);
+	}, [isSuccessUpdateUser, setIsSuccessUpdateUser, reset, userData]);
 
 	useEffect(() => {
 		handleChangePassword();
@@ -105,7 +121,7 @@ const Profile: React.FC<IUserFormProps> = ({
 									message: 'Максимальная длина - 150 символов',
 								},
 								pattern: {
-									value: /^[a-zA-Z\u0430-\u044f\u0410-\u042f]{2,150}$/,
+									value: /^[a-zA-Z\u0430-\u044f\u0410-\u042f\s]*$/,
 									message: 'Введите корректное имя',
 								},
 							})}
@@ -124,6 +140,7 @@ const Profile: React.FC<IUserFormProps> = ({
 								},
 							}}
 							fullWidth
+							onBlur={handleBlur}
 						/>
 						<TextField
 							{...register('lastName', {
@@ -137,7 +154,7 @@ const Profile: React.FC<IUserFormProps> = ({
 									message: 'Максимальная длина - 150 символов',
 								},
 								pattern: {
-									value: /^[a-zA-Z\u0430-\u044f\u0410-\u042f]{2,30}$/,
+									value: /^[a-zA-Z\u0430-\u044f\u0410-\u042f\s]*$/,
 									message: 'Введите корректную фамилию',
 								},
 							})}
@@ -157,6 +174,7 @@ const Profile: React.FC<IUserFormProps> = ({
 								},
 							}}
 							fullWidth
+							onBlur={handleBlur}
 						/>
 						<TextField
 							{...register('telephone', {
@@ -167,8 +185,8 @@ const Profile: React.FC<IUserFormProps> = ({
 										'Введите корректный номер телефона в международном формате',
 								},
 								minLength: {
-									value: 7,
-									message: 'Минимальная длина - 7 символов',
+									value: 12,
+									message: 'Минимальная длина - 12 символов',
 								},
 								maxLength: {
 									value: 14,
@@ -322,7 +340,7 @@ const Profile: React.FC<IUserFormProps> = ({
 								mb: 3,
 								padding: '10px 24px 10px 16px',
 							}}
-							disabled={!isDirty || !isValid || isSuccessUpdateUser}
+							disabled={!isDirty || !isValid}
 						>
 							Сохранить изменения
 						</Button>

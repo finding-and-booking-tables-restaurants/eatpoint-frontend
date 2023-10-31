@@ -5,12 +5,16 @@ import { MenuItem } from '@mui/material';
 import Clocks from '@mui/icons-material/AccessTime';
 
 function MyTimePicker() {
-	const [time, setTime] = useState<string>(times[23]);
+	const selectedTime = localStorage.getItem('selected-time');
+
+	const [time, setTime] = useState<string>(
+		selectedTime ? selectedTime : times[23]
+	);
 
 	const handleTimeChange = (event: ChangeEvent<HTMLInputElement>) => {
-		const selectedTime = event.target.value;
-
-		setTime(selectedTime);
+		const pickedTime = event.target.value;
+		localStorage.setItem('selected-time', pickedTime);
+		setTime(pickedTime);
 	};
 
 	return (

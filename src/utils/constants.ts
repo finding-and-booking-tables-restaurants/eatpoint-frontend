@@ -19,7 +19,7 @@ export const availableType = [
 
 export const availableService = [
 	'Парковка',
-	'Терасса',
+	'Терраса',
 	'Wi-Fi',
 	'Детская комната',
 ];
@@ -196,53 +196,26 @@ export const fetchRestaurantData = async (id: number) => {
 };
 
 export const numOfPeople = [
-	{
-		value: 1,
-		label: '1 человек',
-	},
-	{
-		value: 2,
-		label: '2 человека',
-	},
-	{
-		value: 3,
-		label: '3 человека',
-	},
-	{
-		value: 4,
-		label: '4 человека',
-	},
-	{
-		value: 5,
-		label: '5 человек',
-	},
-	{
-		value: 6,
-		label: '6 человек',
-	},
-];
-
-export const zones = [
-	{
-		value: 1,
-		label: 'Основной зал',
-	},
-	{
-		value: 2,
-		label: 'Центральный зал',
-	},
-	{
-		value: 3,
-		label: 'Барная стойка',
-	},
-	{
-		value: 4,
-		label: 'Зона на терассе',
-	},
-	{
-		value: 5,
-		label: 'Банкетный зал',
-	},
+	{ value: 1, label: '1 человек' },
+	{ value: 2, label: '2 человека' },
+	{ value: 3, label: '3 человека' },
+	{ value: 4, label: '4 человека' },
+	{ value: 5, label: '5 человек' },
+	{ value: 6, label: '6 человек' },
+	{ value: 7, label: '7 человек' },
+	{ value: 8, label: '8 человек' },
+	{ value: 9, label: '9 человек' },
+	{ value: 10, label: '10 человек' },
+	{ value: 11, label: '11 человек' },
+	{ value: 12, label: '12 человек' },
+	{ value: 13, label: '13 человек' },
+	{ value: 14, label: '14 человек' },
+	{ value: 15, label: '15 человек' },
+	{ value: 16, label: '16 человек' },
+	{ value: 17, label: '17 человек' },
+	{ value: 18, label: '18 человек' },
+	{ value: 19, label: '19 человек' },
+	{ value: 20, label: '20 человек' },
 ];
 
 export const formValues: any = {
