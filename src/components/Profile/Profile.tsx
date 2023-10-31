@@ -121,7 +121,7 @@ const Profile: React.FC<IUserFormProps> = ({
 									message: 'Максимальная длина - 150 символов',
 								},
 								pattern: {
-									value: /^[a-zA-Z\u0430-\u044f\u0410-\u042f\s]*$/,
+									value: /^[a-zA-Z\u0430-\u044f\u0410-\u042fёЁ\s]*$/,
 									message: 'Введите корректное имя',
 								},
 							})}
@@ -154,8 +154,8 @@ const Profile: React.FC<IUserFormProps> = ({
 									message: 'Максимальная длина - 150 символов',
 								},
 								pattern: {
-									value: /^[a-zA-Z\u0430-\u044f\u0410-\u042f\s]*$/,
-									message: 'Введите корректную фамилию',
+									value: /^[a-zA-Z\u0430-\u044f\u0410-\u042fёЁ\s]*$/,
+									message: 'Введите корректное имя',
 								},
 							})}
 							placeholder="Введите фамилию"
