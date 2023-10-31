@@ -219,6 +219,10 @@ const Profile: React.FC<IUserFormProps> = ({
 									value: /^[A-Z0-9._%+-]+\S@[A-Z0-9.-]+\.[A-Z]{2,4}$/i,
 									message: 'Введите корректный адрес электронной почты',
 								},
+								maxLength: {
+									value: 50,
+									message: 'Максимальная длина - 50 символов',
+								},
 							})}
 							placeholder="Введите email"
 							type="email"
