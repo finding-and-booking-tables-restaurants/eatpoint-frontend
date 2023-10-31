@@ -216,9 +216,11 @@ const Profile: React.FC<IUserFormProps> = ({
 							{...register('email', {
 								required: 'Обязательное поле',
 								pattern: {
-									value: /^[A-Z0-9._%+-]+\S@[A-Z0-9.-]+\.[A-Z]{2,4}$/i,
+									value:
+										/^(?!.*(__|-{2}))[A-Z0-9._%+-]+\S@[A-Z0-9.-]+\.[A-Z]{2,4}$/i,
 									message: 'Введите корректный адрес электронной почты',
 								},
+
 								maxLength: {
 									value: 50,
 									message: 'Максимальная длина - 50 символов',
