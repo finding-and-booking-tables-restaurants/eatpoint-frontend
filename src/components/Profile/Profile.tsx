@@ -20,10 +20,12 @@ const Profile: React.FC<IUserFormProps> = ({
 		telephone: userData?.telephone,
 		email: userData?.email,
 	});
-	const [isVisible, setIsVisible] = useState(false);
+	const [isPasswordChangeVisible, setIsPasswordChangeVisible] = useState(false);
 
 	const {
+		watch,
 		register,
+		setValue,
 		handleSubmit,
 		formState: { errors, isDirty, isValid },
 	} = useForm<IUserFormData>({
@@ -36,12 +38,19 @@ const Profile: React.FC<IUserFormProps> = ({
 
 		const formDataWithRole = {
 			...formData,
+			email: formData.email.trim(),
 			role: role,
 		};
 		onUpdateUserInfo(formDataWithRole);
 	};
 
-	const handleChangePassword = (): void => setIsVisible(!isVisible);
+	const handleBlur = () => {
+		const emailValue = watch('email').trim();
+		setValue('email', emailValue, { shouldDirty: true });
+	};
+
+	const handleChangePassword = (): void =>
+		setIsPasswordChangeVisible(!isPasswordChangeVisible);
 
 	useEffect(() => {
 		if (isSuccessUpdateUser) {
@@ -54,7 +63,6 @@ const Profile: React.FC<IUserFormProps> = ({
 
 	useEffect(() => {
 		handleChangePassword();
-		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
 	return (
@@ -190,7 +198,7 @@ const Profile: React.FC<IUserFormProps> = ({
 							{...register('email', {
 								required: 'Обязательное поле',
 								pattern: {
-									value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i,
+									value: /^[A-Z0-9._%+-]+\S@[A-Z0-9.-]+\.[A-Z]{2,4}$/i,
 									message: 'Введите корректный адрес электронной почты',
 								},
 							})}
@@ -200,6 +208,7 @@ const Profile: React.FC<IUserFormProps> = ({
 							variant="outlined"
 							error={!!errors.email}
 							helperText={errors.email?.message || ''}
+							onBlur={handleBlur}
 							sx={{
 								marginTop: 2,
 								'.css-md26zr-MuiInputBase-root-MuiOutlinedInput-root': {
@@ -220,18 +229,18 @@ const Profile: React.FC<IUserFormProps> = ({
 								textTransform: 'none',
 								width: '156px',
 								height: '40px',
-								display: isVisible ? 'block' : 'none',
+								display: isPasswordChangeVisible ? 'block' : 'none',
 								color: '#05887B',
 								borderRadius: '100px',
 								borderColor: '#05887B',
-								marginBottom: `${isVisible && '101px'}`,
+								marginBottom: `${isPasswordChangeVisible && '101px'}`,
 								marginTop: '15px',
 							}}
 						>
 							Сменить пароль
 						</Button>
 					</div>
-					{!isVisible && (
+					{!isPasswordChangeVisible && (
 						<div>
 							<TextField
 								type="password"
