@@ -37,6 +37,7 @@ import UserBookings from '../UserBookings/UserBookings';
 import BusinessLanding from '../BusinessLanding/BusinessLanding';
 import SendProblem from '../SendProblem/SendProblem';
 import Help from '../Help/Help';
+import EditRestaurant from '../EditRestaurant/EditRestaurant';
 
 function App() {
 	const [currentUser, setCurrentUser] = useState<UserData>();
@@ -343,11 +344,17 @@ function App() {
 					/>
 					<Route path="/business" element={<BusinessLanding />} />
 					<Route path="/business-profile" element={<BusinessProfile />} />
-					<Route path="/add-restaurant" element={<AddRestaurant />}></Route>
-
+					<Route
+						path="/business-profile/add-restaurant"
+						element={<AddRestaurant />}
+					/>
+					<Route
+						path="//business-profile/edit-restaurant/:id"
+						element={<EditRestaurant />}
+					/>
 					<Route path="/support" element={<SendProblem />} />
 					<Route path="/help" element={<Help />} />
-					<Route path="*" element={<NotFoundPage></NotFoundPage>}></Route>
+					<Route path="*" element={<NotFoundPage></NotFoundPage>} />
 				</Routes>
 			</CurrentUserContext.Provider>
 		</div>

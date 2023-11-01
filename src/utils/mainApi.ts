@@ -51,6 +51,17 @@ class MainApi {
 		});
 	}
 
+	editEstablishment(data: RestaurantData, id: number) {
+		return this._sendFetchRequest(`/api/v1/business/establishments/${id}/`, {
+			method: 'PATCH',
+			headers: {
+				authorization: 'Bearer ' + localStorage.getItem('access-token'),
+				'Content-Type': 'application/json',
+			},
+			body: JSON.stringify(data),
+		});
+	}
+
 	getEstablishmentsReviews(id: number) {
 		return this._sendFetchRequest(`/api/v1/establishments/${id}/reviews/`, {
 			headers: this._headers,

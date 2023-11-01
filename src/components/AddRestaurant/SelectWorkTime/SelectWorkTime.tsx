@@ -1,5 +1,5 @@
 import './SelectWorkTime.css';
-import * as React from 'react';
+import React from 'react';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
@@ -11,6 +11,8 @@ interface SelectWorkTimeProps {
 	onTimeChange?:
 		| ((day: string, start: string, end: string) => void)
 		| undefined;
+	selectedTimeStart?: string;
+	selectedTimeEnd?: string;
 }
 
 const ITEM_HEIGHT = 48;
@@ -24,11 +26,24 @@ const MenuProps = {
 	},
 };
 
-function SelectWorkTime({ text, onTimeChange }: SelectWorkTimeProps) {
+function SelectWorkTime({
+	text,
+	onTimeChange,
+	selectedTimeStart,
+	selectedTimeEnd,
+}: SelectWorkTimeProps) {
 	const [timeStart, setTimeStart] = React.useState<string>(
-		timesForTimePicker[0]
+		selectedTimeStart || timesForTimePicker[0]
 	);
-	const [timeEnd, setTimeEnd] = React.useState<string>(timesForTimePicker[0]);
+	const [timeEnd, setTimeEnd] = React.useState<string>(
+		selectedTimeEnd || timesForTimePicker[0]
+	);
+	const [inputFieldsDisabled, setInputFieldsDisabled] =
+		React.useState<boolean>(false);
+
+	const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+		setInputFieldsDisabled(event.target.checked);
+	};
 
 	const handleChangeTimeStart = (
 		event: SelectChangeEvent<typeof timeStart>
@@ -56,38 +71,16 @@ function SelectWorkTime({ text, onTimeChange }: SelectWorkTimeProps) {
 
 	return (
 		<div className="select-work-time">
-			<div className="">
-				<p className="select-work-time__day">{text}</p>
-				<FormControl sx={{ m: 1, width: 116 }}>
-					<Select
-						labelId="demo-multiple-name-label"
-						id="demo-multiple-name"
-						value={timeStart}
-						onChange={handleChangeTimeStart}
-						inputProps={{ 'aria-label': 'Without label' }}
-						MenuProps={MenuProps}
-						sx={{ backgroundColor: '#FDFAF2' }}
-					>
-						{timesForTimePicker.map((time, i) => (
-							<MenuItem
-								key={i}
-								value={time}
-								sx={{ backgroundColor: '#FDFAF2' }}
-							>
-								{time}
-							</MenuItem>
-						))}
-					</Select>
-				</FormControl>
-			</div>
+			<p className="select-work-time__day">{text}</p>
 			<FormControl sx={{ m: 1, width: 116 }}>
 				<Select
 					labelId="demo-multiple-name-label"
 					id="demo-multiple-name"
-					value={timeEnd}
-					onChange={handleChangeTimeEnd}
+					value={timeStart}
+					onChange={handleChangeTimeStart}
 					inputProps={{ 'aria-label': 'Without label' }}
 					MenuProps={MenuProps}
+					disabled={inputFieldsDisabled}
 					sx={{ backgroundColor: '#FDFAF2' }}
 				>
 					{timesForTimePicker.map((time, i) => (
@@ -97,6 +90,31 @@ function SelectWorkTime({ text, onTimeChange }: SelectWorkTimeProps) {
 					))}
 				</Select>
 			</FormControl>
+
+			<FormControl sx={{ m: 1, width: 116 }}>
+				<Select
+					labelId="demo-multiple-name-label"
+					id="demo-multiple-name"
+					value={timeEnd}
+					onChange={handleChangeTimeEnd}
+					inputProps={{ 'aria-label': 'Without label' }}
+					MenuProps={MenuProps}
+					disabled={inputFieldsDisabled}
+					sx={{ backgroundColor: '#FDFAF2' }}
+				>
+					{timesForTimePicker.map((time, i) => (
+						<MenuItem key={i} value={time} sx={{ backgroundColor: '#FDFAF2' }}>
+							{time}
+						</MenuItem>
+					))}
+				</Select>
+			</FormControl>
+			<input
+				type="checkbox"
+				className="checkbox-item__input"
+				name="example"
+				onChange={handleCheckboxChange}
+			/>
 		</div>
 	);
 }

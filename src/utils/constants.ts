@@ -24,6 +24,8 @@ export const availableService = [
 	'Детская комната',
 ];
 
+export const daysOfWeek = ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'];
+
 export interface kitchen {
 	id: number;
 	name: string;
