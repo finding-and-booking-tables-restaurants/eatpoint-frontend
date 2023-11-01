@@ -45,6 +45,7 @@ import SendProblem from '../SendProblem/SendProblem';
 import Help from '../Help/Help';
 import ProptectedBusinessRouteElement from '../ProptectedBusinessRoute/ProptectedBusinessRoute';
 import { mainApi } from '../../utils/mainApi';
+import RestaurantReviews from '../RestaurantReviews/RestaurantReviews';
 
 function App() {
 	const [currentUser, setCurrentUser] = useState<UserData>();
@@ -336,6 +337,21 @@ function App() {
 							}
 						/>
 					)}
+					{currentRole &&
+						allEstablishments.map((item: Restaurant) => (
+							<Route
+								key={item.id}
+								path={`/restaurant-reviews/${item.id}`}
+								element={
+									<ProptectedBusinessRouteElement
+										role={currentRole}
+										isLoggedIn={isLoggedIn}
+										element={<RestaurantReviews id={item.id} />}
+									/>
+								}
+							/>
+						))}
+
 					<Route
 						path="/user-bookings"
 						element={
