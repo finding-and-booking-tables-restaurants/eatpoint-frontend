@@ -340,6 +340,7 @@ function App() {
 					{currentRole &&
 						allEstablishments.map((item: Restaurant) => (
 							<Route
+								key={item.id}
 								path={`/restaurant-reviews/${item.id}`}
 								element={
 									<ProptectedBusinessRouteElement

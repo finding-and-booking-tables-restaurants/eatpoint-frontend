@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import logo from '../../images/logo.svg';
 import place from '../../images/place.svg';
 import './Header.css';
@@ -8,6 +8,8 @@ import cities from '../../fakeData/cities';
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import { useLocation, useNavigate } from 'react-router-dom';
 import CurrentUserContext from '../../contexts/CurrentUserContext';
+import { handlePageReload } from '../../utils/pageReloader';
+import { getCityNameByLocation } from '../../utils/getCityByLocation';
 
 const Header = ({
 	handleRestart,
@@ -16,15 +18,12 @@ const Header = ({
 }) => {
 	const navigate = useNavigate();
 	const location = useLocation();
+	const isLoggedIn = useContext(CurrentUserContext).isLoggedIn;
+
 	const chechLocation = (path: string) => {
 		return location.pathname === path ? true : false;
 	};
 
-	const handlePageReload = () => {
-		window.location.reload();
-	};
-
-	const isLoggedIn = useContext(CurrentUserContext).isLoggedIn;
 	let role = useContext(CurrentUserContext).currentRole;
 	if (!role) role = 'client';
 	const handleLogOut = useContext(CurrentUserContext).handleLogOut;
@@ -50,21 +49,33 @@ const Header = ({
 	};
 	const handleCityMenuClose = (event: React.MouseEvent<HTMLLIElement>) => {
 		const selectedCity = (event.currentTarget as HTMLLIElement).innerText;
+		if (event.currentTarget.id === 'basic-menu') {
+			setAnchorElCity(null);
+			return;
+		}
 		setCity(selectedCity || city);
 		setAnchorElCity(null);
 	};
 
 	const handleNavClose = (event: React.MouseEvent<HTMLLIElement>) => {
+		setAnchorElNav(null);
 		const clickPath = event.currentTarget.id;
+		if (clickPath === 'basic-menu') return;
 		if (clickPath === location.pathname) handlePageReload();
 		navigate(clickPath);
-		setAnchorElNav(null);
 	};
 
 	const hadleLogoClick = () => {
 		navigate('/');
 		handleRestart && handleRestart(true);
 	};
+
+	useEffect(() => {
+		getCityNameByLocation().then((city) => {
+			if (!city) return;
+			setCity(city);
+		});
+	}, []);
 
 	return (
 		<header className="header">
