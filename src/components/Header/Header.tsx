@@ -20,6 +20,10 @@ const Header = ({
 		return location.pathname === path ? true : false;
 	};
 
+	const handlePageReload = () => {
+		window.location.reload();
+	};
+
 	const isLoggedIn = useContext(CurrentUserContext).isLoggedIn;
 	let role = useContext(CurrentUserContext).currentRole;
 	if (!role) role = 'client';
@@ -51,7 +55,9 @@ const Header = ({
 	};
 
 	const handleNavClose = (event: React.MouseEvent<HTMLLIElement>) => {
-		navigate(event.currentTarget.id);
+		const clickPath = event.currentTarget.id;
+		if (clickPath === location.pathname) handlePageReload();
+		navigate(clickPath);
 		setAnchorElNav(null);
 	};
 
