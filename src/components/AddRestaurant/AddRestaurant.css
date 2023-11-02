@@ -258,8 +258,6 @@
 }
 
 .add-restaurant__file-paragraph {
-	margin-right: 20px;
-	max-width: 150px;
 	font-size: 12px;
 	font-weight: 400;
 	line-height: 16px;
@@ -313,12 +311,6 @@
 	opacity: 0.8;
 }
 
-.add-restaurant__poster {
-	width: 40px;
-	height: 40px;
-	border: none;
-}
-
 .input__file-button::before {
 	padding-right: 5px;
 	display: flex;
@@ -327,29 +319,4 @@
 	width: 12px;
 	height: 12px;
 	background: url('../../images/add-restaurant__plus.svg') no-repeat;
-}
-
-.add-restaurant__back-btn {
-	margin-bottom: 24px;
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	max-width: 328px;
-	height: 48px;
-	color: #05887b;
-	border: 1px solid #006c60;
-	border-radius: 30px;
-	background-color: #fff;
-	font-family: Roboto;
-	font-size: 16px;
-	font-weight: 500;
-	line-height: 20px;
-	letter-spacing: 0.10000000149011612px;
-	text-align: center;
-	cursor: pointer;
-	text-decoration: none;
-}
-
-.add-restaurant__back-btn:hover {
-	opacity: 0.7;
 }

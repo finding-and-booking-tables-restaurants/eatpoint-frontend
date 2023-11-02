@@ -24,6 +24,8 @@ function BusinessProfile() {
 		});
 	}, []);
 
+	console.log(myEstablishments);
+
 	return (
 		<>
 			<Header />
@@ -47,7 +49,7 @@ function BusinessProfile() {
 				</div>
 
 				<Link
-					to="add-restaurant"
+					to="/add-restaurant"
 					className="business-profile__add-restaurantBtn"
 				>
 					Добавить ресторан
@@ -63,9 +65,6 @@ function BusinessProfile() {
 							address={establishment.address}
 							poster={establishment.poster}
 							avarage_check={establishment.average_check}
-							rating={establishment.rating}
-							review_count={establishment.review_count}
-							establishment={establishment}
 						/>
 					))}
 				</ul>

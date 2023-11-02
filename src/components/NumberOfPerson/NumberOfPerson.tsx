@@ -4,14 +4,15 @@ import { createTheme } from '@mui/material/styles';
 import { ThemeProvider } from '@emotion/react';
 import { numOfPeople } from '../../utils/constants';
 
-const newTheme = (theme: any) =>
+export const selectTheme = (theme: any) =>
 	createTheme({
 		...theme,
 		components: {
 			MuiList: {
 				styleOverrides: {
 					root: {
-						padding: 0,
+						backgroundColor: '#FCF8EA',
+						maxHeight: '336px',
 					},
 				},
 			},
@@ -19,12 +20,18 @@ const newTheme = (theme: any) =>
 	});
 
 export default function SelectTextFields() {
+	const handleSelectPeople = (event: React.ChangeEvent<HTMLInputElement>) => {
+		localStorage.setItem('selected-number-of-people', event.target.value);
+	};
+
 	return (
-		<ThemeProvider theme={newTheme}>
+		<ThemeProvider theme={selectTheme}>
 			<TextField
 				id="outlined-select-currency"
 				select
-				defaultValue="2"
+				name="number_guests"
+				onChange={handleSelectPeople}
+				defaultValue={localStorage.getItem('selected-number-of-people') || '2'}
 				sx={{
 					backgroundColor: '#FCF8EA',
 					width: 328,

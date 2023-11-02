@@ -38,7 +38,7 @@ function AddRestaurant() {
 			{ day: 'воскресенье', start: '00:00', end: '00:00' },
 		],
 	});
-	// eslint-disable-next-line @typescript-eslint/no-unused-vars
+
 	const [selectedCheckboxes, setSelectedCheckboxes] = useState<{
 		[key: string]: boolean;
 	}>({});
@@ -146,24 +146,16 @@ function AddRestaurant() {
 				// console.log('Base64-строка изображения:', base64String);
 			};
 			reader.readAsDataURL(file);
-		} else {
-			setFormData({ ...formData, poster: undefined });
 		}
 	}
 
-	const handleTimeChange = (day: string, start: string, end: string) => {
+	const handleTimeChange = (start: string, end: string) => {
 		setFormData((prevData) => {
-			const updatedWorked = prevData.worked.map((workedDay) => {
-				if (workedDay.day === day) {
-					return {
-						...workedDay,
-						start,
-						end,
-					};
-				} else {
-					return workedDay;
-				}
-			});
+			const updatedWorked = prevData.worked.map((workedDay) => ({
+				...workedDay,
+				start,
+				end,
+			}));
 
 			return {
 				...prevData,
@@ -382,7 +374,7 @@ function AddRestaurant() {
 					<h3 className="add-restaurant__category_padding-bot">Фотография</h3>
 					<div className="add-restaurant__flex-box-file">
 						<p className="add-restaurant__file-paragraph">
-							Добавьте фото для аватара размером до 5 МБ
+							Добавьте фото размером до 5 МБ
 						</p>
 						<div className="input__wrapper">
 							<input
@@ -399,24 +391,10 @@ function AddRestaurant() {
 							</label>
 						</div>
 					</div>
-					{formData.poster ? (
-						<img
-							src={
-								typeof formData.poster === 'string'
-									? formData.poster
-									: undefined
-							}
-							alt="avatar"
-							className="add-restaurant__poster"
-						/>
-					) : null}
 					<button className="add-restaurant__submit-btn" type="submit">
 						Добавить заведение
 					</button>
 				</form>
-				<Link to="/business-profile" className="add-restaurant__back-btn">
-					Назад
-				</Link>
 			</section>
 			<Footer />
 		</>

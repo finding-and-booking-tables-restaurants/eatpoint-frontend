@@ -25,33 +25,7 @@ const BookingForm: FC<BookingFormProps> = ({ children, onSubmit, booking }) => {
 					<DatePickerValue />
 					<TimePickerValue />
 				</div>
-				<TextField
-					id="outlined-select-currency"
-					select
-					name="number_guests"
-					defaultValue={2}
-					sx={{
-						backgroundColor: '#FCF8EA',
-						borderRadius: '8px',
-						maxWidth: 328,
-						'& .MuiSelect-menu': {
-							minHeight: '100px',
-							maxHeight: '200px',
-						},
-					}}
-				>
-					{numOfPeople.map((option) => (
-						<MenuItem
-							key={option.value}
-							value={option.value}
-							sx={{
-								backgroundColor: '#FCF8EA',
-							}}
-						>
-							{option.label}
-						</MenuItem>
-					))}
-				</TextField>
+				<NumberOfPerson />
 				{children}
 			</SearchForm>
 		</div>

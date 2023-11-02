@@ -19,12 +19,10 @@ export const availableType = [
 
 export const availableService = [
 	'Парковка',
-	'Терасса',
+	'Терраса',
 	'Wi-Fi',
 	'Детская комната',
 ];
-
-export const daysOfWeek = ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'];
 
 export interface kitchen {
 	id: number;
@@ -164,27 +162,6 @@ export const getDayAbbreviation = (day: string) => {
 	}
 };
 
-export function getFullDayName(shortName: string): string {
-	switch (shortName) {
-		case 'Пн':
-			return 'понедельник';
-		case 'Вт':
-			return 'вторник';
-		case 'Ср':
-			return 'среда';
-		case 'Чт':
-			return 'четверг';
-		case 'Пт':
-			return 'пятница';
-		case 'Сб':
-			return 'суббота';
-		case 'Вс':
-			return 'воскресенье';
-		default:
-			return shortName;
-	}
-}
-
 function replaceBackendUrl(data: any): any {
 	const replaceUrl = (url: string) =>
 		url.replace('backend:8000', 'eatpoint.sytes.net');
@@ -219,53 +196,26 @@ export const fetchRestaurantData = async (id: number) => {
 };
 
 export const numOfPeople = [
-	{
-		value: 1,
-		label: '1 человек',
-	},
-	{
-		value: 2,
-		label: '2 человека',
-	},
-	{
-		value: 3,
-		label: '3 человека',
-	},
-	{
-		value: 4,
-		label: '4 человека',
-	},
-	{
-		value: 5,
-		label: '5 человек',
-	},
-	{
-		value: 6,
-		label: '6 человек',
-	},
-];
-
-export const zones = [
-	{
-		value: 1,
-		label: 'Основной зал',
-	},
-	{
-		value: 2,
-		label: 'Центральный зал',
-	},
-	{
-		value: 3,
-		label: 'Барная стойка',
-	},
-	{
-		value: 4,
-		label: 'Зона на терассе',
-	},
-	{
-		value: 5,
-		label: 'Банкетный зал',
-	},
+	{ value: 1, label: '1 человек' },
+	{ value: 2, label: '2 человека' },
+	{ value: 3, label: '3 человека' },
+	{ value: 4, label: '4 человека' },
+	{ value: 5, label: '5 человек' },
+	{ value: 6, label: '6 человек' },
+	{ value: 7, label: '7 человек' },
+	{ value: 8, label: '8 человек' },
+	{ value: 9, label: '9 человек' },
+	{ value: 10, label: '10 человек' },
+	{ value: 11, label: '11 человек' },
+	{ value: 12, label: '12 человек' },
+	{ value: 13, label: '13 человек' },
+	{ value: 14, label: '14 человек' },
+	{ value: 15, label: '15 человек' },
+	{ value: 16, label: '16 человек' },
+	{ value: 17, label: '17 человек' },
+	{ value: 18, label: '18 человек' },
+	{ value: 19, label: '19 человек' },
+	{ value: 20, label: '20 человек' },
 ];
 
 export const formValues: any = {
@@ -372,6 +322,8 @@ const AUTH_ERROR_MESSAGE = 'При авторизации пользовател
 const UPDATE_USER_INFO_ERROR_MESSAGE =
 	'При обновлении профиля произошла ошибка.';
 const UPDATE_USER_INFO_MESSAGE = 'Данные успешно обновлены';
+const DUPLICATE_EMAIL_PHONE_MESSAGE =
+	'Пользователь с таким email или телефоном уже существует';
 
 export {
 	ERROR,
@@ -385,6 +337,7 @@ export {
 	INVALID_AUTH_DATA_ERROR_MESSAGE,
 	UPDATE_USER_INFO_ERROR_MESSAGE,
 	UPDATE_USER_INFO_MESSAGE,
+	DUPLICATE_EMAIL_PHONE_MESSAGE,
 };
 
 export const API_URL = 'https://eatpoint.sytes.net';

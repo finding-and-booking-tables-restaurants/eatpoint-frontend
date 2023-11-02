@@ -9,52 +9,86 @@ import { IUserFormData, IUserFormProps } from '../../types/commonTypes';
 
 const Profile: React.FC<IUserFormProps> = ({
 	onUpdateUserInfo,
-	isSuccessUpdateUser,
-	setIsSuccessUpdateUser,
+	requestStatus: { message, isSuccess },
+	resetRequestMessage,
 }) => {
 	const userData = useContext(CurrentUserContext).currentUser;
 	const role = useContext(CurrentUserContext).currentRole;
-
-	const [isVisible, setIsVisible] = useState(false);
+	const [defaultValues] = useState({
+		firstName: userData?.first_name,
+		lastName: userData?.last_name,
+		telephone: userData?.telephone,
+		email: userData?.email,
+	});
+	const [isPasswordChangeVisible, setIsPasswordChangeVisible] = useState(false);
 
 	const {
+		watch,
 		register,
+		setValue,
 		handleSubmit,
+		reset,
 		formState: { errors, isDirty, isValid },
 	} = useForm<IUserFormData>({
 		mode: 'onChange',
-		defaultValues: {
-			firstName: userData.first_name,
-			lastName: userData.last_name,
-			telephone: userData.telephone,
-			email: userData.email,
-		},
+		defaultValues: defaultValues,
 	});
+
+	const handleChangePassword = (): void => {
+		setIsPasswordChangeVisible(!isPasswordChangeVisible);
+	};
 
 	const onSubmit: SubmitHandler<IUserFormData> = async (formData, e) => {
 		e?.preventDefault();
 
 		const formDataWithRole = {
 			...formData,
+			firstName: formData.firstName.trim(),
+			lastName: formData.lastName.trim(),
+			email: formData.email.trim(),
 			role: role,
 		};
+
 		onUpdateUserInfo(formDataWithRole);
+		setIsPasswordChangeVisible(true);
 	};
 
-	const handleChangePassword = (): void => setIsVisible(!isVisible);
+	const handleBlur = () => {
+		const emailValue = watch('email').trim();
+		const firstNameValue = watch('firstName').trim();
+		const lastNameValue = watch('lastName').trim();
+		setValue('email', emailValue, { shouldDirty: true });
+		setValue('firstName', firstNameValue, { shouldDirty: true });
+		setValue('lastName', lastNameValue, { shouldDirty: true });
+	};
 
 	useEffect(() => {
-		if (isSuccessUpdateUser) {
+		if (message) {
 			const timer = setTimeout(() => {
-				setIsSuccessUpdateUser(false);
+				resetRequestMessage();
 			}, 3000);
+
+			reset({
+				firstName: userData?.first_name,
+				lastName: userData?.last_name,
+				telephone: userData?.telephone,
+				email: userData?.email,
+			});
+
 			return () => clearTimeout(timer);
 		}
-	}, [isSuccessUpdateUser, setIsSuccessUpdateUser]);
+	}, [
+		message,
+		reset,
+		resetRequestMessage,
+		userData?.email,
+		userData?.first_name,
+		userData?.last_name,
+		userData?.telephone,
+	]);
 
 	useEffect(() => {
 		handleChangePassword();
-		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
 	return (
@@ -93,11 +127,11 @@ const Profile: React.FC<IUserFormProps> = ({
 									message: 'Минимальная длина - 2 символа',
 								},
 								maxLength: {
-									value: 150,
-									message: 'Максимальная длина - 150 символов',
+									value: 30,
+									message: 'Максимальная длина - 30 символов',
 								},
 								pattern: {
-									value: /^[a-zA-Z\u0430-\u044f\u0410-\u042f]{2,150}$/,
+									value: /^[a-zA-Z\u0430-\u044f\u0410-\u042fёЁ\s]*$/,
 									message: 'Введите корректное имя',
 								},
 							})}
@@ -116,6 +150,7 @@ const Profile: React.FC<IUserFormProps> = ({
 								},
 							}}
 							fullWidth
+							onBlur={handleBlur}
 						/>
 						<TextField
 							{...register('lastName', {
@@ -125,12 +160,12 @@ const Profile: React.FC<IUserFormProps> = ({
 									message: 'Минимальная длина - 2 символа',
 								},
 								maxLength: {
-									value: 150,
-									message: 'Максимальная длина - 150 символов',
+									value: 30,
+									message: 'Максимальная длина - 30 символов',
 								},
 								pattern: {
-									value: /^[a-zA-Z\u0430-\u044f\u0410-\u042f]{2,30}$/,
-									message: 'Введите корректную фамилию',
+									value: /^[a-zA-Z\u0430-\u044f\u0410-\u042fёЁ\s]*$/,
+									message: 'Введите корректное имя',
 								},
 							})}
 							placeholder="Введите фамилию"
@@ -149,6 +184,7 @@ const Profile: React.FC<IUserFormProps> = ({
 								},
 							}}
 							fullWidth
+							onBlur={handleBlur}
 						/>
 						<TextField
 							{...register('telephone', {
@@ -159,8 +195,8 @@ const Profile: React.FC<IUserFormProps> = ({
 										'Введите корректный номер телефона в международном формате',
 								},
 								minLength: {
-									value: 7,
-									message: 'Минимальная длина - 7 символов',
+									value: 12,
+									message: 'Минимальная длина - 12 символов',
 								},
 								maxLength: {
 									value: 14,
@@ -188,10 +224,16 @@ const Profile: React.FC<IUserFormProps> = ({
 						/>
 						<TextField
 							{...register('email', {
-								required: 'Обязательное поле',
+								required: 'Поле обязательно для заполнения',
 								pattern: {
-									value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i,
+									value:
+										/^(?!.*(__|-{2}))[A-Z0-9._%+-]+\S@[A-Z0-9.-]+\.[A-Z]{2,4}$/i,
 									message: 'Введите корректный адрес электронной почты',
+								},
+
+								maxLength: {
+									value: 50,
+									message: 'Максимальная длина - 50 символов',
 								},
 							})}
 							placeholder="Введите email"
@@ -200,6 +242,7 @@ const Profile: React.FC<IUserFormProps> = ({
 							variant="outlined"
 							error={!!errors.email}
 							helperText={errors.email?.message || ''}
+							onBlur={handleBlur}
 							sx={{
 								marginTop: 2,
 								'.css-md26zr-MuiInputBase-root-MuiOutlinedInput-root': {
@@ -220,18 +263,18 @@ const Profile: React.FC<IUserFormProps> = ({
 								textTransform: 'none',
 								width: '156px',
 								height: '40px',
-								display: isVisible ? 'block' : 'none',
+								display: isPasswordChangeVisible ? 'block' : 'none',
 								color: '#05887B',
 								borderRadius: '100px',
 								borderColor: '#05887B',
-								marginBottom: `${isVisible && '101px'}`,
+								marginBottom: `${isPasswordChangeVisible && '101px'}`,
 								marginTop: '15px',
 							}}
 						>
 							Сменить пароль
 						</Button>
 					</div>
-					{!isVisible && (
+					{!isPasswordChangeVisible && (
 						<div>
 							<TextField
 								type="password"
@@ -285,10 +328,10 @@ const Profile: React.FC<IUserFormProps> = ({
 							/>
 						</div>
 					)}
-					{isSuccessUpdateUser ? (
+					{message ? (
 						<Typography
 							fontFamily="Ubuntu"
-							fontSize="20px"
+							fontSize="12px"
 							fontWeight="500"
 							lineHeight="26px"
 							letterSpacing="0.2px"
@@ -296,7 +339,7 @@ const Profile: React.FC<IUserFormProps> = ({
 							textAlign="center"
 							mb="26px"
 						>
-							{`Изменения успешно внесены`}
+							{message}
 						</Typography>
 					) : (
 						<Button
@@ -313,7 +356,7 @@ const Profile: React.FC<IUserFormProps> = ({
 								mb: 3,
 								padding: '10px 24px 10px 16px',
 							}}
-							disabled={!isDirty || !isValid || isSuccessUpdateUser}
+							disabled={!isDirty || !isValid}
 						>
 							Сохранить изменения
 						</Button>
