@@ -42,6 +42,8 @@ import ProtectedClientRouteElement from '../ProptectedClientRoute/ProtectedClien
 import SendProblem from '../SendProblem/SendProblem';
 import Help from '../Help/Help';
 import ProptectedBusinessRouteElement from '../ProptectedBusinessRoute/ProptectedBusinessRoute';
+import { mainApi } from '../../utils/mainApi';
+import RestaurantReviews from '../RestaurantReviews/RestaurantReviews';
 
 function App() {
 	const [currentUser, setCurrentUser] = useState<UserData>();
@@ -107,19 +109,15 @@ function App() {
 	}, [isLoggedIn]);
 
 	useEffect(() => {
-		const fetchData = async () => {
-			try {
-				const response = await fetch(
-					`${API_URL}/api/v1/establishments/?page_size=50`
-				);
-				const data = await response.json();
+		mainApi
+			.getEstablishments(50)
+			.then((data) => {
+				if (!data) return;
 				setAllEstablishments(data.results.reverse());
-			} catch (error) {
+			})
+			.catch((error) => {
 				console.error('Error fetching data:', error);
-			}
-		};
-
-		fetchData();
+			});
 	}, []);
 
 	const resetMessages = () => {
@@ -219,32 +217,19 @@ function App() {
 
 	function handleSearchEstablishments() {
 		setIsSearching(true);
-		const fetchData = async () => {
-			try {
-				const response = await fetch(
-					`${API_URL}/api/v1/establishments/?page_size=50&search=${query}`
-				);
-				const data = await response.json();
-
+		mainApi
+			.getEstablishmentsBySearchQuery(query, 50)
+			.then((data) => {
 				setSearchEstablishments(data.results);
-			} catch (error) {
+			})
+			.catch((error) => {
 				console.error('Error fetching data:', error);
-			}
-		};
-
-		fetchData();
+			});
 	}
 
 	const handleRestart = (value: boolean) => {
 		setIsSearching(!value);
 	};
-
-	useEffect(() => {
-		const token = localStorage.getItem('jwt');
-		if (token) {
-			setIsLoggedIn(true);
-		}
-	}, []);
 
 	const handleLogOut = () => {
 		localStorage.clear();
@@ -366,6 +351,21 @@ function App() {
 							}
 						/>
 					)}
+					{currentRole &&
+						allEstablishments.map((item: Restaurant) => (
+							<Route
+								key={item.id}
+								path={`/restaurant-reviews/${item.id}`}
+								element={
+									<ProptectedBusinessRouteElement
+										role={currentRole}
+										isLoggedIn={isLoggedIn}
+										element={<RestaurantReviews id={item.id} />}
+									/>
+								}
+							/>
+						))}
+
 					<Route
 						path="/user-bookings"
 						element={

@@ -19,17 +19,27 @@ class MainApi {
 		});
 	}
 
+	getEstablishments(pageSize: number) {
+		return this._sendFetchRequest(
+			`/api/v1/establishments/?page_size=${pageSize}`,
+			{
+				headers: this._headers,
+			}
+		);
+	}
+
 	getEstablissmentData(id: number) {
 		return this._sendFetchRequest(`/api/v1/establishments/${id}`, {
 			headers: this._headers,
 		});
 	}
 
-	// searchQuery(query: string) {
-	// 	return this._sendFetchRequest(`/establishments/?search=${query}`, {
-	// 		headers: this._headers,
-	// 	});
-	// }
+	getEstablishmentsBySearchQuery(query: string, pageSize: number) {
+		return this._sendFetchRequest(
+			`/api/v1/establishments/?page_size=${pageSize}&search=${query}`,
+			{ headers: this._headers }
+		);
+	}
 
 	getAllMyEstablishments() {
 		return this._sendFetchRequest(`/api/v1/business/establishments/`, {
