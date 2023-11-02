@@ -34,6 +34,10 @@ const Profile: React.FC<IUserFormProps> = ({
 		defaultValues: defaultValues,
 	});
 
+	const handleChangePassword = (): void => {
+		setIsPasswordChangeVisible(!isPasswordChangeVisible);
+	};
+
 	const onSubmit: SubmitHandler<IUserFormData> = async (formData, e) => {
 		e?.preventDefault();
 
@@ -46,6 +50,7 @@ const Profile: React.FC<IUserFormProps> = ({
 		};
 
 		onUpdateUserInfo(formDataWithRole);
+		setIsPasswordChangeVisible(true);
 	};
 
 	const handleBlur = () => {
@@ -57,14 +62,10 @@ const Profile: React.FC<IUserFormProps> = ({
 		setValue('lastName', lastNameValue, { shouldDirty: true });
 	};
 
-	const handleChangePassword = (): void =>
-		setIsPasswordChangeVisible(!isPasswordChangeVisible);
-
 	useEffect(() => {
 		if (message) {
 			const timer = setTimeout(() => {
 				resetRequestMessage();
-				console.log('таймер работает');
 			}, 3000);
 
 			reset({
