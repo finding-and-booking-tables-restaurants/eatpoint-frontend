@@ -4,13 +4,7 @@ import Recomended from '../Recomended/Recomended';
 import SearchResults from '../SearchResults/SearchResults';
 import AddRestaurant from '../AddRestaurant/AddRestaurant';
 import { useEffect, useState } from 'react';
-import {
-	Routes,
-	Route,
-	useNavigate,
-	Navigate,
-	useLocation,
-} from 'react-router-dom';
+import { Routes, Route, useNavigate, useLocation } from 'react-router-dom';
 import RestaurantPage from '../RestaurantPage/RestaurantPage';
 import BookingPage from '../BookingPage/BookingPage';
 import {
@@ -24,11 +18,15 @@ import {
 	ERROR_400,
 	ERROR_401,
 	ERROR_409,
-	EMAIL_ALREADY_REGISTERED_MESSAGE,
+	DUPLICATE_EMAIL_PHONE_MESSAGE,
 	INCORRECT_ADD_USER_DATA,
 	REG_ERROR_MESSAGE,
 	AUTH_ERROR_MESSAGE,
 	INVALID_AUTH_DATA_ERROR_MESSAGE,
+	UPDATE_USER_INFO_MESSAGE,
+	UPDATE_USER_INFO_ERROR_MESSAGE,
+	EMAIL_ALREADY_REGISTERED_MESSAGE,
+	API_URL,
 	UserData,
 } from '../../utils/constants';
 import { Restaurant } from '../../utils/constants';
@@ -52,10 +50,13 @@ function App() {
 	const [currentRole, setCurrentRole] = useState('');
 	const [authErrorMessage, setAuthErrorMessage] = useState('');
 	const [regErrorMessage, setRegErrorMessage] = useState('');
-	const [isSuccessUpdateUser, setIsSuccessUpdateUser] = useState(false);
 	const [isSuccessRegister, setIsSuccessRegister] = useState(false);
 	const [isLoggedIn, setIsLoggedIn] = useState(false);
 	const [allEstablishments, setAllEstablishments] = useState<Restaurant[]>([]);
+	const [updateUserInfo, setUpdateUserInfo] = useState({
+		message: '',
+		isSuccess: true,
+	});
 	const [searchEstablishments, setSearchEstablishments] = useState<
 		Restaurant[]
 	>([]);
@@ -118,6 +119,10 @@ function App() {
 				console.error('Error fetching data:', error);
 			});
 	}, []);
+
+	const resetMessages = () => {
+		setUpdateUserInfo({ message: '', isSuccess: true });
+	};
 
 	// Логин
 	const handleLogin = (data: ILoginFormData, rememberMe: boolean) => {
@@ -189,13 +194,22 @@ function App() {
 			.updateUserInfo(userInfo)
 			.then((user) => {
 				setCurrentUser(user);
-				setIsSuccessUpdateUser(true);
+				setUpdateUserInfo({
+					message: UPDATE_USER_INFO_MESSAGE,
+					isSuccess: true,
+				});
 			})
 			.catch((error) => {
-				if (error === ERROR_409) {
-					setIsSuccessUpdateUser(false);
+				if (error === ERROR_401) {
+					setUpdateUserInfo({
+						message: DUPLICATE_EMAIL_PHONE_MESSAGE,
+						isSuccess: false,
+					});
 				} else {
-					setIsSuccessUpdateUser(false);
+					setUpdateUserInfo({
+						message: UPDATE_USER_INFO_ERROR_MESSAGE,
+						isSuccess: false,
+					});
 				}
 				console.log(`${ERROR}: ${error}`);
 			});
@@ -317,8 +331,8 @@ function App() {
 									element={
 										<Profile
 											onUpdateUserInfo={handleUpdateUserInfo}
-											isSuccessUpdateUser={isSuccessUpdateUser}
-											setIsSuccessUpdateUser={setIsSuccessUpdateUser}
+											requestStatus={updateUserInfo}
+											resetRequestMessage={resetMessages}
 										/>
 									}
 								/>

@@ -322,6 +322,8 @@ const AUTH_ERROR_MESSAGE = 'При авторизации пользовател
 const UPDATE_USER_INFO_ERROR_MESSAGE =
 	'При обновлении профиля произошла ошибка.';
 const UPDATE_USER_INFO_MESSAGE = 'Данные успешно обновлены';
+const DUPLICATE_EMAIL_PHONE_MESSAGE =
+	'Пользователь с таким email или телефоном уже существует';
 
 export {
 	ERROR,
@@ -335,6 +337,7 @@ export {
 	INVALID_AUTH_DATA_ERROR_MESSAGE,
 	UPDATE_USER_INFO_ERROR_MESSAGE,
 	UPDATE_USER_INFO_MESSAGE,
+	DUPLICATE_EMAIL_PHONE_MESSAGE,
 };
 
 export const API_URL = 'https://eatpoint.sytes.net';
