@@ -37,8 +37,11 @@ interface IUserFormData {
 
 interface IUserFormProps {
 	onUpdateUserInfo: (formData: IUserFormData) => void;
-	isSuccessUpdateUser: boolean;
-	setIsSuccessUpdateUser: React.Dispatch<React.SetStateAction<boolean>>;
+	requestStatus: {
+		message: string;
+		isSuccess: boolean;
+	};
+	resetRequestMessage: () => void;
 }
 
 export type {

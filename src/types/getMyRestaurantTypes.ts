@@ -2,35 +2,35 @@ interface Worked {
 	day: string;
 	start: string;
 	end: string;
-	day_off?: boolean;
+	day_off: boolean;
 }
 
 interface Kitchen {
-	id?: number;
+	id: number;
 	name: string;
-	description?: string;
-	slug?: string;
+	description: string;
+	slug: string;
 }
 
 interface Type {
-	id?: number;
+	id: number;
 	name: string;
-	description?: string;
-	slug?: string;
+	description: string;
+	slug: string;
 }
 
 interface Service {
-	id?: number;
+	id: number;
 	name: string;
-	description?: string;
-	slug?: string;
+	description: string;
+	slug: string;
 }
 
 interface Zone {
-	id?: number;
+	id: number;
 	zone: string;
 	seats: number;
-	available_seats?: number;
+	available_seats: number;
 }
 
 interface Establishment {
