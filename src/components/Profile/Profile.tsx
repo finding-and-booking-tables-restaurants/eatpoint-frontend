@@ -224,7 +224,7 @@ const Profile: React.FC<IUserFormProps> = ({
 						/>
 						<TextField
 							{...register('email', {
-								required: 'Обязательное поле',
+								required: 'Поле обязательно для заполнения',
 								pattern: {
 									value:
 										/^(?!.*(__|-{2}))[A-Z0-9._%+-]+\S@[A-Z0-9.-]+\.[A-Z]{2,4}$/i,
