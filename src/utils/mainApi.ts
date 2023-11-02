@@ -19,27 +19,17 @@ class MainApi {
 		});
 	}
 
-	getEstablishments(pageSize: number) {
-		return this._sendFetchRequest(
-			`/api/v1/establishments/?page_size=${pageSize}`,
-			{
-				headers: this._headers,
-			}
-		);
-	}
-
 	getEstablissmentData(id: number) {
 		return this._sendFetchRequest(`/api/v1/establishments/${id}`, {
 			headers: this._headers,
 		});
 	}
 
-	getEstablishmentsBySearchQuery(query: string, pageSize: number) {
-		return this._sendFetchRequest(
-			`/api/v1/establishments/?page_size=${pageSize}&search=${query}`,
-			{ headers: this._headers }
-		);
-	}
+	// searchQuery(query: string) {
+	// 	return this._sendFetchRequest(`/establishments/?search=${query}`, {
+	// 		headers: this._headers,
+	// 	});
+	// }
 
 	getAllMyEstablishments() {
 		return this._sendFetchRequest(`/api/v1/business/establishments/`, {
@@ -53,6 +43,17 @@ class MainApi {
 	createEstablishment(data: RestaurantData) {
 		return this._sendFetchRequest(`/api/v1/business/establishments/`, {
 			method: 'POST',
+			headers: {
+				authorization: 'Bearer ' + localStorage.getItem('access-token'),
+				'Content-Type': 'application/json',
+			},
+			body: JSON.stringify(data),
+		});
+	}
+
+	editEstablishment(data: RestaurantData, id: number) {
+		return this._sendFetchRequest(`/api/v1/business/establishments/${id}/`, {
+			method: 'PATCH',
 			headers: {
 				authorization: 'Bearer ' + localStorage.getItem('access-token'),
 				'Content-Type': 'application/json',

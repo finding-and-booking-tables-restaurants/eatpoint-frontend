@@ -16,7 +16,6 @@ import {
 	IconButton,
 	Backdrop,
 } from '@mui/material';
-import ModeEditOutlineOutlinedIcon from '@mui/icons-material/ModeEditOutlineOutlined';
 import CloseIcon from '@mui/icons-material/Close';
 import { FavoriteBorder, Favorite } from '@mui/icons-material';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
@@ -26,7 +25,7 @@ import ChatBubbleOutlineOutlinedIcon from '@mui/icons-material/ChatBubbleOutline
 import DeckOutlinedIcon from '@mui/icons-material/DeckOutlined';
 import MapOutlinedIcon from '@mui/icons-material/MapOutlined';
 import AccessTimeOutlinedIcon from '@mui/icons-material/AccessTimeOutlined';
-import { useContext, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import RatingAndReviews from '../RatingAndReviews/RatingAndReviews';
 import BookingForm from '../BookingForm/BookingForm';
 import TodayIcon from '@mui/icons-material/Today';
@@ -39,7 +38,6 @@ import { ReviewType } from '../../types/Reviews';
 import { pluralizeReviews } from '../../utils/pluralizeReviews';
 import { formatRating } from '../../utils/formatRating';
 import { calculateBlackRubles } from '../../utils/calculateBlackRubles';
-import CurrentUserContext from '../../contexts/CurrentUserContext';
 
 export default function RestaurantPage({ id }: { id: number }) {
 	const [isModalOpen, setIsModalOpen] = useState(false);
@@ -51,9 +49,6 @@ export default function RestaurantPage({ id }: { id: number }) {
 		ReviewType[]
 	>([]);
 	const [currentImageIndex, setCurrentImageIndex] = useState(0);
-
-	const isLoggedIn = useContext(CurrentUserContext).isLoggedIn;
-	const role = useContext(CurrentUserContext).currentRole;
 
 	const updatePageData = () => {
 		mainApi
@@ -134,14 +129,6 @@ export default function RestaurantPage({ id }: { id: number }) {
 			<Dialog
 				open={isModalOpen}
 				onClose={closeModal}
-				sx={{
-					'.css-yiavyu-MuiBackdrop-root-MuiDialog-backdrop': {
-						backgroundColor: 'rgba(0, 0, 0, 0.8)',
-					},
-					'.css-1t1j96h-MuiPaper-root-MuiDialog-paper': {
-						boxShadow: 'none',
-					},
-				}}
 				PaperProps={{
 					style: {
 						backgroundColor: 'transparent',
@@ -387,28 +374,10 @@ export default function RestaurantPage({ id }: { id: number }) {
 					<div className="restaurant-page__about-line"></div>
 				</div>
 				<RatingAndReviews
-					headingText="Рейтинг и отзывы"
+					openModal={openAddReviewModal}
 					reviews={currentRestaurantReviews}
 					rating={formatRating(currentRestaurant.rating)}
-				>
-					{!isLoggedIn || role !== 'client' ? (
-						''
-					) : (
-						<Button
-							onClick={openAddReviewModal}
-							startIcon={<ModeEditOutlineOutlinedIcon />}
-							variant="outlined"
-							sx={{
-								color: '#006C60',
-								border: '1px solid #006C60',
-								borderRadius: '100px',
-								textTransform: 'none',
-							}}
-						>
-							Оставить свой отзыв
-						</Button>
-					)}
-				</RatingAndReviews>
+				/>
 			</main>
 			<Footer />
 			<AddReview

@@ -4,7 +4,7 @@ import Recomended from '../Recomended/Recomended';
 import SearchResults from '../SearchResults/SearchResults';
 import AddRestaurant from '../AddRestaurant/AddRestaurant';
 import { useEffect, useState } from 'react';
-import { Routes, Route, useNavigate, useLocation } from 'react-router-dom';
+import { Routes, Route, useNavigate, Navigate } from 'react-router-dom';
 import RestaurantPage from '../RestaurantPage/RestaurantPage';
 import BookingPage from '../BookingPage/BookingPage';
 import {
@@ -18,14 +18,11 @@ import {
 	ERROR_400,
 	ERROR_401,
 	ERROR_409,
-	DUPLICATE_EMAIL_PHONE_MESSAGE,
+	EMAIL_ALREADY_REGISTERED_MESSAGE,
 	INCORRECT_ADD_USER_DATA,
 	REG_ERROR_MESSAGE,
 	AUTH_ERROR_MESSAGE,
 	INVALID_AUTH_DATA_ERROR_MESSAGE,
-	UPDATE_USER_INFO_MESSAGE,
-	UPDATE_USER_INFO_ERROR_MESSAGE,
-	EMAIL_ALREADY_REGISTERED_MESSAGE,
 	API_URL,
 	UserData,
 } from '../../utils/constants';
@@ -38,32 +35,25 @@ import Profile from '../Profile/Profile';
 import CurrentUserContext from '../../contexts/CurrentUserContext';
 import UserBookings from '../UserBookings/UserBookings';
 import BusinessLanding from '../BusinessLanding/BusinessLanding';
-import ProtectedClientRouteElement from '../ProptectedClientRoute/ProtectedClientRoute';
 import SendProblem from '../SendProblem/SendProblem';
 import Help from '../Help/Help';
-import ProptectedBusinessRouteElement from '../ProptectedBusinessRoute/ProptectedBusinessRoute';
-import { mainApi } from '../../utils/mainApi';
-import RestaurantReviews from '../RestaurantReviews/RestaurantReviews';
+import EditRestaurant from '../EditRestaurant/EditRestaurant';
 
 function App() {
 	const [currentUser, setCurrentUser] = useState<UserData>();
 	const [currentRole, setCurrentRole] = useState('');
 	const [authErrorMessage, setAuthErrorMessage] = useState('');
 	const [regErrorMessage, setRegErrorMessage] = useState('');
+	const [isSuccessUpdateUser, setIsSuccessUpdateUser] = useState(false);
 	const [isSuccessRegister, setIsSuccessRegister] = useState(false);
 	const [isLoggedIn, setIsLoggedIn] = useState(false);
 	const [allEstablishments, setAllEstablishments] = useState<Restaurant[]>([]);
-	const [updateUserInfo, setUpdateUserInfo] = useState({
-		message: '',
-		isSuccess: true,
-	});
 	const [searchEstablishments, setSearchEstablishments] = useState<
 		Restaurant[]
 	>([]);
 	const [query, setQuery] = useState('');
 
 	const navigate = useNavigate();
-	const location = useLocation();
 
 	const [isSearching, setIsSearching] = useState(false);
 
@@ -76,7 +66,6 @@ function App() {
 				.getUserInfo()
 				.then(() => {
 					setIsLoggedIn(true);
-					navigate(location.pathname);
 				})
 				.catch((err) => {
 					console.log(err);
@@ -109,20 +98,20 @@ function App() {
 	}, [isLoggedIn]);
 
 	useEffect(() => {
-		mainApi
-			.getEstablishments(50)
-			.then((data) => {
-				if (!data) return;
+		const fetchData = async () => {
+			try {
+				const response = await fetch(
+					`${API_URL}/api/v1/establishments/?page_size=50`
+				);
+				const data = await response.json();
 				setAllEstablishments(data.results.reverse());
-			})
-			.catch((error) => {
+			} catch (error) {
 				console.error('Error fetching data:', error);
-			});
-	}, []);
+			}
+		};
 
-	const resetMessages = () => {
-		setUpdateUserInfo({ message: '', isSuccess: true });
-	};
+		fetchData();
+	}, []);
 
 	// Логин
 	const handleLogin = (data: ILoginFormData, rememberMe: boolean) => {
@@ -194,22 +183,13 @@ function App() {
 			.updateUserInfo(userInfo)
 			.then((user) => {
 				setCurrentUser(user);
-				setUpdateUserInfo({
-					message: UPDATE_USER_INFO_MESSAGE,
-					isSuccess: true,
-				});
+				setIsSuccessUpdateUser(true);
 			})
 			.catch((error) => {
-				if (error === ERROR_401) {
-					setUpdateUserInfo({
-						message: DUPLICATE_EMAIL_PHONE_MESSAGE,
-						isSuccess: false,
-					});
+				if (error === ERROR_409) {
+					setIsSuccessUpdateUser(false);
 				} else {
-					setUpdateUserInfo({
-						message: UPDATE_USER_INFO_ERROR_MESSAGE,
-						isSuccess: false,
-					});
+					setIsSuccessUpdateUser(false);
 				}
 				console.log(`${ERROR}: ${error}`);
 			});
@@ -217,19 +197,32 @@ function App() {
 
 	function handleSearchEstablishments() {
 		setIsSearching(true);
-		mainApi
-			.getEstablishmentsBySearchQuery(query, 50)
-			.then((data) => {
+		const fetchData = async () => {
+			try {
+				const response = await fetch(
+					`${API_URL}/api/v1/establishments/?page_size=50&search=${query}`
+				);
+				const data = await response.json();
+
 				setSearchEstablishments(data.results);
-			})
-			.catch((error) => {
+			} catch (error) {
 				console.error('Error fetching data:', error);
-			});
+			}
+		};
+
+		fetchData();
 	}
 
 	const handleRestart = (value: boolean) => {
 		setIsSearching(!value);
 	};
+
+	useEffect(() => {
+		const token = localStorage.getItem('jwt');
+		if (token) {
+			setIsLoggedIn(true);
+		}
+	}, []);
 
 	const handleLogOut = () => {
 		localStorage.clear();
@@ -322,58 +315,23 @@ function App() {
 							/>
 						}
 					/>
-					{currentUser && currentRole && (
-						<Route
-							path="/user-profile"
-							element={
-								<ProtectedClientRouteElement
-									isLoggedIn={isLoggedIn}
-									element={
-										<Profile
-											onUpdateUserInfo={handleUpdateUserInfo}
-											requestStatus={updateUserInfo}
-											resetRequestMessage={resetMessages}
-										/>
-									}
+					<Route
+						path="/user-profile"
+						element={
+							isLoggedIn ? (
+								<Profile
+									onUpdateUserInfo={handleUpdateUserInfo}
+									isSuccessUpdateUser={isSuccessUpdateUser}
+									setIsSuccessUpdateUser={setIsSuccessUpdateUser}
 								/>
-							}
-						/>
-					)}
-					{currentUser && currentRole && (
-						<Route
-							path="/business-profile"
-							element={
-								<ProptectedBusinessRouteElement
-									role={currentRole}
-									isLoggedIn={isLoggedIn}
-									element={<BusinessProfile />}
-								/>
-							}
-						/>
-					)}
-					{currentRole &&
-						allEstablishments.map((item: Restaurant) => (
-							<Route
-								key={item.id}
-								path={`/restaurant-reviews/${item.id}`}
-								element={
-									<ProptectedBusinessRouteElement
-										role={currentRole}
-										isLoggedIn={isLoggedIn}
-										element={<RestaurantReviews id={item.id} />}
-									/>
-								}
-							/>
-						))}
-
+							) : (
+								<Navigate to="/" />
+							)
+						}
+					/>
 					<Route
 						path="/user-bookings"
-						element={
-							<ProtectedClientRouteElement
-								isLoggedIn={isLoggedIn}
-								element={<UserBookings />}
-							/>
-						}
+						element={isLoggedIn ? <UserBookings /> : <Navigate to="/" />}
 					/>
 					<Route
 						path="/signin"
@@ -385,10 +343,18 @@ function App() {
 						}
 					/>
 					<Route path="/business" element={<BusinessLanding />} />
-					<Route path="/add-restaurant" element={<AddRestaurant />} />
+					<Route path="/business-profile" element={<BusinessProfile />} />
+					<Route
+						path="/business-profile/add-restaurant"
+						element={<AddRestaurant />}
+					/>
+					<Route
+						path="/business-profile/edit-restaurant/:id"
+						element={<EditRestaurant />}
+					/>
 					<Route path="/support" element={<SendProblem />} />
 					<Route path="/help" element={<Help />} />
-					<Route path="*" element={<NotFoundPage />} />
+					<Route path="*" element={<NotFoundPage></NotFoundPage>} />
 				</Routes>
 			</CurrentUserContext.Provider>
 		</div>
