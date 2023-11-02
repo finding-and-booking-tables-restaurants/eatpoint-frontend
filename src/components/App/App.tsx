@@ -349,7 +349,7 @@ function App() {
 						element={<AddRestaurant />}
 					/>
 					<Route
-						path="//business-profile/edit-restaurant/:id"
+						path="/business-profile/edit-restaurant/:id"
 						element={<EditRestaurant />}
 					/>
 					<Route path="/support" element={<SendProblem />} />
