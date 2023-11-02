@@ -15,6 +15,7 @@ import { daysOfWeek } from '../../utils/constants';
 
 function EditRestaurant() {
 	const { state } = useLocation();
+	console.log(state);
 
 	const [formData, setFormData] = useState<RestaurantData>({
 		name: state.name,
@@ -35,7 +36,7 @@ function EditRestaurant() {
 		worked: state.worked,
 	});
 
-	console.log(state.worked);
+	// console.log(state.worked);
 
 	const typeNames = state.types.map((type: { name: string }) => type.name);
 	const kitchenNames = state.kitchens.map(
