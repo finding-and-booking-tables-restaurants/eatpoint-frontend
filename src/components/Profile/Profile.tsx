@@ -9,8 +9,8 @@ import { IUserFormData, IUserFormProps } from '../../types/commonTypes';
 
 const Profile: React.FC<IUserFormProps> = ({
 	onUpdateUserInfo,
-	isSuccessUpdateUser,
-	setIsSuccessUpdateUser,
+	requestStatus: { message, isSuccess },
+	resetRequestMessage,
 }) => {
 	const userData = useContext(CurrentUserContext).currentUser;
 	const role = useContext(CurrentUserContext).currentRole;
@@ -61,9 +61,10 @@ const Profile: React.FC<IUserFormProps> = ({
 		setIsPasswordChangeVisible(!isPasswordChangeVisible);
 
 	useEffect(() => {
-		if (isSuccessUpdateUser) {
+		if (message) {
 			const timer = setTimeout(() => {
-				setIsSuccessUpdateUser(false);
+				resetRequestMessage();
+				console.log('таймер работает');
 			}, 3000);
 
 			reset({
@@ -75,7 +76,15 @@ const Profile: React.FC<IUserFormProps> = ({
 
 			return () => clearTimeout(timer);
 		}
-	}, [isSuccessUpdateUser, setIsSuccessUpdateUser, reset, userData]);
+	}, [
+		message,
+		reset,
+		resetRequestMessage,
+		userData?.email,
+		userData?.first_name,
+		userData?.last_name,
+		userData?.telephone,
+	]);
 
 	useEffect(() => {
 		handleChangePassword();
@@ -318,10 +327,10 @@ const Profile: React.FC<IUserFormProps> = ({
 							/>
 						</div>
 					)}
-					{isSuccessUpdateUser ? (
+					{message ? (
 						<Typography
 							fontFamily="Ubuntu"
-							fontSize="20px"
+							fontSize="12px"
 							fontWeight="500"
 							lineHeight="26px"
 							letterSpacing="0.2px"
@@ -329,7 +338,7 @@ const Profile: React.FC<IUserFormProps> = ({
 							textAlign="center"
 							mb="26px"
 						>
-							{`Изменения успешно внесены`}
+							{message}
 						</Typography>
 					) : (
 						<Button
