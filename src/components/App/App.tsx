@@ -200,7 +200,7 @@ function App() {
 				});
 			})
 			.catch((error) => {
-				if (error === ERROR_401) {
+				if (error === ERROR_409) {
 					setUpdateUserInfo({
 						message: DUPLICATE_EMAIL_PHONE_MESSAGE,
 						isSuccess: false,
