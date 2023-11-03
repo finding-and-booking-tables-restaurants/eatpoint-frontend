@@ -166,7 +166,7 @@ const Profile: React.FC<IUserFormProps> = ({
 								},
 								pattern: {
 									value: /^[a-zA-Z\u0430-\u044f\u0410-\u042fёЁ\s]*$/,
-									message: 'Введите корректное имя',
+									message: 'Введите корректную фамилию',
 								},
 							})}
 							placeholder="Введите фамилию"
@@ -192,16 +192,15 @@ const Profile: React.FC<IUserFormProps> = ({
 								required: 'Поле обязательно для заполнения',
 								pattern: {
 									value: /^\+(?:[0-9] ?){6,14}[0-9]$/,
-									message:
-										'Введите корректный номер телефона в международном формате',
+									message: 'Введите корректный номер телефона',
 								},
 								minLength: {
-									value: 12,
-									message: 'Минимальная длина - 12 символов',
+									value: 10,
+									message: 'Минимальная длина - 10 символов',
 								},
 								maxLength: {
-									value: 14,
-									message: 'Максимальная длина - 14 символов',
+									value: 12,
+									message: 'Максимальная длина - 12 символов',
 								},
 							})}
 							placeholder="Введите номер телефона"
@@ -229,12 +228,15 @@ const Profile: React.FC<IUserFormProps> = ({
 								pattern: {
 									value:
 										/^(?!.*(__|-{2}))[A-Z0-9._%+-]+\S@[A-Z0-9.-]+\.[A-Z]{2,4}$/i,
-									message: 'Введите корректный адрес электронной почты',
+									message: 'Электронная почта введена не корректно',
 								},
-
+								minLength: {
+									value: 5,
+									message: 'Введите не менее 5 символов',
+								},
 								maxLength: {
 									value: 50,
-									message: 'Максимальная длина - 50 символов',
+									message: 'Введите менее 50 символов',
 								},
 							})}
 							placeholder="Введите email"

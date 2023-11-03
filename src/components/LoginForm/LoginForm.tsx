@@ -91,12 +91,7 @@ const LoginForm: React.FC<ILoginFormProps> = ({
 							pattern: {
 								value:
 									/^(?!.*(__|-{2}))[A-Z0-9._%+-]+\S@[A-Z0-9.-]+\.[A-Z]{2,4}$/i,
-								message: 'Введите корректный адрес электронной почты',
-							},
-
-							maxLength: {
-								value: 50,
-								message: 'Максимальная длина - 50 символов',
+								message: 'Электронная почта введена не корректно',
 							},
 						})}
 						error={!!errors.email}
@@ -123,10 +118,6 @@ const LoginForm: React.FC<ILoginFormProps> = ({
 					<TextField
 						{...register('password', {
 							required: 'Поле обязательно для заполнения',
-							minLength: {
-								value: 6,
-								message: 'Минимальная длина - 6 символов',
-							},
 							pattern: {
 								value: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{6,}$/,
 								message:
