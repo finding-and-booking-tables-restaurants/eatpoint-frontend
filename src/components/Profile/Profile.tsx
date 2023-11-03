@@ -89,6 +89,7 @@ const Profile: React.FC<IUserFormProps> = ({
 
 	useEffect(() => {
 		handleChangePassword();
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
 	return (
