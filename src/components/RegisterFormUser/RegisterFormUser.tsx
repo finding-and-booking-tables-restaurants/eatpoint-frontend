@@ -107,6 +107,18 @@ const RegisterFormUser: React.FC<IRegisterFormUserProps> = ({
 						<TextField
 							{...register('firstName', {
 								required: 'Поле обязательно для заполнения',
+								minLength: {
+									value: 2,
+									message: 'Введите не менее 2 символов',
+								},
+								maxLength: {
+									value: 30,
+									message: 'Введите менее 30 символов',
+								},
+								pattern: {
+									value: /^[a-zA-Z\u0430-\u044f\u0410-\u042fёЁ\s]*$/,
+									message: 'Введите корректное имя',
+								},
 							})}
 							name="firstName"
 							id="name"
@@ -135,15 +147,15 @@ const RegisterFormUser: React.FC<IRegisterFormUserProps> = ({
 								required: 'Поле обязательно для заполнения',
 								minLength: {
 									value: 2,
-									message: 'Минимальная длина - 2 символа',
+									message: 'Введите не менее 2 символов',
 								},
 								maxLength: {
 									value: 30,
-									message: 'Максимальная длина - 30 символов',
+									message: 'Введите не более 30 символов',
 								},
 								pattern: {
 									value: /^[a-zA-Z\u0430-\u044f\u0410-\u042fёЁ\s]*$/,
-									message: 'Введите корректное имя',
+									message: 'Введите корректную фамилию',
 								},
 							})}
 							placeholder="Введите фамилию"
@@ -170,16 +182,15 @@ const RegisterFormUser: React.FC<IRegisterFormUserProps> = ({
 								required: 'Поле обязательно для заполнения',
 								pattern: {
 									value: /^\+(?:[0-9] ?){6,14}[0-9]$/,
-									message:
-										'Введите корректный номер телефона в международном формате',
+									message: 'Введите корректный номер телефона',
 								},
 								minLength: {
-									value: 12,
-									message: 'Минимальная длина - 12 символов',
+									value: 10,
+									message: 'Минимальная длина - 10 символов',
 								},
 								maxLength: {
-									value: 14,
-									message: 'Максимальная длина - 14 символов',
+									value: 12,
+									message: 'Максимальная длина - 12 символов',
 								},
 							})}
 							placeholder="Введите номер телефона"
@@ -207,12 +218,15 @@ const RegisterFormUser: React.FC<IRegisterFormUserProps> = ({
 								pattern: {
 									value:
 										/^(?!.*(__|-{2}))[A-Z0-9._%+-]+\S@[A-Z0-9.-]+\.[A-Z]{2,4}$/i,
-									message: 'Введите корректный адрес электронной почты',
+									message: 'Электронная почта введена не корректно',
 								},
-
+								minLength: {
+									value: 5,
+									message: 'Введите не менее 5 символов',
+								},
 								maxLength: {
 									value: 50,
-									message: 'Максимальная длина - 50 символов',
+									message: 'Введите менее 50 символов',
 								},
 							})}
 							placeholder="Введите email"
@@ -239,11 +253,16 @@ const RegisterFormUser: React.FC<IRegisterFormUserProps> = ({
 							{...register('password', {
 								required: 'Поле обязательно для заполнения',
 								minLength: {
-									value: 6,
-									message: 'Минимальная длина - 6 символов',
+									value: 8,
+									message: 'Минимальная длина - 8 символов',
+								},
+								maxLength: {
+									value: 30,
+									message: 'Максимальная длина - 30 символов',
 								},
 								pattern: {
-									value: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{6,}$/,
+									value:
+										/^(?=.*[a-zA-Z\d!@#$%^&*()_+{}[\]:;<>,.?~\\-]).{8,30}$/,
 									message:
 										'Пароль должен содержать хотя бы одну заглавную букву, строчную букву и цифру',
 								},
