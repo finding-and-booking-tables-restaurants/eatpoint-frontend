@@ -7,6 +7,7 @@ import {
 	Checkbox,
 	FormControlLabel,
 	Box,
+	checkboxClasses,
 } from '@mui/material';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -77,7 +78,11 @@ const RegisterFormUser: React.FC<IRegisterFormUserProps> = ({
 	return (
 		<>
 			<Header />
-			<Container fixed maxWidth="sm" sx={{ mb: 5 }}>
+			<Container
+				fixed
+				maxWidth="sm"
+				sx={{ mb: 5, minHeight: 'calc(100vh - 217px)' }}
+			>
 				<Typography
 					variant="h1"
 					component="h1"
@@ -318,7 +323,7 @@ const RegisterFormUser: React.FC<IRegisterFormUserProps> = ({
 								display: 'block',
 								minHeight: '15px',
 								color: 'red',
-								fontSize: '10px',
+								fontSize: '11px',
 								margin: '5px',
 							}}
 						>
@@ -327,6 +332,11 @@ const RegisterFormUser: React.FC<IRegisterFormUserProps> = ({
 						<FormControlLabel
 							control={
 								<Checkbox
+									sx={{
+										[`&, &.${checkboxClasses.checked}`]: {
+											color: '#05887B',
+										},
+									}}
 									checked={isAgreement}
 									onChange={(e) => setIsAgreement(e.target.checked)}
 								/>

@@ -7,6 +7,7 @@ import {
 	Button,
 	FormControlLabel,
 	Checkbox,
+	checkboxClasses,
 } from '@mui/material';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -118,11 +119,6 @@ const LoginForm: React.FC<ILoginFormProps> = ({
 					<TextField
 						{...register('password', {
 							required: 'Поле обязательно для заполнения',
-							pattern: {
-								value: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{6,}$/,
-								message:
-									'Пароль должен содержать хотя бы одну заглавную букву, строчную букву и цифру',
-							},
 						})}
 						error={!!errors.password}
 						helperText={errors.password?.message || ''}
@@ -150,7 +146,7 @@ const LoginForm: React.FC<ILoginFormProps> = ({
 							display: 'block',
 							minHeight: '15px',
 							color: 'red',
-							fontSize: '10px',
+							fontSize: '12px',
 							margin: '5px',
 						}}
 					>
@@ -159,6 +155,11 @@ const LoginForm: React.FC<ILoginFormProps> = ({
 					<FormControlLabel
 						control={
 							<Checkbox
+								sx={{
+									[`&, &.${checkboxClasses.checked}`]: {
+										color: '#05887B',
+									},
+								}}
 								checked={rememberMe}
 								onChange={(e) => setRememberMe(e.target.checked)}
 							/>
@@ -229,7 +230,7 @@ const LoginForm: React.FC<ILoginFormProps> = ({
 						</Button>
 					</Stack>
 				</Box>
-				<Button
+				{/* <Button
 					variant="text"
 					sx={{
 						ml: 1,
@@ -242,7 +243,7 @@ const LoginForm: React.FC<ILoginFormProps> = ({
 					}}
 				>
 					Забыли пароль
-				</Button>
+				</Button> */}
 			</Container>
 			<Footer />
 		</>
