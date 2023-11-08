@@ -1,7 +1,8 @@
 import './RestaurantItem.css';
-import RestaurantImage from '../../../images/business-profile__restaurant-image.png';
 import RatingIcon from '../../../images/star-icon.svg';
 import ReviewsIcon from '../../../images/message-icon.svg';
+import { Link } from 'react-router-dom';
+import { Establishment } from '../../../types/getMyRestaurantTypes';
 
 interface RestaurantItemProps {
 	id?: number;
@@ -10,6 +11,9 @@ interface RestaurantItemProps {
 	address: string;
 	poster: string;
 	avarage_check: string;
+	rating: number | undefined;
+	review_count: number | undefined;
+	establishment: Establishment;
 }
 
 function RestaurantItem({
@@ -19,26 +23,37 @@ function RestaurantItem({
 	address,
 	poster,
 	avarage_check,
+	rating,
+	review_count,
+	establishment,
 }: RestaurantItemProps) {
 	return (
 		<li className="restaurant">
 			<div className="restaurant__box-card">
 				<div className="restaurant__box-info">
-					<img src={poster} className="restaurant__image" />
+					<img
+						src={poster}
+						alt="Аватар заведения"
+						className="restaurant__image"
+					/>
 					<div>
 						<p className="restaurant__title">{name}</p>
 						<p className="restaurant__place">{`${cities}, ${address}`}</p>
 					</div>
-					<button className="restaurant__editBtn"></button>
+					<Link
+						to={`edit-restaurant/${id}`}
+						state={establishment}
+						className="restaurant__editBtn"
+					/>
 				</div>
 				<div className="restaurant__box-addition-info">
 					<div className="restaurant__flex-box">
-						<img src={RatingIcon}></img>
-						<span className="restaurant__rating-num">4.5</span>
+						<img src={RatingIcon} alt="Иконка рейтинга"></img>
+						<span className="restaurant__rating-num">{rating || 0}</span>
 					</div>
 					<div className="restaurant__flex-box">
-						<img src={ReviewsIcon}></img>
-						<span className="restaurant__reviews-num">76</span>
+						<img src={ReviewsIcon} alt="Иконка отзывов"></img>
+						<span className="restaurant__reviews-num">{review_count || 0}</span>
 					</div>
 					<p>{`${avarage_check}`} ₽</p>
 				</div>

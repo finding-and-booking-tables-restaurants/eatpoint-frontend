@@ -44,6 +44,8 @@ import Help from '../Help/Help';
 import ProptectedBusinessRouteElement from '../ProptectedBusinessRoute/ProptectedBusinessRoute';
 import { mainApi } from '../../utils/mainApi';
 import RestaurantReviews from '../RestaurantReviews/RestaurantReviews';
+import EditRestaurant from '../EditRestaurant/EditRestaurant';
+import EditRestaurantTEST from '../EditRestaurant/EditRestaurantSTATE';
 
 function App() {
 	const [currentUser, setCurrentUser] = useState<UserData>();
@@ -339,18 +341,7 @@ function App() {
 							}
 						/>
 					)}
-					{currentUser && currentRole && (
-						<Route
-							path="/business-profile"
-							element={
-								<ProptectedBusinessRouteElement
-									role={currentRole}
-									isLoggedIn={isLoggedIn}
-									element={<BusinessProfile />}
-								/>
-							}
-						/>
-					)}
+
 					{currentRole &&
 						allEstablishments.map((item: Restaurant) => (
 							<Route
@@ -385,7 +376,42 @@ function App() {
 						}
 					/>
 					<Route path="/business" element={<BusinessLanding />} />
-					<Route path="/add-restaurant" element={<AddRestaurant />} />
+					{currentUser && currentRole && (
+						<Route
+							path="/business-profile"
+							element={
+								<ProptectedBusinessRouteElement
+									role={currentRole}
+									isLoggedIn={isLoggedIn}
+									element={<BusinessProfile />}
+								/>
+							}
+						/>
+					)}
+					{currentUser && currentRole && (
+						<Route
+							path="/business-profile/add-restaurant"
+							element={
+								<ProptectedBusinessRouteElement
+									role={currentRole}
+									isLoggedIn={isLoggedIn}
+									element={<AddRestaurant />}
+								/>
+							}
+						/>
+					)}
+					{currentUser && currentRole && (
+						<Route
+							path="/business-profile/edit-restaurant/:id"
+							element={
+								<ProptectedBusinessRouteElement
+									role={currentRole}
+									isLoggedIn={isLoggedIn}
+									element={<EditRestaurant />}
+								/>
+							}
+						/>
+					)}
 					<Route path="/support" element={<SendProblem />} />
 					<Route path="/help" element={<Help />} />
 					<Route path="*" element={<NotFoundPage />} />

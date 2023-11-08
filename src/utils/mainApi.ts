@@ -50,7 +50,7 @@ class MainApi {
 		});
 	}
 
-	createEstablishment(data: RestaurantData) {
+	createMyEstablishment(data: RestaurantData) {
 		return this._sendFetchRequest(`/api/v1/business/establishments/`, {
 			method: 'POST',
 			headers: {
@@ -58,6 +58,27 @@ class MainApi {
 				'Content-Type': 'application/json',
 			},
 			body: JSON.stringify(data),
+		});
+	}
+
+	editMyEstablishment(data: RestaurantData, id: string | undefined) {
+		return this._sendFetchRequest(`/api/v1/business/establishments/${id}/`, {
+			method: 'PATCH',
+			headers: {
+				authorization: 'Bearer ' + localStorage.getItem('access-token'),
+				'Content-Type': 'application/json',
+			},
+			body: JSON.stringify(data),
+		});
+	}
+
+	getMyEstablishmentById(id: string | undefined) {
+		return this._sendFetchRequest(`/api/v1/business/establishments/${id}/`, {
+			method: 'GET',
+			headers: {
+				authorization: 'Bearer ' + localStorage.getItem('access-token'),
+				'Content-Type': 'application/json',
+			},
 		});
 	}
 

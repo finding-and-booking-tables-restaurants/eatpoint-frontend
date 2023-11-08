@@ -13,7 +13,8 @@ interface RestaurantData {
 	services: string[];
 	zones: Zone[];
 	average_check: string;
-	poster: File | string;
+	// poster: File | string | null | undefined;
+	poster: any;
 	email: string;
 	telephone: string;
 	description: string;
