@@ -34,6 +34,7 @@ import UserBookings from '../UserBookings/UserBookings';
 import BusinessLanding from '../BusinessLanding/BusinessLanding';
 import SendProblem from '../SendProblem/SendProblem';
 import Help from '../Help/Help';
+import ResetPassword from '../ResetPassword/ResetPassword';
 
 function App() {
 	const [currentUser, setCurrentUser] = useState<UserData>();
@@ -292,6 +293,7 @@ function App() {
 					<Route path="/test" element={<TEST></TEST>}></Route>
 					<Route path="/support" element={<SendProblem />} />
 					<Route path="/help" element={<Help />} />
+					<Route path="/resetpass" element={<ResetPassword />} />
 					<Route path="*" element={<NotFoundPage></NotFoundPage>}></Route>
 				</Routes>
 			</CurrentUserContext.Provider>
