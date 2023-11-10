@@ -1,18 +1,30 @@
 import './BusinessProfile.css';
-import React, { useContext } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import Header from '../Header/Header';
 import Footer from '../Footer/Footer';
 import RestaurantItem from './RestaurantItem/RestaurantItem';
 import CurrentUserContext from '../../contexts/CurrentUserContext';
+import { mainApi } from '../../utils/mainApi';
+import { Establishment } from '../../types/getMyRestaurantTypes';
 
 function BusinessProfile() {
 	const userData = useContext(CurrentUserContext).currentUser;
 	const navigate = useNavigate();
 
+	const [myEstablishments, setMyEstablishments] = useState<Establishment[]>([]);
+
 	const handleEditProfile = () => {
 		navigate('/user-profile');
 	};
+
+	useEffect(() => {
+		mainApi.getAllMyEstablishments().then((res) => {
+			setMyEstablishments(res.results);
+		});
+	}, []);
+
+	console.log(myEstablishments);
 
 	return (
 		<>
@@ -21,14 +33,13 @@ function BusinessProfile() {
 				<div className="business-profile__box-profile">
 					<div className="business-profile__box-info">
 						<p className="business-profile__user-name">
-							{userData.first_name + ' ' + userData.last_name}
+							{userData?.first_name + ' ' + userData?.last_name}
 						</p>
-						<p className="business-profile__user-id">ID 12345678</p>
+						<p className="business-profile__user-phone">
+							{userData?.telephone}
+						</p>
 						<div className="business-profile__box-info_contacts">
-							<p className="business-profile__user-email">{userData.email}</p>
-							<p className="business-profile__user-phone">
-								{userData.telephone}
-							</p>
+							<p className="business-profile__user-email">{userData?.email}</p>
 						</div>
 					</div>
 					<button
@@ -45,7 +56,17 @@ function BusinessProfile() {
 				</Link>
 				<h2 className="business-profile__list-title">Мои рестораны</h2>
 				<ul className="business-profile__list">
-					<RestaurantItem />
+					{myEstablishments.map((establishment, index) => (
+						<RestaurantItem
+							key={establishment.id}
+							id={establishment.id}
+							name={establishment.name}
+							cities={establishment.cities}
+							address={establishment.address}
+							poster={establishment.poster}
+							avarage_check={establishment.average_check}
+						/>
+					))}
 				</ul>
 			</section>
 

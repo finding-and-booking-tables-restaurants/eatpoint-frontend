@@ -11,6 +11,7 @@ interface RestCardProps {
 	reviews?: number;
 	search: boolean;
 	id: number;
+	average_check: string;
 }
 
 export default RestCardProps;

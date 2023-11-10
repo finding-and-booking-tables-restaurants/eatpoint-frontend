@@ -2,46 +2,17 @@ import TextField from '@mui/material/TextField';
 import MenuItem from '@mui/material/MenuItem';
 import { createTheme } from '@mui/material/styles';
 import { ThemeProvider } from '@emotion/react';
+import { numOfPeople } from '../../utils/constants';
 
-const currencies = [
-	{
-		value: '1',
-		label: '2 человек',
-	},
-	{
-		value: '2',
-		label: '2 человека',
-	},
-	{
-		value: '3',
-		label: '3 человека',
-	},
-	{
-		value: '4',
-		label: '4 человека',
-	},
-	{
-		value: '5',
-		label: '5 человек',
-	},
-	{
-		value: '6',
-		label: '6 человек',
-	},
-	{
-		value: '7',
-		label: '7 человек',
-	},
-];
-
-const newTheme = (theme: any) =>
+export const selectTheme = (theme: any) =>
 	createTheme({
 		...theme,
 		components: {
 			MuiList: {
 				styleOverrides: {
 					root: {
-						padding: 0,
+						backgroundColor: '#FCF8EA',
+						maxHeight: '336px',
 					},
 				},
 			},
@@ -49,19 +20,26 @@ const newTheme = (theme: any) =>
 	});
 
 export default function SelectTextFields() {
+	const handleSelectPeople = (event: React.ChangeEvent<HTMLInputElement>) => {
+		localStorage.setItem('selected-number-of-people', event.target.value);
+	};
+
 	return (
-		<ThemeProvider theme={newTheme}>
+		<ThemeProvider theme={selectTheme}>
 			<TextField
 				id="outlined-select-currency"
 				select
-				label="Количество человек"
-				defaultValue="2"
+				name="number_guests"
+				onChange={handleSelectPeople}
+				defaultValue={localStorage.getItem('selected-number-of-people') || '2'}
 				sx={{
 					backgroundColor: '#FCF8EA',
-					maxWidth: 328,
+					width: 328,
+					margin: 'auto',
+					borderRadius: '8px',
 				}}
 			>
-				{currencies.map((option) => (
+				{numOfPeople.map((option) => (
 					<MenuItem
 						key={option.value}
 						value={option.value}

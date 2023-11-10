@@ -14,43 +14,18 @@ import { numOfPeople } from '../../utils/constants';
 interface BookingFormProps {
 	children?: ReactNode;
 	onSubmit: (event: React.FormEvent<HTMLFormElement>) => void;
+	booking: boolean;
 }
 
-const BookingForm: FC<BookingFormProps> = ({ children, onSubmit }) => {
+const BookingForm: FC<BookingFormProps> = ({ children, onSubmit, booking }) => {
 	return (
 		<div className="booking-form">
-			<SearchForm onSubmit={onSubmit}>
+			<SearchForm booking={booking} onSubmit={onSubmit}>
 				<div className="search-results__flex-box">
 					<DatePickerValue />
 					<TimePickerValue />
 				</div>
-				<TextField
-					id="outlined-select-currency"
-					select
-					name="number_guests"
-					label="Количество человек"
-					defaultValue={1}
-					sx={{
-						backgroundColor: '#FCF8EA',
-						maxWidth: 328,
-						'& .MuiSelect-menu': {
-							minHeight: '100px',
-							maxHeight: '200px',
-						},
-					}}
-				>
-					{numOfPeople.map((option) => (
-						<MenuItem
-							key={option.value}
-							value={option.value}
-							sx={{
-								backgroundColor: '#FCF8EA',
-							}}
-						>
-							{option.label}
-						</MenuItem>
-					))}
-				</TextField>
+				<NumberOfPerson />
 				{children}
 			</SearchForm>
 		</div>

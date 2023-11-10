@@ -6,9 +6,24 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import 'dayjs/locale/ru';
 import { createTheme } from '@mui/material/styles';
 import { ThemeProvider } from '@emotion/react';
+import {
+	DateValidationError,
+	PickerChangeHandlerContext,
+} from '@mui/x-date-pickers';
 
 export default function DatePickerValue() {
-	const [value, setValue] = useState<Dayjs | null>(dayjs(dayjs()));
+	const selectedDate = localStorage.getItem('selected-date');
+	const [value, setValue] = useState<Dayjs | null>(
+		selectedDate ? dayjs(selectedDate) : dayjs()
+	);
+
+	const handleDateChange = (
+		value: dayjs.Dayjs | null,
+		context: PickerChangeHandlerContext<DateValidationError>
+	) => {
+		localStorage.setItem('selected-date', String(value));
+		setValue(value);
+	};
 
 	const newTheme = (theme: any) =>
 		createTheme({
@@ -17,7 +32,7 @@ export default function DatePickerValue() {
 				MuiDateCalendar: {
 					styleOverrides: {
 						root: {
-							backgroundColor: '#FCF8EA',
+							backgroundColor: 'white',
 						},
 					},
 				},
@@ -41,10 +56,10 @@ export default function DatePickerValue() {
 					value={value?.format('YYYY-MM-DD')}
 				/>
 				<DatePicker
-					label="Дата"
 					value={value}
-					onChange={(newValue) => setValue(newValue)}
+					onChange={handleDateChange}
 					sx={{
+						borderRadius: '8px',
 						'.MuiDateCalendar-root': {
 							backgroundColor: 'black',
 						},
@@ -53,7 +68,7 @@ export default function DatePickerValue() {
 							maxWidth: 160,
 						},
 						'.MuiInputBase-root': {
-							maxWidth: 151,
+							maxWidth: 160,
 							minHeight: 56,
 							backgroundColor: '#FCF8EA',
 						},
