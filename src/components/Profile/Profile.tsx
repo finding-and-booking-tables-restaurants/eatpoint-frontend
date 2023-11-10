@@ -337,13 +337,13 @@ const Profile: React.FC<IUserFormProps> = ({
 					{message ? (
 						<Typography
 							fontFamily="Ubuntu"
-							fontSize="12px"
+							fontSize="20px"
 							fontWeight="500"
 							lineHeight="26px"
 							letterSpacing="0.2px"
 							color="#006C60"
 							textAlign="center"
-							mb="26px"
+							mt="135px"
 						>
 							{message}
 						</Typography>
@@ -357,7 +357,7 @@ const Profile: React.FC<IUserFormProps> = ({
 								borderRadius: '8px',
 								width: '100%',
 								height: '40px',
-								mt: '16px',
+								mt: 17,
 								mb: 3,
 								padding: '10px 24px 10px 16px',
 							}}
