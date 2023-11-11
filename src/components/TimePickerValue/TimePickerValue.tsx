@@ -1,8 +1,9 @@
-import { useState, ChangeEvent } from 'react';
+import { useState, ChangeEvent, useEffect } from 'react';
 import TextField from '@mui/material/TextField';
 import { timesForTimePicker as times } from '../../utils/constants';
 import { MenuItem } from '@mui/material';
 import Clocks from '@mui/icons-material/AccessTime';
+import DoneIcon from '@mui/icons-material/Done';
 
 function MyTimePicker() {
 	const selectedTime = localStorage.getItem('selected-time');
@@ -17,6 +18,11 @@ function MyTimePicker() {
 		setTime(pickedTime);
 	};
 
+	useEffect(() => {
+		if (selectedTime) return;
+		localStorage.setItem('selected-time', times[23]);
+	}, []);
+
 	return (
 		<TextField
 			id="outlined-select-currency"
@@ -25,17 +31,17 @@ function MyTimePicker() {
 			value={time}
 			onChange={handleTimeChange}
 			sx={{
-				backgroundColor: '#FCF8EA',
 				maxWidth: 328,
 				minWidth: 160,
 				borderRadius: '8px',
+				backgroundColor: 'white',
 			}}
 			SelectProps={{
-				IconComponent: () => (
+				IconComponent: () => null,
+				startAdornment: (
 					<Clocks
 						style={{
-							transform: 'rotate(0deg)',
-							marginRight: 10,
+							marginRight: '12px',
 							color: 'rgba(0, 0, 0, 0.54)',
 						}}
 					/>
@@ -50,13 +56,7 @@ function MyTimePicker() {
 			}}
 		>
 			{times.map((time, idx) => (
-				<MenuItem
-					key={idx}
-					value={time}
-					sx={{
-						background: '#FCF8EA',
-					}}
-				>
+				<MenuItem sx={{ paddingLeft: '50px' }} key={idx} value={time}>
 					{time}
 				</MenuItem>
 			))}
