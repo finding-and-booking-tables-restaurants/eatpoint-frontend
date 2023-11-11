@@ -34,31 +34,22 @@ const Recomended: React.FC<RecomendedProps> = ({
 					<p>{link}</p>
 				</Link>
 			</div>
-			<div className="recomended__swiper">
-				<Swiper
-					modules={[Navigation, A11y]}
-					spaceBetween={16}
-					slidesPerView={1.5}
-					centeredSlides={true}
-					loop={true}
-					slideToClickedSlide={true}
-				>
-					{establishments.map((restaurant: Restaurant, index: number) => (
-						<SwiperSlide key={index}>
-							<RestCard
-								key={index}
-								img={restaurant.poster}
-								name={restaurant.name}
-								address={restaurant.address}
-								rating={formatRating(restaurant.rating)}
-								reviews={restaurant.review_count}
-								search={false}
-								id={restaurant.id}
-								average_check={restaurant.average_check}
-							/>
-						</SwiperSlide>
+			<div className="recomended__cards-container">
+				{establishments
+					.slice(0, 10)
+					.map((restaurant: Restaurant, index: number) => (
+						<RestCard
+							key={index}
+							img={restaurant.poster}
+							name={restaurant.name}
+							address={restaurant.address}
+							rating={formatRating(restaurant.rating)}
+							reviews={restaurant.review_count}
+							search={true}
+							id={restaurant.id}
+							average_check={restaurant.average_check}
+						/>
 					))}
-				</Swiper>
 			</div>
 		</section>
 	);
