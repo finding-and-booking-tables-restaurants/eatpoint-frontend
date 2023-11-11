@@ -218,7 +218,7 @@ export const numOfPeople = [
 	{ value: 20, label: '20 человек' },
 ];
 
-export const formValues: any = {
+export const BookingformValues: any = {
 	reminder_one_day: true,
 	reminder_three_hours: true,
 	reminder_half_on_hour: true,
@@ -229,31 +229,77 @@ export const inputs = [
 		label: 'Имя',
 		id: 'first_name',
 		type: 'text',
-		required: true,
-		maxLength: 30,
-		errorMessage: 'Введите корректное имя',
+		validationConfig: {
+			required: 'Введите имя',
+			minLength: {
+				value: 2,
+				message: 'Введите не менее 2 символов',
+			},
+			maxLength: {
+				value: 30,
+				message: 'Введите менее 30 символов',
+			},
+			pattern: {
+				value: /^[a-zA-Z\u0430-\u044f\u0410-\u042fёЁ\s]*$/,
+				message: 'Введите корректное имя',
+			},
+		},
 	},
 	{
-		label: 'Моб. телефон',
+		label: 'Моб. телефон в виде +7... ... .. ..',
 		id: 'telephone',
-		required: true,
 		type: 'text',
-		errorMessage: 'Введите корректный номер моб. телефона',
+		validationConfig: {
+			required: 'Введите моб. телефон',
+			pattern: {
+				value: /^\+(?:[0-9] ?){6,14}[0-9]$/,
+				message: 'Введите корректный номер телефона',
+			},
+			minLength: {
+				value: 10,
+				message: 'Минимальная длина - 10 символов',
+			},
+			maxLength: {
+				value: 12,
+				message: 'Максимальная длина - 12 символов',
+			},
+		},
 	},
 	{
 		label: 'Эл. почта',
 		type: 'email',
 		id: 'email',
-		errorMessage: 'Введите корректный адрес эл. почты',
+		validationConfig: {
+			required: 'Введите эл. почту',
+			pattern: {
+				value: /^(?!.*(__|-{2}))[A-Z0-9._%+-]+\S@[A-Z0-9.-]+\.[A-Z]{2,4}$/i,
+				message: 'Электронная почта введена не корректно',
+			},
+			minLength: {
+				value: 5,
+				message: 'Введите не менее 5 символов',
+			},
+			maxLength: {
+				value: 50,
+				message: 'Введите менее 50 символов',
+			},
+		},
 	},
 	{
-		label: 'Комментарий',
+		label: 'Комментарий (не обязательно)',
 		type: 'text',
 		id: 'comment',
-		required: false,
-		maxLength: 1500,
-		errorMessage: 'Длина введённого текста превышает 1500 символов',
-		helperText: 'Сообщите нам о ваших пожеланиях',
+		validationConfig: {
+			required: false,
+			pattern: {
+				value: /^[а-яА-ЯёЁ0-9\s\d!""#$%&'()*+,\-.\/:;<=>?@[\\\]^_`{|}№~]+$/,
+				message: 'Вы ввели недопустимые символы',
+			},
+			maxLength: {
+				value: 1500,
+				message: 'Длина комментария превышает 1500 символов',
+			},
+		},
 	},
 ];
 

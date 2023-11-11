@@ -3,6 +3,7 @@ import MenuItem from '@mui/material/MenuItem';
 import { createTheme } from '@mui/material/styles';
 import { ThemeProvider } from '@emotion/react';
 import { numOfPeople } from '../../utils/constants';
+import { useEffect } from 'react';
 
 export const selectTheme = (theme: any) =>
 	createTheme({
@@ -11,7 +12,6 @@ export const selectTheme = (theme: any) =>
 			MuiList: {
 				styleOverrides: {
 					root: {
-						backgroundColor: '#FCF8EA',
 						maxHeight: '336px',
 					},
 				},
@@ -20,9 +20,16 @@ export const selectTheme = (theme: any) =>
 	});
 
 export default function SelectTextFields() {
+	const numberOfPeople = localStorage.getItem('selected-number-of-people');
+
 	const handleSelectPeople = (event: React.ChangeEvent<HTMLInputElement>) => {
 		localStorage.setItem('selected-number-of-people', event.target.value);
 	};
+
+	useEffect(() => {
+		if (numberOfPeople) return;
+		localStorage.setItem('selected-number-of-people', '2');
+	}, []);
 
 	return (
 		<ThemeProvider theme={selectTheme}>
@@ -31,22 +38,16 @@ export default function SelectTextFields() {
 				select
 				name="number_guests"
 				onChange={handleSelectPeople}
-				defaultValue={localStorage.getItem('selected-number-of-people') || '2'}
+				defaultValue={numberOfPeople || '2'}
 				sx={{
-					backgroundColor: '#FCF8EA',
 					width: 328,
 					margin: 'auto',
 					borderRadius: '8px',
+					backgroundColor: 'white',
 				}}
 			>
 				{numOfPeople.map((option) => (
-					<MenuItem
-						key={option.value}
-						value={option.value}
-						sx={{
-							backgroundColor: '#FCF8EA',
-						}}
-					>
+					<MenuItem key={option.value} value={option.value}>
 						{option.label}
 					</MenuItem>
 				))}
