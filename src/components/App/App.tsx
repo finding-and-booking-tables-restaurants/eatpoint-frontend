@@ -265,14 +265,8 @@ function App() {
 										<Recomended
 											establishments={allEstablishments}
 											nearest={false}
-											link="Все"
+											link=""
 											title="Рекомендации"
-										/>
-										<Recomended
-											establishments={allEstablishments}
-											nearest
-											link="На карте"
-											title="Ближайшие"
 										/>
 									</>
 								)}
