@@ -1,8 +1,10 @@
 import './RestaurantItem.css';
+import { useState } from 'react';
 import RatingIcon from '../../../images/star-icon.svg';
 import ReviewsIcon from '../../../images/message-icon.svg';
 import { Link } from 'react-router-dom';
 import { Establishment } from '../../../types/getMyRestaurantTypes';
+import DeleteCardConfirm from '../../DeleteCardConfirm/DeleteCardConfirm';
 
 interface RestaurantItemProps {
 	id?: number;
@@ -14,6 +16,7 @@ interface RestaurantItemProps {
 	rating: number | undefined;
 	review_count: number | undefined;
 	establishment: Establishment;
+	handleOpenDeleteModal?: () => void;
 }
 
 function RestaurantItem({
@@ -27,6 +30,11 @@ function RestaurantItem({
 	review_count,
 	establishment,
 }: RestaurantItemProps) {
+	const [isDeleteModalOpen, setDeleteModalOpen] = useState(false);
+
+	const handleOpenDeleteModal = () => {
+		setDeleteModalOpen(true);
+	};
 	return (
 		<li className="restaurant">
 			<div className="restaurant__box-card">
@@ -56,6 +64,13 @@ function RestaurantItem({
 						<span className="restaurant__reviews-num">{review_count || 0}</span>
 					</div>
 					<p>{`${avarage_check}`} ₽</p>
+					<button
+						className="restaurant__delete-btn"
+						onClick={handleOpenDeleteModal}
+					></button>
+					{/* {isDeleteModalOpen && (
+						<DeleteCardConfirm onClose={() => setDeleteModalOpen(false)} />
+					)} */}
 				</div>
 				<div className="restaurant__box-optionBtn">
 					<button className="restaurant__optionBtn restaurant__optionBtn_reservation">
@@ -74,6 +89,11 @@ function RestaurantItem({
 					</button>
 				</div>
 			</div>
+			<DeleteCardConfirm
+				isOpen={isDeleteModalOpen}
+				isClose={setDeleteModalOpen}
+				title={name}
+			/>
 		</li>
 	);
 }

@@ -50,14 +50,38 @@ class MainApi {
 		});
 	}
 
-	createMyEstablishment(data: RestaurantData) {
+	// createMyEstablishment(data: RestaurantData) {
+	// 	return this._sendFetchRequest(`/api/v1/business/establishments/`, {
+	// 		method: 'POST',
+	// 		headers: {
+	// 			authorization: 'Bearer ' + localStorage.getItem('access-token'),
+	// 		},
+	// 		body: JSON.stringify(data),
+	// 	});
+	// }
+
+	createMyEstablishment(data: RestaurantData, files: FileList) {
+		const formData = new FormData();
+
+		// Добавляем текстовые данные
+		Object.keys(data).forEach((key) => {
+			// Проверяем, что key является ключом объекта
+			if (Object.prototype.hasOwnProperty.call(data, key)) {
+				formData.append(key, (data as any)[key]);
+			}
+		});
+
+		// Добавляем файлы
+		for (let i = 0; i < files.length; i++) {
+			formData.append('files', files[i]);
+		}
+
 		return this._sendFetchRequest(`/api/v1/business/establishments/`, {
 			method: 'POST',
 			headers: {
 				authorization: 'Bearer ' + localStorage.getItem('access-token'),
-				'Content-Type': 'application/json',
 			},
-			body: JSON.stringify(data),
+			body: formData,
 		});
 	}
 

@@ -45,7 +45,6 @@ import ProptectedBusinessRouteElement from '../ProptectedBusinessRoute/Proptecte
 import { mainApi } from '../../utils/mainApi';
 import RestaurantReviews from '../RestaurantReviews/RestaurantReviews';
 import EditRestaurant from '../EditRestaurant/EditRestaurant';
-import EditRestaurantTEST from '../EditRestaurant/EditRestaurantSTATE';
 
 function App() {
 	const [currentUser, setCurrentUser] = useState<UserData>();

@@ -82,11 +82,14 @@ export interface Restaurant {
 	id: number;
 	owner: number;
 	name: string;
-	types: Type[];
+	// types: Type[];
+	types: string[];
 	cities: string;
 	address: string;
-	kitchens: Kitchen[];
-	services: Service[];
+	// kitchens: Kitchen[];
+	kitchens: string[];
+	// services: Service[];
+	services: string[];
 	zones: Zone[];
 	average_check: string;
 	poster: string;

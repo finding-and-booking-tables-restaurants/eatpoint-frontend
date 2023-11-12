@@ -300,18 +300,18 @@ export default function RestaurantPage({ id }: { id: number }) {
 					</div>
 					<div className="restaurant-page__features-container">
 						{currentRestaurant?.kitchens.map((kitchen) => (
-							<p className="restaurant-page__feature" key={kitchen.id}>
-								{kitchen.name}
+							<p className="restaurant-page__feature" key={kitchen}>
+								{kitchen}
 							</p>
 						))}
 						{currentRestaurant?.types.map((type) => (
-							<p className="restaurant-page__feature" key={type.id}>
-								{type.name}
+							<p className="restaurant-page__feature" key={type}>
+								{type}
 							</p>
 						))}
 						{currentRestaurant?.services.map((service) => (
-							<p className="restaurant-page__feature" key={service.id}>
-								{service.name}
+							<p className="restaurant-page__feature" key={service}>
+								{service}
 							</p>
 						))}
 					</div>

@@ -1,4 +1,4 @@
-interface Zone {
+export interface Zone {
 	zone?: string;
 	seats?: number;
 	available_seats?: number;
@@ -29,3 +29,9 @@ interface RestaurantData {
 }
 
 export type { RestaurantData };
+
+export interface Zone {
+	zone?: string;
+	seats?: number;
+	available_seats?: number;
+}

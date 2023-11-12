@@ -91,7 +91,7 @@ function SelectWorkTime({
 					inputProps={{ 'aria-label': 'Without label' }}
 					MenuProps={MenuProps}
 					disabled={inputFieldsDisabled}
-					sx={{ backgroundColor: '#FDFAF2' }}
+					// sx={{ backgroundColor: '#FDFAF2' }}
 				>
 					{timesForTimePicker.map((time, i) => (
 						<MenuItem key={i} value={time} sx={{ backgroundColor: '#FDFAF2' }}>
@@ -110,7 +110,7 @@ function SelectWorkTime({
 					inputProps={{ 'aria-label': 'Without label' }}
 					MenuProps={MenuProps}
 					disabled={inputFieldsDisabled}
-					sx={{ backgroundColor: '#FDFAF2' }}
+					// sx={{ backgroundColor: '#FDFAF2' }}
 				>
 					{timesForTimePicker.map((time, i) => (
 						<MenuItem key={i} value={time} sx={{ backgroundColor: '#FDFAF2' }}>

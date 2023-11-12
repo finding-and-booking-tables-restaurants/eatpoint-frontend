@@ -222,7 +222,7 @@ function AddRestaurant() {
 		};
 
 		mainApi
-			.createMyEstablishment(formDataSend)
+			.createMyEstablishment(formDataSend, formData.poster)
 			.then(() => {
 				navigate('/business-profile');
 			})
@@ -241,56 +241,101 @@ function AddRestaurant() {
 					<h2 className="add-restaurant__title">Новое заведение</h2>
 				</div>
 				<form className="add-restaurant__form" onSubmit={handleSubmit}>
-					<input
-						className="add-restaurant__input"
-						placeholder="Название"
-						type="text"
-						maxLength={30}
-						name="name"
-						value={formData.name}
-						onChange={handleInputChange}
-						required
-					/>
-					<input
-						className="add-restaurant__input"
-						placeholder="Город"
-						type="text"
-						maxLength={30}
-						name="cities"
-						value={formData.cities}
-						onChange={handleInputChange}
-						required
-					/>
-					<input
-						className="add-restaurant__input"
-						placeholder="Адрес"
-						type="text"
-						maxLength={30}
-						name="address"
-						value={formData.address}
-						onChange={handleInputChange}
-						required
-					/>
-					<input
-						className="add-restaurant__input"
-						placeholder="Телефон (+7 *** ***-**-**)"
-						type="text"
-						name="telephone"
-						minLength={11}
-						maxLength={12}
-						value={formData.telephone}
-						onChange={handleInputChange}
-						required
-					/>
-					<input
-						className="add-restaurant__input"
-						placeholder="Email заведения"
-						type="email"
-						name="email"
-						value={formData.email}
-						onChange={handleInputChange}
-						required
-					/>
+					<div className="add-restaurant__box-relative">
+						<input
+							className="add-restaurant__input"
+							// placeholder="Название"
+							type="text"
+							maxLength={30}
+							name="name"
+							id="add-restaurant-name"
+							value={formData.name}
+							onChange={handleInputChange}
+							required
+						/>
+						<label
+							className="add-restaurant__label-input"
+							htmlFor="add-restaurant-name"
+						>
+							Название
+						</label>
+					</div>
+					<div className="add-restaurant__box-relative">
+						<input
+							className="add-restaurant__input"
+							// placeholder="Город"
+							type="text"
+							maxLength={30}
+							name="cities"
+							id="add-restaurant-city"
+							value={formData.cities}
+							onChange={handleInputChange}
+							required
+						/>
+						<label
+							className="add-restaurant__label-input"
+							htmlFor="add-restaurant-city"
+						>
+							Город
+						</label>
+					</div>
+					<div className="add-restaurant__box-relative">
+						<input
+							className="add-restaurant__input"
+							// placeholder="Адрес"
+							type="text"
+							maxLength={30}
+							name="address"
+							id="add-restaurant-address"
+							value={formData.address}
+							onChange={handleInputChange}
+							required
+						/>
+						<label
+							className="add-restaurant__label-input"
+							htmlFor="add-restaurant-address"
+						>
+							Адрес
+						</label>
+					</div>
+					<div className="add-restaurant__box-relative">
+						<input
+							className="add-restaurant__input"
+							// placeholder="Телефон (+7 *** ***-**-**)"
+							type="text"
+							name="telephone"
+							id="add-restaurant-telephone"
+							minLength={11}
+							maxLength={12}
+							value={formData.telephone}
+							onChange={handleInputChange}
+							required
+						/>
+						<label
+							className="add-restaurant__label-input"
+							htmlFor="add-restaurant-telephone"
+						>
+							Моб. телефон в виде +7(...)... .. ..
+						</label>
+					</div>
+					<div className="add-restaurant__box-relative">
+						<input
+							className="add-restaurant__input"
+							// placeholder="Email заведения"
+							type="email"
+							name="email"
+							id="add-restaurant-email"
+							value={formData.email}
+							onChange={handleInputChange}
+							required
+						/>
+						<label
+							className="add-restaurant__label-input"
+							htmlFor="add-restaurant-email"
+						>
+							Email заведения
+						</label>
+					</div>
 					<h3 className="add-restaurant__category">Тип заведения</h3>
 					<ul className="add-restaurant__list">
 						{availableType.map((item, i) => (
@@ -339,6 +384,7 @@ function AddRestaurant() {
 							onRemove={removeInputsZoneComponent}
 							onAddZone={handleAddZone}
 							onAddSeats={handleAddSeats}
+							formData={formData.zones}
 						/>
 					))}
 					<button
@@ -346,7 +392,7 @@ function AddRestaurant() {
 						className="add-restaurant__moreBtn"
 						onClick={addInputsZoneComponent}
 					>
-						Еще
+						Добавить еще
 					</button>
 					<h3 className="add-restaurant__category">Режим работы (от, до)</h3>
 					<SelectWorkTime
@@ -425,18 +471,24 @@ function AddRestaurant() {
 						))}
 					</ul>
 					<h3 className="add-restaurant__category_padding-bot">Описание</h3>
-					<textarea
-						className="add-restaurant__text-area"
-						name="description"
-						maxLength={500}
-						onChange={handleInputChange}
-						required
-					></textarea>
-					<h3 className="add-restaurant__category_padding-bot">Фотография</h3>
+					<div className="add-restaurant__box-relative">
+						<label
+							className="add-restaurant__label-text-area"
+							htmlFor="add-restaurant-description"
+						>
+							Описание заведения (не обязательно)
+						</label>
+						<textarea
+							className="add-restaurant__text-area"
+							name="description"
+							id="add-restaurant-description"
+							maxLength={500}
+							onChange={handleInputChange}
+							required
+						></textarea>
+					</div>
+					<h3 className="add-restaurant__category_padding-bot">Обложка</h3>
 					<div className="add-restaurant__flex-box-file">
-						<p className="add-restaurant__file-paragraph">
-							Добавьте фото для аватара размером до 5 МБ
-						</p>
 						{/* <TEST
 							label="загрузить фото"
 							onChange={(file) => {

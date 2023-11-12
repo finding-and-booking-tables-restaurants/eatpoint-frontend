@@ -13,6 +13,8 @@ import {
 import { RestaurantData } from '../../types/addRestaurantTypes';
 import { mainApi } from '../../utils/mainApi';
 import { daysOfWeek } from '../../utils/constants';
+import InputsZone from '../AddRestaurant/InputsZone/InputsZone';
+import { InputsZoneData } from '../../types/InputsZoneData';
 
 function EditRestaurant() {
 	const { id } = useParams();
@@ -23,6 +25,7 @@ function EditRestaurant() {
 			setFormData(res);
 			// setRecipeFile(res.poster);
 			setSelectedCheckFilters(res.average_check);
+			setInputsZone(res.zones);
 		});
 	}, [id]);
 
@@ -50,9 +53,11 @@ function EditRestaurant() {
 	const [selectedCheckboxes, setSelectedCheckboxes] = useState<{
 		[key: string]: boolean;
 	}>({});
-	const [recipeFile, setRecipeFile] = useState<
-		string | File | null | undefined
-	>(formData.poster);
+
+	const [inputsZone, setInputsZone] = useState<InputsZoneData[]>([]);
+	// const [recipeFile, setRecipeFile] = useState<
+	// 	string | File | null | undefined
+	// >(formData.poster);
 
 	const handleInputChange = (
 		event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -64,6 +69,18 @@ function EditRestaurant() {
 			[name]: value,
 		}));
 	};
+
+	const addInputsZoneComponent = () => {
+		setInputsZone([...inputsZone, { zone: '', seats: 0 }]);
+	};
+
+	const removeInputsZoneComponent = (index: number) => {
+		const newComponents = [...inputsZone];
+		newComponents.splice(index, 1);
+		setInputsZone(newComponents);
+	};
+
+	console.log(inputsZone);
 
 	const handleCheckboxChange = (event: ChangeEvent<HTMLInputElement>) => {
 		const { name, checked } = event.target;
@@ -343,7 +360,17 @@ function EditRestaurant() {
 						Можно добавить любые типы столов и их доступное количество мест,
 						например, «на терассе — 16».
 					</p>
-					{formData.zones.map((zone: any, index: number) => (
+					{inputsZone.map((_, index) => (
+						<InputsZone
+							key={index}
+							index={index}
+							onRemove={removeInputsZoneComponent}
+							onAddZone={handleAddZone}
+							onAddSeats={handleAddSeats}
+							formData={formData.zones}
+						/>
+					))}
+					{/* {formData.zones.map((zone: any, index: number) => (
 						<div key={index} className="add-restaurant__flex-box">
 							<input
 								className="add-restaurant__input-place"
@@ -369,8 +396,14 @@ function EditRestaurant() {
 								required
 							/>
 						</div>
-					))}
-					{/* <button className="add-restaurant__moreBtn">Еще</button> */}
+					))} */}
+					<button
+						className="add-restaurant__moreBtn"
+						type="button"
+						onClick={addInputsZoneComponent}
+					>
+						Добавить еще
+					</button>
 					<h3 className="add-restaurant__category">Режим работы (от, до)</h3>
 					<div>
 						{daysOfWeek.map((day, index) => {

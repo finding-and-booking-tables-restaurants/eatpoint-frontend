@@ -1,0 +1,100 @@
+.delete-card-confirm {
+	display: flex;
+	flex-direction: column;
+	background-color: white;
+	bottom: 0;
+	left: 0;
+	opacity: 0;
+	top: 0;
+	position: fixed;
+	transition:
+		visibility 0.3s,
+		opacity 0.4s linear;
+	visibility: hidden;
+	width: 100%;
+	z-index: 10;
+	max-height: 100%;
+	overflow-y: auto;
+}
+
+.delete-card-confirm_active {
+	opacity: 1;
+	visibility: visible;
+}
+
+.delete-card-confirm__title {
+	font-size: 18px;
+	font-weight: 500;
+	line-height: 24px;
+	letter-spacing: 0.20000000298023224px;
+	color: #1d1b20;
+}
+
+.delete-card-confirm__description {
+	padding-top: 20px;
+	max-width: 328px;
+	font-family: Roboto;
+	font-size: 14px;
+	font-weight: 400;
+	line-height: 20px;
+	letter-spacing: 0.25px;
+	text-align: left;
+	color: #1d1b20;
+}
+
+.delete-card-confirm__container {
+	position: relative;
+	padding: 16px;
+}
+
+.delete-card-confirm__box-btns {
+	padding-top: 50px;
+	display: flex;
+	gap: 16px;
+}
+
+.delete-card-confirm__cancel {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 11px;
+	width: 144px;
+	height: 40px;
+	border: 1px solid #006c60;
+	border-radius: 8px;
+	background-color: initial;
+	cursor: pointer;
+	color: #006c60;
+	font-family: Roboto;
+	font-size: 14px;
+	font-weight: 500;
+	line-height: 20px;
+	letter-spacing: 0.10000000149011612px;
+}
+
+.delete-card-confirm__cancel:hover {
+	opacity: 0.7;
+}
+
+.delete-card-confirm__delete {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 11px;
+	width: 144px;
+	height: 40px;
+	border: 1px solid #006c60;
+	border-radius: 8px;
+	background-color: initial;
+	cursor: pointer;
+	color: #006c60;
+	font-family: Roboto;
+	font-size: 14px;
+	font-weight: 500;
+	line-height: 20px;
+	letter-spacing: 0.10000000149011612px;
+}
+
+.delete-card-confirm__delete:hover {
+	opacity: 0.7;
+}

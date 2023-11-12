@@ -70,7 +70,6 @@ function BusinessProfile() {
 					))}
 				</ul>
 			</section>
-
 			<Footer />
 		</>
 	);
