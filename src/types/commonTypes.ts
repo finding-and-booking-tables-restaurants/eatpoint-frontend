@@ -44,6 +44,10 @@ interface IUserFormProps {
 	resetRequestMessage: () => void;
 }
 
+interface ICity {
+	name: string;
+}
+
 export type {
 	IRegisterFormData,
 	IRegisterFormUserProps,
@@ -51,4 +55,5 @@ export type {
 	ILoginFormProps,
 	IUserFormData,
 	IUserFormProps,
+	ICity,
 };

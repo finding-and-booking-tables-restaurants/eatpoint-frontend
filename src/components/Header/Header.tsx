@@ -4,6 +4,7 @@ import place from '../../images/place.svg';
 import './Header.css';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
+import SearchCity from '../SearchSity/SearchSity';
 import cities from '../../fakeData/cities';
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -89,7 +90,7 @@ const Header = ({
 				<img src={place} alt="" />
 				<p className="header__location">{city}</p>
 			</div>
-			<Menu
+			{/* <Menu
 				id="basic-menu"
 				anchorEl={anchorElCity}
 				open={openCityMenu}
@@ -103,7 +104,10 @@ const Header = ({
 						{city}
 					</MenuItem>
 				))}
-			</Menu>
+			</Menu> */}
+			{openCityMenu && <SearchCity onClose={() => setAnchorElCity(null)} setSity={setCity}/>}
+
+
 
 			<button onClick={handleSearchClick} className="header__srch-btn"></button>
 			<button onClick={handleNavClick} className="header__nav-btn"></button>
