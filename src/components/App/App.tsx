@@ -41,6 +41,7 @@ import BusinessLanding from '../BusinessLanding/BusinessLanding';
 import ProtectedClientRouteElement from '../ProptectedClientRoute/ProtectedClientRoute';
 import SendProblem from '../SendProblem/SendProblem';
 import Help from '../Help/Help';
+import ResetPassword from '../ResetPassword/ResetPassword';
 import ProptectedBusinessRouteElement from '../ProptectedBusinessRoute/ProptectedBusinessRoute';
 import { mainApi } from '../../utils/mainApi';
 import RestaurantReviews from '../RestaurantReviews/RestaurantReviews';
@@ -264,14 +265,8 @@ function App() {
 										<Recomended
 											establishments={allEstablishments}
 											nearest={false}
-											link="Все"
+											link=""
 											title="Рекомендации"
-										/>
-										<Recomended
-											establishments={allEstablishments}
-											nearest
-											link="На карте"
-											title="Ближайшие"
 										/>
 									</>
 								)}
@@ -388,6 +383,7 @@ function App() {
 					<Route path="/add-restaurant" element={<AddRestaurant />} />
 					<Route path="/support" element={<SendProblem />} />
 					<Route path="/help" element={<Help />} />
+					<Route path="/resetpass" element={<ResetPassword />} />
 					<Route path="*" element={<NotFoundPage />} />
 				</Routes>
 			</CurrentUserContext.Provider>

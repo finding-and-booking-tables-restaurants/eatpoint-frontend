@@ -1,5 +1,6 @@
 import './SendProblem.css';
 import { useContext } from 'react';
+import { Button } from '@mui/material';
 
 import CurrentUserContext from '../../contexts/CurrentUserContext';
 import Header from '../Header/Header';
@@ -51,6 +52,19 @@ export default function SendProblem() {
 						name="text-problem"
 						className="problem-page__textarea"
 					></textarea>
+					<Button
+						variant="contained"
+						type="submit"
+						style={{
+							width: '100%',
+							backgroundColor: '#05887B',
+							borderRadius: '100px',
+							textTransform: 'none',
+						}}
+						disabled={false}
+					>
+						Сообщить о проблеме
+					</Button>
 				</form>
 			</main>
 			<Footer />
