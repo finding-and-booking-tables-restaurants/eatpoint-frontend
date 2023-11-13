@@ -17,12 +17,21 @@ interface SearchCityProps {
 
 const SearchCity: React.FC<SearchCityProps> = ({ onClose, setSity }) => {
 	const [data, setData] = useState([
-		{ name: 'Москва' },
-		{ name: 'Санкт-Петербург' },
-		{ name: 'Самара' },
-		{ name: 'Казань' },
-		{ name: 'Новосибирск' },
-		{ name: 'Сочи' },
+		{ name: 'Москва'},
+		{ name: 'Санкт-Петербург'},
+        { name: 'Казань' },
+        { name: 'Нижний Новгород'},
+        { name: 'Ростов-на-Дону'},
+        { name: 'Пермь'},
+        { name: 'Волгоград'},
+        { name: 'Воронеж'},
+		{ name: 'Самара'},
+        { name: 'Екатеринбург'},
+        { name: 'Омск'},
+		{ name: 'Челябинск'},
+        { name: 'Уфа'},
+		{ name: 'Новосибирск'},
+		{ name: 'Красноярск'},
 	]);
 	const [cities, setCities] = useState([]);
 	const [searchTerm, setSearchTerm] = useState('');

@@ -1,6 +1,7 @@
 .search-sity__section {
 	height: 100%;
 	width: 100%;
+    overflow: scroll;
 	padding: 16px;
 	position: fixed;
 	left: 0;
