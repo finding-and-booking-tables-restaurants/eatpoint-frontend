@@ -81,16 +81,12 @@ class MainApi {
 	}
 
 	getAllCities() {
-		return this._sendFetchRequest(
-			`/api/v1/cities/`,
-			{
-				method: 'GET',
-				headers: {
-					authorization: 'Bearer ' + localStorage.getItem('access-token'),
-					'Content-Type': 'application/json',
-				},
-			}
-		);
+		return this._sendFetchRequest(`/api/v1/cities/`, {
+			method: 'GET',
+			headers: {
+				'Content-Type': 'application/json',
+			},
+		});
 	}
 }
 
