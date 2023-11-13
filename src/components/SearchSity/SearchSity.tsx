@@ -12,7 +12,7 @@ const modalRoot = document.getElementById('modals') as HTMLDivElement;
 
 interface SearchCityProps {
 	onClose: () => void;
-    setSity: (p: string) => void;
+	setSity: (p: string) => void;
 }
 
 const SearchCity: React.FC<SearchCityProps> = ({ onClose, setSity }) => {
@@ -44,11 +44,9 @@ const SearchCity: React.FC<SearchCityProps> = ({ onClose, setSity }) => {
 	const handleItemClick = (item: ICity) => {
 		setSelectedItem(item.name);
 		localStorage.setItem('city', item.name);
-        setSity(item.name)
-        onClose()
+		setSity(item.name);
+		onClose();
 	};
-
-	console.log(selectedItem);
 
 	return ReactDOM.createPortal(
 		<div className="search-sity__section">
@@ -77,7 +75,7 @@ const SearchCity: React.FC<SearchCityProps> = ({ onClose, setSity }) => {
 				}}
 			/>
 			<ul className="search-sity__list">
-				{searchTerm.length === 0 &&
+				{!searchTerm &&
 					data.map((item: ICity, index) => (
 						<li
 							className="search-sity__city"
@@ -87,7 +85,7 @@ const SearchCity: React.FC<SearchCityProps> = ({ onClose, setSity }) => {
 							{item.name}
 						</li>
 					))}
-				{searchTerm.length > 0 &&
+				{searchTerm &&
 					filteredData.map((item: ICity, index) => (
 						<li
 							className="search-sity__city"
