@@ -145,11 +145,6 @@ const Profile: React.FC<IUserFormProps> = ({
 									height: '48px',
 								},
 							}}
-							InputProps={{
-								sx: {
-									backgroundColor: '#FDFAF2',
-								},
-							}}
 							fullWidth
 							onBlur={handleBlur}
 						/>
@@ -178,11 +173,6 @@ const Profile: React.FC<IUserFormProps> = ({
 								marginTop: 2,
 								'.css-md26zr-MuiInputBase-root-MuiOutlinedInput-root': {
 									height: '48px',
-								},
-							}}
-							InputProps={{
-								sx: {
-									backgroundColor: '#FDFAF2',
 								},
 							}}
 							fullWidth
@@ -215,11 +205,6 @@ const Profile: React.FC<IUserFormProps> = ({
 								marginTop: 2,
 								'.css-md26zr-MuiInputBase-root-MuiOutlinedInput-root': {
 									height: '48px',
-								},
-							}}
-							InputProps={{
-								sx: {
-									backgroundColor: '#FDFAF2',
 								},
 							}}
 							fullWidth
@@ -255,11 +240,6 @@ const Profile: React.FC<IUserFormProps> = ({
 									height: '48px',
 								},
 							}}
-							InputProps={{
-								sx: {
-									backgroundColor: '#FDFAF2',
-								},
-							}}
 							fullWidth
 						/>
 						{/* <Button
@@ -292,11 +272,6 @@ const Profile: React.FC<IUserFormProps> = ({
 										height: '48px',
 									},
 								}}
-								InputProps={{
-									sx: {
-										backgroundColor: '#FDFAF2',
-									},
-								}}
 								placeholder="Текущий пароль"
 								fullWidth
 							/>
@@ -311,10 +286,6 @@ const Profile: React.FC<IUserFormProps> = ({
 									},
 								}}
 								InputProps={{
-									sx: {
-										backgroundColor: '#FDFAF2',
-									},
-								}}
 								placeholder="Новый пароль"
 								fullWidth
 							/>

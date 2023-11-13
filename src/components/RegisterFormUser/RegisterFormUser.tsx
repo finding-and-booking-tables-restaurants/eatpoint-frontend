@@ -87,14 +87,14 @@ const RegisterFormUser: React.FC<IRegisterFormUserProps> = ({
 					variant="h1"
 					component="h1"
 					sx={{
-						fontFamily: 'Ubuntu',
+						fontFamily: 'Roboto',
 						fontSize: '26px',
-						fontWeight: '400',
-						lineHeight: '32px',
-						letterSpacing: 'normal',
+						fontWeight: '600',
+						lineHeight: '36px',
+						mt: 4,
 						ml: 0,
-						marginTop: 3,
-						mb: 1,
+						marginTop: 2.5,
+						mb: 0.6,
 					}}
 				>
 					Регистрация
@@ -125,26 +125,16 @@ const RegisterFormUser: React.FC<IRegisterFormUserProps> = ({
 									message: 'Введите корректное имя',
 								},
 							})}
+							label="Имя"
 							name="firstName"
 							id="name"
 							type="text"
 							placeholder="Введите имя"
 							variant="outlined"
-							margin="dense"
 							fullWidth
 							onBlur={handleBlur}
 							error={!!errors.firstName}
 							helperText={errors.firstName?.message || ''}
-							sx={{
-								'.css-md26zr-MuiInputBase-root-MuiOutlinedInput-root': {
-									height: '48px',
-								},
-							}}
-							InputProps={{
-								sx: {
-									backgroundColor: '#FDFAF2',
-								},
-							}}
 						/>
 
 						<TextField
@@ -160,26 +150,16 @@ const RegisterFormUser: React.FC<IRegisterFormUserProps> = ({
 								},
 								pattern: {
 									value: /^[a-zA-Z\u0430-\u044f\u0410-\u042fёЁ\s]*$/,
-									message: 'Введите корректную фамилию',
+									message: 'Фамилия введена не корректно',
 								},
 							})}
+							label="Фамилия"
 							placeholder="Введите фамилию"
 							name="lastName"
 							variant="outlined"
 							onBlur={handleBlur}
 							error={!!errors.lastName}
 							helperText={errors.lastName?.message || ''}
-							sx={{
-								marginTop: 2,
-								'.css-md26zr-MuiInputBase-root-MuiOutlinedInput-root': {
-									height: '48px',
-								},
-							}}
-							InputProps={{
-								sx: {
-									backgroundColor: '#FDFAF2',
-								},
-							}}
 							fullWidth
 						/>
 						<TextField
@@ -198,23 +178,13 @@ const RegisterFormUser: React.FC<IRegisterFormUserProps> = ({
 									message: 'Максимальная длина - 12 символов',
 								},
 							})}
+							label="Моб. телефон в виде +7(...)... .. .."
 							placeholder="Введите номер телефона"
 							variant="outlined"
 							name="telephone"
 							type="tel"
 							error={!!errors.telephone}
 							helperText={errors.telephone?.message || ''}
-							sx={{
-								marginTop: 2,
-								'.css-md26zr-MuiInputBase-root-MuiOutlinedInput-root': {
-									height: '48px',
-								},
-							}}
-							InputProps={{
-								sx: {
-									backgroundColor: '#FDFAF2',
-								},
-							}}
 							fullWidth
 						/>
 						<TextField
@@ -234,6 +204,7 @@ const RegisterFormUser: React.FC<IRegisterFormUserProps> = ({
 									message: 'Введите менее 50 символов',
 								},
 							})}
+							label="Эл. почта"
 							placeholder="Введите email"
 							type="email"
 							name="email"
@@ -243,14 +214,6 @@ const RegisterFormUser: React.FC<IRegisterFormUserProps> = ({
 							helperText={errors.email?.message || ''}
 							sx={{
 								marginTop: 2,
-								'.css-md26zr-MuiInputBase-root-MuiOutlinedInput-root': {
-									height: '48px',
-								},
-							}}
-							InputProps={{
-								sx: {
-									backgroundColor: '#FDFAF2',
-								},
 							}}
 							fullWidth
 						/>
@@ -272,6 +235,7 @@ const RegisterFormUser: React.FC<IRegisterFormUserProps> = ({
 										'Пароль должен содержать хотя бы одну заглавную букву, строчную букву и цифру',
 								},
 							})}
+							label="Пароль"
 							type="password"
 							name="password"
 							margin="dense"
@@ -279,18 +243,7 @@ const RegisterFormUser: React.FC<IRegisterFormUserProps> = ({
 							placeholder="Пароль"
 							error={!!errors.password}
 							helperText={errors.password?.message || ''}
-							required
 							fullWidth
-							sx={{
-								'.css-md26zr-MuiInputBase-root-MuiOutlinedInput-root': {
-									height: '48px',
-								},
-							}}
-							InputProps={{
-								sx: {
-									backgroundColor: '#FDFAF2',
-								},
-							}}
 						/>
 						<TextField
 							{...register('confirmPassword', {
@@ -298,6 +251,7 @@ const RegisterFormUser: React.FC<IRegisterFormUserProps> = ({
 								validate: (value) =>
 									value === password || 'Пароли должны совпадать',
 							})}
+							label="Пароль повторно"
 							margin="dense"
 							variant="outlined"
 							placeholder="Пароль повторно"
@@ -305,18 +259,7 @@ const RegisterFormUser: React.FC<IRegisterFormUserProps> = ({
 							name="confirmPassword"
 							error={!!errors.confirmPassword}
 							helperText={errors.confirmPassword?.message || ''}
-							required
 							fullWidth
-							sx={{
-								'.css-md26zr-MuiInputBase-root-MuiOutlinedInput-root': {
-									height: '48px',
-								},
-							}}
-							InputProps={{
-								sx: {
-									backgroundColor: '#FDFAF2',
-								},
-							}}
 						/>
 						<span
 							style={{
