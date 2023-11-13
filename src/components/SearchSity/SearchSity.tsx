@@ -17,28 +17,31 @@ interface SearchCityProps {
 
 const SearchCity: React.FC<SearchCityProps> = ({ onClose, setSity }) => {
 	const [data, setData] = useState([
-		{ name: 'Москва'},
-		{ name: 'Санкт-Петербург'},
-        { name: 'Казань' },
-        { name: 'Нижний Новгород'},
-        { name: 'Ростов-на-Дону'},
-        { name: 'Пермь'},
-        { name: 'Волгоград'},
-        { name: 'Воронеж'},
-		{ name: 'Самара'},
-        { name: 'Екатеринбург'},
-        { name: 'Омск'},
-		{ name: 'Челябинск'},
-        { name: 'Уфа'},
-		{ name: 'Новосибирск'},
-		{ name: 'Красноярск'},
+		{ name: 'Москва' },
+		{ name: 'Санкт-Петербург' },
+		{ name: 'Казань' },
+		{ name: 'Нижний Новгород' },
+		{ name: 'Ростов-на-Дону' },
+		{ name: 'Пермь' },
+		{ name: 'Волгоград' },
+		{ name: 'Воронеж' },
+		{ name: 'Самара' },
+		{ name: 'Екатеринбург' },
+		{ name: 'Омск' },
+		{ name: 'Челябинск' },
+		{ name: 'Уфа' },
+		{ name: 'Новосибирск' },
+		{ name: 'Красноярск' },
 	]);
 	const [cities, setCities] = useState([]);
 	const [searchTerm, setSearchTerm] = useState('');
 	const [selectedItem, setSelectedItem] = useState('');
 
 	useEffect(() => {
-		mainApi.getAllCities().then((cities) => setCities(cities));
+		mainApi
+			.getAllCities()
+			.then((cities) => setCities(cities))
+			.catch((err) => console.log(err));
 	}, []);
 
 	const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -61,8 +64,7 @@ const SearchCity: React.FC<SearchCityProps> = ({ onClose, setSity }) => {
 		<div className="search-sity__section">
 			<div className="search-sity__back">
 				<button className="search-sity__button" onClick={onClose}>
-					{' '}
-					<ArrowBackIcon />{' '}
+					<ArrowBackIcon />
 				</button>
 
 				<p className="search-sity__text">Выбор города</p>

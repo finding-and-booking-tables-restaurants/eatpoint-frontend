@@ -105,9 +105,9 @@ const Header = ({
 					</MenuItem>
 				))}
 			</Menu> */}
-			{openCityMenu && <SearchCity onClose={() => setAnchorElCity(null)} setSity={setCity}/>}
-
-
+			{openCityMenu && (
+				<SearchCity onClose={() => setAnchorElCity(null)} setSity={setCity} />
+			)}
 
 			<button onClick={handleSearchClick} className="header__srch-btn"></button>
 			<button onClick={handleNavClick} className="header__nav-btn"></button>
