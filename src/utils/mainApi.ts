@@ -79,6 +79,19 @@ class MainApi {
 			}
 		);
 	}
+
+	getAllCities() {
+		return this._sendFetchRequest(
+			`/api/v1/cities/`,
+			{
+				method: 'GET',
+				headers: {
+					authorization: 'Bearer ' + localStorage.getItem('access-token'),
+					'Content-Type': 'application/json',
+				},
+			}
+		);
+	}
 }
 
 export const mainApi = new MainApi({
