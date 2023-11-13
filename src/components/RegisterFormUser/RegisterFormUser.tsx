@@ -94,7 +94,7 @@ const RegisterFormUser: React.FC<IRegisterFormUserProps> = ({
 						mt: 4,
 						ml: 0,
 						marginTop: 2.5,
-						mb: 0.6,
+						mb: 1.3,
 					}}
 				>
 					Регистрация
@@ -106,7 +106,7 @@ const RegisterFormUser: React.FC<IRegisterFormUserProps> = ({
 						component="form"
 						onSubmit={handleSubmit(handleRegistration)}
 						sx={{
-							'& > :not(style)': { m: 1, width: '100%', ml: 0, mb: 0 },
+							'& > :not(style)': { m: 0, width: '100%', ml: 0, mb: 2 },
 						}}
 					>
 						<TextField
@@ -222,11 +222,11 @@ const RegisterFormUser: React.FC<IRegisterFormUserProps> = ({
 								required: 'Поле обязательно для заполнения',
 								minLength: {
 									value: 8,
-									message: 'Минимальная длина - 8 символов',
+									message: 'Введите не менее 8 символов',
 								},
 								maxLength: {
 									value: 30,
-									message: 'Максимальная длина - 30 символов',
+									message: 'Введите не более 30 символов',
 								},
 								pattern: {
 									value:
@@ -261,17 +261,20 @@ const RegisterFormUser: React.FC<IRegisterFormUserProps> = ({
 							helperText={errors.confirmPassword?.message || ''}
 							fullWidth
 						/>
-						<span
-							style={{
-								display: 'block',
-								minHeight: '15px',
-								color: 'red',
-								fontSize: '11px',
-								margin: '5px',
-							}}
-						>
-							{requestErrorMessage}
-						</span>
+						{requestErrorMessage && (
+							<span
+								style={{
+									display: 'block',
+									minHeight: '15px',
+									color: 'red',
+									fontSize: '11px',
+									margin: '5px',
+								}}
+							>
+								{requestErrorMessage}
+							</span>
+						)}
+
 						<FormControlLabel
 							control={
 								<Checkbox
@@ -294,7 +297,6 @@ const RegisterFormUser: React.FC<IRegisterFormUserProps> = ({
 										fontSize: '12px',
 										fontWeight: '400',
 										lineHeight: '16px',
-										mt: '2px',
 										ml: '13px',
 									}}
 								>
@@ -307,7 +309,7 @@ const RegisterFormUser: React.FC<IRegisterFormUserProps> = ({
 								onClick={handleGoBack}
 								variant="outlined"
 								sx={{
-									borderRadius: '100px',
+									borderRadius: '6px',
 									borderColor: '#006C60',
 									height: '40px',
 									width: '156px',
@@ -331,7 +333,7 @@ const RegisterFormUser: React.FC<IRegisterFormUserProps> = ({
 								disabled={!isDirty || !isValid || !isAgreement}
 								sx={{
 									backgroundColor: '#05887B',
-									borderRadius: '100px',
+									borderRadius: '6px',
 								}}
 							>
 								<Typography
