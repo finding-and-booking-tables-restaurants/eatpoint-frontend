@@ -12,7 +12,7 @@ const modalRoot = document.getElementById('modals') as HTMLDivElement;
 
 interface SearchCityProps {
 	onClose: () => void;
-    setSity: any;
+    setSity: (p: string) => void;
 }
 
 const SearchCity: React.FC<SearchCityProps> = ({ onClose, setSity }) => {
