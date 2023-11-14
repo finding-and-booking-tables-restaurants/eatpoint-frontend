@@ -243,6 +243,7 @@ function SearchResults({
 					{/* <SearchBtn /> */}
 					<Button
 						variant="contained"
+						type="submit"
 						sx={{
 							backgroundColor: '#c41a68',
 							textTransform: 'none',
