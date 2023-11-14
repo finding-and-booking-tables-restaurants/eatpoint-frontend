@@ -12,10 +12,10 @@ class MainApi {
 
 	_sendFetchRequest(path: string, settings: RequestInit) {
 		return fetch(`${this._baseUrl}${path}`, settings).then((res) => {
-			if (res.ok) {
-				return res.json();
+			if (!res.ok) {
+				return Promise.reject(`Error: ${res.status}`);
 			}
-			return Promise.reject(res);
+			return res.json();
 		});
 	}
 

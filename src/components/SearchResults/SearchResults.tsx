@@ -96,7 +96,7 @@ function SearchResults({
 				return true;
 			}
 			return restaurant.kitchens.some((kitchen) =>
-				selectedKitchenFilters.includes(kitchen.name)
+				selectedKitchenFilters.includes(kitchen)
 			);
 		});
 		// Фильтрация по типу ресторана
@@ -105,7 +105,7 @@ function SearchResults({
 				return true;
 			}
 			return restaurant.types.some((type) =>
-				selectedTypeFilters.includes(type.name)
+				selectedTypeFilters.includes(type)
 			);
 		});
 
@@ -123,7 +123,7 @@ function SearchResults({
 				return true;
 			}
 			return restaurant.services.some((service) =>
-				selectedServiceFilters.includes(service.name)
+				selectedServiceFilters.includes(service)
 			);
 		});
 

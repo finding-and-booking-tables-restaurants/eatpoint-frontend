@@ -80,11 +80,11 @@ export interface Restaurant {
 	id: number;
 	owner: number;
 	name: string;
-	types: Type[];
+	types: string[];
 	cities: string;
 	address: string;
-	kitchens: Kitchen[];
-	services: Service[];
+	kitchens: string[];
+	services: string[];
 	zones: Zone[];
 	average_check: string;
 	poster: string;
@@ -371,6 +371,10 @@ const UPDATE_USER_INFO_MESSAGE = 'Данные успешно обновлены
 const DUPLICATE_EMAIL_PHONE_MESSAGE =
 	'Пользователь с таким email или телефоном уже существует';
 
+const INVALID_DATE_OR_TIME_RESERVATION_MESSAGE =
+	'Данное время или дата бронирования недоступны';
+
+const SERVER_ERROR_MESSAGE = 'Что-то пошло не так, попробуйте позже.';
 export {
 	ERROR,
 	ERROR_400,
@@ -384,6 +388,8 @@ export {
 	UPDATE_USER_INFO_ERROR_MESSAGE,
 	UPDATE_USER_INFO_MESSAGE,
 	DUPLICATE_EMAIL_PHONE_MESSAGE,
+	INVALID_DATE_OR_TIME_RESERVATION_MESSAGE,
+	SERVER_ERROR_MESSAGE,
 };
 
 export const API_URL = 'https://eatpoint.sytes.net';

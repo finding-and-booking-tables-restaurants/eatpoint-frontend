@@ -1,26 +1,25 @@
-import React, { FC, useContext, useEffect, useState } from 'react';
-import MapOutlinedIcon from '@mui/icons-material/MapOutlined';
+import { FC, useContext, useEffect, useState } from 'react';
 import '../RestaurantPage/RestaurantPage.css';
 import BookingForm from '../BookingForm/BookingForm';
 import './BookingPage.css';
 import TextField from '@mui/material/TextField';
 import MenuItem from '@mui/material/MenuItem';
 import Checkbox from '@mui/material/Checkbox';
-import TodayIcon from '@mui/icons-material/Today';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import LinkToYandexMap from '../LinkToYandexMap/LinkToYandexMap';
 import {
-	API_URL,
 	Restaurant,
 	UserData,
 	fetchRestaurantData,
 	BookingformValues,
 	inputs,
+	initRestaurant,
+	INVALID_DATE_OR_TIME_RESERVATION_MESSAGE,
+	SERVER_ERROR_MESSAGE,
+	ERROR_400,
 } from '../../utils/constants';
 import { useNavigate } from 'react-router-dom';
 import SuccessBooking from '../SuccessBooking/SuccessBooking';
-import Header from '../Header/Header';
-import Footer from '../Footer/Footer';
 import CurrentUserContext from '../../contexts/CurrentUserContext';
 import { mainApi } from '../../utils/mainApi';
 import { ThemeProvider } from '@emotion/react';
@@ -42,9 +41,7 @@ const BookingPage: FC<BookingPageProps> = ({ id, userData }) => {
 	const isLoggedIn = useContext(CurrentUserContext).isLoggedIn;
 
 	const {
-		watch,
 		register,
-		setValue,
 		handleSubmit,
 		formState: { errors, isDirty, isValid },
 	} = useForm<BookingFormValues>({
@@ -53,7 +50,8 @@ const BookingPage: FC<BookingPageProps> = ({ id, userData }) => {
 
 	const [isSuccessBooking, setIsSuccessBooking] = useState(false);
 	const [errMessage, setErrMessage] = useState('');
-	const [currentRestaurant, setcurrentRestaurant] = useState<Restaurant>();
+	const [currentRestaurant, setcurrentRestaurant] =
+		useState<Restaurant>(initRestaurant);
 	const [isAgreement, setIsAgreement] = useState(false);
 	const [bookingId, setBookingId] = useState('');
 	const [dataToSend, setDataToSend] = useState({
@@ -102,7 +100,16 @@ const BookingPage: FC<BookingPageProps> = ({ id, userData }) => {
 				setIsSuccessBooking(true);
 				setBookingId(data.id);
 			})
-			.catch((err) => console.log(err));
+			.catch((err) => {
+				if (err === ERROR_400) {
+					setErrMessage(INVALID_DATE_OR_TIME_RESERVATION_MESSAGE);
+				} else {
+					setErrMessage(SERVER_ERROR_MESSAGE);
+				}
+			})
+			.finally(() => {
+				setTimeout(() => setErrMessage(''), 4000);
+			});
 	};
 	const handleBackBtnClick = () => {
 		navigate(`/establishment/${id}`, { replace: true });
@@ -146,9 +153,9 @@ const BookingPage: FC<BookingPageProps> = ({ id, userData }) => {
 								</p>
 							</div>
 							<LinkToYandexMap
-							city={currentRestaurant!.cities}
-							address={currentRestaurant!.address}
-						/>
+								city={currentRestaurant.cities}
+								address={currentRestaurant.address}
+							/>
 						</div>
 						<BookingForm booking onSubmit={handleSubmit(handleBooking)}>
 							<TextField
@@ -193,7 +200,15 @@ const BookingPage: FC<BookingPageProps> = ({ id, userData }) => {
 								/>
 							))}
 							<p className="booking-page__comment">Введите ваши пожелания</p>
-							<span>{errMessage}</span>
+							<span
+								style={{
+									color: '#EC006C',
+									fontSize: '0.75rem',
+									minHeight: '15px',
+								}}
+							>
+								{errMessage}
+							</span>
 							<div className="checkbox-container">
 								<Checkbox
 									onChange={(e) => setIsAgreement(e.target.checked)}

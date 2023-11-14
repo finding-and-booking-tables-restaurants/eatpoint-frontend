@@ -301,19 +301,19 @@ export default function RestaurantPage({ id }: { id: number }) {
 						/>
 					</div>
 					<div className="restaurant-page__features-container">
-						{currentRestaurant?.kitchens.map((kitchen) => (
-							<p className="restaurant-page__feature" key={kitchen.id}>
-								{kitchen.name}
+						{currentRestaurant?.kitchens.map((kitchen, index) => (
+							<p className="restaurant-page__feature" key={index}>
+								{kitchen}
 							</p>
 						))}
-						{currentRestaurant?.types.map((type) => (
-							<p className="restaurant-page__feature" key={type.id}>
-								{type.name}
+						{currentRestaurant?.types.map((type, index) => (
+							<p className="restaurant-page__feature" key={index}>
+								{type}
 							</p>
 						))}
-						{currentRestaurant?.services.map((service) => (
-							<p className="restaurant-page__feature" key={service.id}>
-								{service.name}
+						{currentRestaurant?.services.map((service, index) => (
+							<p className="restaurant-page__feature" key={index}>
+								{service}
 							</p>
 						))}
 					</div>

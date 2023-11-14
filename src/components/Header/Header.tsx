@@ -29,7 +29,9 @@ const Header = ({
 	if (!role) role = 'client';
 	const handleLogOut = useContext(CurrentUserContext).handleLogOut;
 
-	const [city, setCity] = useState('Москва');
+	const savedCity = localStorage.getItem('city');
+
+	const [city, setCity] = useState(savedCity || 'Москва');
 	const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
 		null
 	);
@@ -72,11 +74,16 @@ const Header = ({
 	};
 
 	useEffect(() => {
-		getCityNameByLocation().then((city) => {
-			if (!city) return;
-			setCity(city);
-		});
-	}, []);
+		if (localStorage.getItem('city')) return;
+		getCityNameByLocation()
+			.then((city) => {
+				if (!city) return;
+				localStorage.setItem('city', city);
+				setCity(city);
+			})
+			.catch((err) => console.log(err));
+		localStorage.setItem('city', 'Москва');
+	}, [savedCity]);
 
 	return (
 		<header className="header">
