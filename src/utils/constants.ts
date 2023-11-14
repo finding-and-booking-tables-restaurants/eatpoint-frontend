@@ -357,6 +357,7 @@ const ERROR = 'Ошибка';
 const ERROR_400 = 'Error: 400';
 const ERROR_401 = 'Error: 401';
 const ERROR_409 = 'Error: 409';
+const ERROR_403 = 'Error: 403';
 
 const EMAIL_ALREADY_REGISTERED_MESSAGE =
 	'Пользователь с таким email или телефоном уже существует.';
@@ -375,10 +376,15 @@ const INVALID_DATE_OR_TIME_RESERVATION_MESSAGE =
 	'Данное время или дата бронирования недоступны';
 
 const SERVER_ERROR_MESSAGE = 'Что-то пошло не так, попробуйте позже.';
+
+const NOT_CONFIRMED_NUMBER_MESSAGE =
+	'Для бронирования нужно подтвердить номер телефона или зарегистрироваться';
+
 export {
 	ERROR,
 	ERROR_400,
 	ERROR_401,
+	ERROR_403,
 	ERROR_409,
 	EMAIL_ALREADY_REGISTERED_MESSAGE,
 	INCORRECT_ADD_USER_DATA,
@@ -390,6 +396,7 @@ export {
 	DUPLICATE_EMAIL_PHONE_MESSAGE,
 	INVALID_DATE_OR_TIME_RESERVATION_MESSAGE,
 	SERVER_ERROR_MESSAGE,
+	NOT_CONFIRMED_NUMBER_MESSAGE,
 };
 
 export const API_URL = 'https://eatpoint.sytes.net';

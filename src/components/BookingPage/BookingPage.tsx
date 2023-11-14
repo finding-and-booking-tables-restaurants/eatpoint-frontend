@@ -17,6 +17,8 @@ import {
 	INVALID_DATE_OR_TIME_RESERVATION_MESSAGE,
 	SERVER_ERROR_MESSAGE,
 	ERROR_400,
+	ERROR_403,
+	NOT_CONFIRMED_NUMBER_MESSAGE,
 } from '../../utils/constants';
 import { useNavigate } from 'react-router-dom';
 import SuccessBooking from '../SuccessBooking/SuccessBooking';
@@ -103,6 +105,8 @@ const BookingPage: FC<BookingPageProps> = ({ id, userData }) => {
 			.catch((err) => {
 				if (err === ERROR_400) {
 					setErrMessage(INVALID_DATE_OR_TIME_RESERVATION_MESSAGE);
+				} else if (err === ERROR_403) {
+					setErrMessage(NOT_CONFIRMED_NUMBER_MESSAGE);
 				} else {
 					setErrMessage(SERVER_ERROR_MESSAGE);
 				}
@@ -204,7 +208,7 @@ const BookingPage: FC<BookingPageProps> = ({ id, userData }) => {
 								style={{
 									color: '#EC006C',
 									fontSize: '0.75rem',
-									minHeight: '15px',
+									textAlign: 'center',
 								}}
 							>
 								{errMessage}
