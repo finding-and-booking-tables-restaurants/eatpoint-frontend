@@ -4,12 +4,14 @@ import place from '../../images/place.svg';
 import './Header.css';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
+import SearchCity from '../SearchSity/SearchSity';
 import cities from '../../fakeData/cities';
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import { useLocation, useNavigate } from 'react-router-dom';
 import CurrentUserContext from '../../contexts/CurrentUserContext';
 import { handlePageReload } from '../../utils/pageReloader';
 import { getCityNameByLocation } from '../../utils/getCityByLocation';
+import { Link } from '@mui/material';
 
 const Header = ({
 	handleRestart,
@@ -28,7 +30,9 @@ const Header = ({
 	if (!role) role = 'client';
 	const handleLogOut = useContext(CurrentUserContext).handleLogOut;
 
-	const [city, setCity] = useState('Москва');
+	const savedCity = localStorage.getItem('city');
+
+	const [city, setCity] = useState(savedCity || 'Москва');
 	const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
 		null
 	);
@@ -47,15 +51,6 @@ const Header = ({
 	const handleLocationClick = (event: React.MouseEvent<HTMLDivElement>) => {
 		setAnchorElCity(event.currentTarget);
 	};
-	const handleCityMenuClose = (event: React.MouseEvent<HTMLLIElement>) => {
-		const selectedCity = (event.currentTarget as HTMLLIElement).innerText;
-		if (event.currentTarget.id === 'basic-menu') {
-			setAnchorElCity(null);
-			return;
-		}
-		setCity(selectedCity || city);
-		setAnchorElCity(null);
-	};
 
 	const handleNavClose = (event: React.MouseEvent<HTMLLIElement>) => {
 		setAnchorElNav(null);
@@ -65,45 +60,35 @@ const Header = ({
 		navigate(clickPath);
 	};
 
-	const hadleLogoClick = () => {
-		navigate('/');
-		handleRestart && handleRestart(true);
-	};
+	// const hadleLogoClick = () => {
+	// 	navigate('/');
+	// 	handleRestart && handleRestart(true);
+	// };
 
 	useEffect(() => {
-		getCityNameByLocation().then((city) => {
-			if (!city) return;
-			setCity(city);
-		});
-	}, []);
+		if (localStorage.getItem('city')) return;
+		getCityNameByLocation()
+			.then((city) => {
+				if (!city) return;
+				localStorage.setItem('city', city);
+				setCity(city);
+			})
+			.catch((err) => console.log(err));
+		localStorage.setItem('city', 'Москва');
+	}, [savedCity]);
 
 	return (
 		<header className="header">
-			<img
-				onClick={hadleLogoClick}
-				className="header__logo"
-				src={logo}
-				alt="лого"
-			/>
+			<Link href="/">
+				<img className="header__logo" src={logo} alt="лого" />
+			</Link>
 			<div onClick={handleLocationClick} className="header__location-btn">
 				<img src={place} alt="" />
 				<p className="header__location">{city}</p>
 			</div>
-			<Menu
-				id="basic-menu"
-				anchorEl={anchorElCity}
-				open={openCityMenu}
-				onClose={handleCityMenuClose}
-				MenuListProps={{
-					'aria-labelledby': 'basic-button',
-				}}
-			>
-				{cities.map((city: string, index: number) => (
-					<MenuItem key={index} onClick={handleCityMenuClose}>
-						{city}
-					</MenuItem>
-				))}
-			</Menu>
+			{openCityMenu && (
+				<SearchCity onClose={() => setAnchorElCity(null)} setSity={setCity} />
+			)}
 
 			<button onClick={handleSearchClick} className="header__srch-btn"></button>
 			<button onClick={handleNavClick} className="header__nav-btn"></button>

@@ -22,8 +22,8 @@ const BookingForm: FC<BookingFormProps> = ({ children, onSubmit, booking }) => {
 		<div className="booking-form">
 			<SearchForm booking={booking} onSubmit={onSubmit}>
 				<div className="search-results__flex-box">
-					<DatePickerValue />
 					<TimePickerValue />
+					<DatePickerValue />
 				</div>
 				<NumberOfPerson />
 				{children}

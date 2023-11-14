@@ -7,9 +7,11 @@ import {
 	Checkbox,
 	FormControlLabel,
 	Box,
+	checkboxClasses,
 } from '@mui/material';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { SubmitHandler, useForm } from 'react-hook-form';
 import {
 	IRegisterFormData,
 	IRegisterFormUserProps,
@@ -22,66 +24,56 @@ import SuccessRegister from '../SuccessRegister/SuccessRegister';
 const RegisterFormUser: React.FC<IRegisterFormUserProps> = ({
 	onRegistration,
 	requestErrorMessage,
-	role,
 	isSuccessRegister,
+	role,
 }) => {
 	const navigate = useNavigate();
-	const [firstName, setFirstName] = useState('');
-	const [lastName, setLastName] = useState('');
-	const [telephone, setPhone] = useState('');
-	const [email, setEmail] = useState('');
-	const [password, setPassword] = useState('');
-	const [confirmPassword, setConfirmPassword] = useState('');
 	const [isAgreement, setIsAgreement] = useState(false);
-	const [isFormValid, setIsFormValid] = useState(false);
-	const [isSuccess, setIsSuccess] = useState(false);
+	const [emailValue, setEmailValue] = useState('');
 
-	const handleRegistration = (e: React.FormEvent<HTMLFormElement>) => {
-		e.preventDefault();
-		const userData: IRegisterFormData = {
-			firstName,
-			lastName,
-			telephone,
-			email,
-			password,
-			confirmPassword,
+	const {
+		watch,
+		register,
+		setValue,
+		handleSubmit,
+		formState: { errors, isDirty, isValid },
+	} = useForm<IRegisterFormData>({
+		mode: 'onChange',
+	});
+
+	const password = watch('password', '');
+
+	const handleRegistration: SubmitHandler<IRegisterFormData> = async (
+		formData,
+		e
+	) => {
+		e?.preventDefault();
+		const userData = {
+			...formData,
+			firstName: formData.firstName.trim(),
+			lastName: formData.lastName.trim(),
+			email: formData.email.trim(),
+			password: formData.password.trim(),
 			is_agreement: isAgreement,
 			role: role,
 			confirm_code_send_method: 'nothing',
 		};
-
+		setEmailValue(formData.email.trim());
 		onRegistration(userData);
-		setIsSuccess(true);
+	};
+
+	const handleBlur = () => {
+		const emailValue = watch('email').trim();
+		const firstNameValue = watch('firstName').trim();
+		const lastNameValue = watch('lastName').trim();
+		setValue('email', emailValue, { shouldDirty: true });
+		setValue('firstName', firstNameValue, { shouldDirty: true });
+		setValue('lastName', lastNameValue, { shouldDirty: true });
 	};
 
 	const handleGoBack = () => {
 		navigate(-1);
 	};
-
-	useEffect(() => {
-		if (
-			password !== confirmPassword ||
-			!firstName ||
-			!lastName ||
-			!telephone! ||
-			!email ||
-			!password ||
-			!confirmPassword ||
-			!isAgreement
-		) {
-			setIsFormValid(false);
-		} else {
-			setIsFormValid(true);
-		}
-	}, [
-		password,
-		confirmPassword,
-		firstName,
-		lastName,
-		email,
-		telephone,
-		isAgreement,
-	]);
 
 	return (
 		<>
@@ -89,7 +81,7 @@ const RegisterFormUser: React.FC<IRegisterFormUserProps> = ({
 			<Container
 				fixed
 				maxWidth="sm"
-				sx={{ mb: 5, minHeight: 'calc(100vh - 216px)' }}
+				sx={{ mb: 5, minHeight: 'calc(100vh - 217px)' }}
 			>
 				<Typography
 					variant="h1"
@@ -107,86 +99,231 @@ const RegisterFormUser: React.FC<IRegisterFormUserProps> = ({
 				>
 					Регистрация
 				</Typography>
-				{isSuccess && isSuccessRegister ? (
-					<SuccessRegister userEmail={email} />
+				{isSuccessRegister ? (
+					<SuccessRegister userEmail={emailValue} />
 				) : (
 					<Box
 						component="form"
-						onSubmit={handleRegistration}
+						onSubmit={handleSubmit(handleRegistration)}
 						sx={{
 							'& > :not(style)': { m: 1, width: '100%', ml: 0, mb: 0 },
 						}}
 					>
 						<TextField
-							margin="dense"
-							name="name"
-							variant="outlined"
-							placeholder="Имя, Фамилия"
-							type="text"
+							{...register('firstName', {
+								required: 'Поле обязательно для заполнения',
+								minLength: {
+									value: 2,
+									message: 'Введите не менее 2 символов',
+								},
+								maxLength: {
+									value: 30,
+									message: 'Введите менее 30 символов',
+								},
+								pattern: {
+									value: /^[a-zA-Z\u0430-\u044f\u0410-\u042fёЁ\s]*$/,
+									message: 'Введите корректное имя',
+								},
+							})}
+							name="firstName"
 							id="name"
-							required
+							type="text"
+							placeholder="Введите имя"
+							variant="outlined"
+							margin="dense"
 							fullWidth
-							onChange={(e) => {
-								const fullName = e.target.value;
-								const [firstName, ...lastNameArr] = fullName.split(' ');
-								const lastName = lastNameArr.join(' ');
-								setFirstName(firstName);
-								setLastName(lastName);
-							}}
+							onBlur={handleBlur}
+							error={!!errors.firstName}
+							helperText={errors.firstName?.message || ''}
 							sx={{
-								backgroundColor: '#FDFAF2',
+								'.css-md26zr-MuiInputBase-root-MuiOutlinedInput-root': {
+									height: '48px',
+								},
+							}}
+							InputProps={{
+								sx: {
+									backgroundColor: '#FDFAF2',
+								},
 							}}
 						/>
+
 						<TextField
+							{...register('lastName', {
+								required: 'Поле обязательно для заполнения',
+								minLength: {
+									value: 2,
+									message: 'Введите не менее 2 символов',
+								},
+								maxLength: {
+									value: 30,
+									message: 'Введите не более 30 символов',
+								},
+								pattern: {
+									value: /^[a-zA-Z\u0430-\u044f\u0410-\u042fёЁ\s]*$/,
+									message: 'Введите корректную фамилию',
+								},
+							})}
+							placeholder="Введите фамилию"
+							name="lastName"
+							variant="outlined"
+							onBlur={handleBlur}
+							error={!!errors.lastName}
+							helperText={errors.lastName?.message || ''}
+							sx={{
+								marginTop: 2,
+								'.css-md26zr-MuiInputBase-root-MuiOutlinedInput-root': {
+									height: '48px',
+								},
+							}}
+							InputProps={{
+								sx: {
+									backgroundColor: '#FDFAF2',
+								},
+							}}
+							fullWidth
+						/>
+						<TextField
+							{...register('telephone', {
+								required: 'Поле обязательно для заполнения',
+								pattern: {
+									value: /^\+(?:[0-9] ?){6,14}[0-9]$/,
+									message: 'Введите корректный номер телефона',
+								},
+								minLength: {
+									value: 10,
+									message: 'Минимальная длина - 10 символов',
+								},
+								maxLength: {
+									value: 12,
+									message: 'Максимальная длина - 12 символов',
+								},
+							})}
+							placeholder="Введите номер телефона"
 							variant="outlined"
 							name="telephone"
-							placeholder="Моб. телефон"
-							type="text"
-							id="phone"
-							onChange={(e) => setPhone(e.target.value)}
-							required
-							fullWidth
+							type="tel"
+							error={!!errors.telephone}
+							helperText={errors.telephone?.message || ''}
 							sx={{
-								backgroundColor: '#FDFAF2',
+								marginTop: 2,
+								'.css-md26zr-MuiInputBase-root-MuiOutlinedInput-root': {
+									height: '48px',
+								},
 							}}
-						/>
-						<TextField
-							margin="dense"
-							variant="outlined"
-							placeholder="Эл. почта"
-							name="email"
-							type="text"
-							onChange={(e) => setEmail(e.target.value)}
-							required
+							InputProps={{
+								sx: {
+									backgroundColor: '#FDFAF2',
+								},
+							}}
 							fullWidth
-							sx={{ backgroundColor: '#FDFAF2' }}
 						/>
 						<TextField
+							{...register('email', {
+								required: 'Поле обязательно для заполнения',
+								pattern: {
+									value:
+										/^(?!.*(__|-{2}))[A-Z0-9._%+-]+\S@[A-Z0-9.-]+\.[A-Z]{2,4}$/i,
+									message: 'Электронная почта введена не корректно',
+								},
+								minLength: {
+									value: 5,
+									message: 'Введите не менее 5 символов',
+								},
+								maxLength: {
+									value: 50,
+									message: 'Введите менее 50 символов',
+								},
+							})}
+							placeholder="Введите email"
+							type="email"
+							name="email"
+							variant="outlined"
+							onBlur={handleBlur}
+							error={!!errors.email}
+							helperText={errors.email?.message || ''}
+							sx={{
+								marginTop: 2,
+								'.css-md26zr-MuiInputBase-root-MuiOutlinedInput-root': {
+									height: '48px',
+								},
+							}}
+							InputProps={{
+								sx: {
+									backgroundColor: '#FDFAF2',
+								},
+							}}
+							fullWidth
+						/>
+						<TextField
+							{...register('password', {
+								required: 'Поле обязательно для заполнения',
+								minLength: {
+									value: 8,
+									message: 'Минимальная длина - 8 символов',
+								},
+								maxLength: {
+									value: 30,
+									message: 'Максимальная длина - 30 символов',
+								},
+								pattern: {
+									value:
+										/^(?=.*[a-zA-Z\d!@#$%^&*()_+{}[\]:;<>,.?~\\-]).{8,30}$/,
+									message:
+										'Пароль должен содержать хотя бы одну заглавную букву, строчную букву и цифру',
+								},
+							})}
+							type="password"
+							name="password"
 							margin="dense"
 							variant="outlined"
 							placeholder="Пароль"
-							type="password"
-							onChange={(e) => setPassword(e.target.value)}
+							error={!!errors.password}
+							helperText={errors.password?.message || ''}
 							required
 							fullWidth
-							sx={{ backgroundColor: '#FDFAF2' }}
+							sx={{
+								'.css-md26zr-MuiInputBase-root-MuiOutlinedInput-root': {
+									height: '48px',
+								},
+							}}
+							InputProps={{
+								sx: {
+									backgroundColor: '#FDFAF2',
+								},
+							}}
 						/>
 						<TextField
+							{...register('confirmPassword', {
+								required: 'Поле обязательно для заполнения',
+								validate: (value) =>
+									value === password || 'Пароли должны совпадать',
+							})}
 							margin="dense"
 							variant="outlined"
 							placeholder="Пароль повторно"
 							type="password"
-							onChange={(e) => setConfirmPassword(e.target.value)}
+							name="confirmPassword"
+							error={!!errors.confirmPassword}
+							helperText={errors.confirmPassword?.message || ''}
 							required
 							fullWidth
-							style={{ backgroundColor: '#FDFAF2' }}
+							sx={{
+								'.css-md26zr-MuiInputBase-root-MuiOutlinedInput-root': {
+									height: '48px',
+								},
+							}}
+							InputProps={{
+								sx: {
+									backgroundColor: '#FDFAF2',
+								},
+							}}
 						/>
 						<span
 							style={{
 								display: 'block',
 								minHeight: '15px',
 								color: 'red',
-								fontSize: '10px',
+								fontSize: '11px',
 								margin: '5px',
 							}}
 						>
@@ -195,6 +332,11 @@ const RegisterFormUser: React.FC<IRegisterFormUserProps> = ({
 						<FormControlLabel
 							control={
 								<Checkbox
+									sx={{
+										[`&, &.${checkboxClasses.checked}`]: {
+											color: '#05887B',
+										},
+									}}
 									checked={isAgreement}
 									onChange={(e) => setIsAgreement(e.target.checked)}
 								/>
@@ -243,7 +385,7 @@ const RegisterFormUser: React.FC<IRegisterFormUserProps> = ({
 							<Button
 								type="submit"
 								variant="contained"
-								disabled={!isFormValid}
+								disabled={!isDirty || !isValid || !isAgreement}
 								sx={{
 									backgroundColor: '#05887B',
 									borderRadius: '100px',

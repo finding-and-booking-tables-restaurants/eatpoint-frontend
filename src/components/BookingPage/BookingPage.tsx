@@ -1,41 +1,60 @@
-import React, { FC, useContext, useEffect, useState } from 'react';
-import MapOutlinedIcon from '@mui/icons-material/MapOutlined';
+import { FC, useContext, useEffect, useState } from 'react';
 import '../RestaurantPage/RestaurantPage.css';
 import BookingForm from '../BookingForm/BookingForm';
 import './BookingPage.css';
 import TextField from '@mui/material/TextField';
 import MenuItem from '@mui/material/MenuItem';
 import Checkbox from '@mui/material/Checkbox';
-import TodayIcon from '@mui/icons-material/Today';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import LinkToYandexMap from '../LinkToYandexMap/LinkToYandexMap';
 import {
-	API_URL,
 	Restaurant,
 	UserData,
 	fetchRestaurantData,
-	formValues,
+	BookingformValues,
 	inputs,
+	initRestaurant,
+	INVALID_DATE_OR_TIME_RESERVATION_MESSAGE,
+	SERVER_ERROR_MESSAGE,
+	ERROR_400,
+	ERROR_403,
+	NOT_CONFIRMED_NUMBER_MESSAGE,
 } from '../../utils/constants';
 import { useNavigate } from 'react-router-dom';
 import SuccessBooking from '../SuccessBooking/SuccessBooking';
-import Header from '../Header/Header';
-import Footer from '../Footer/Footer';
 import CurrentUserContext from '../../contexts/CurrentUserContext';
 import { mainApi } from '../../utils/mainApi';
 import { ThemeProvider } from '@emotion/react';
 import { selectTheme } from '../NumberOfPerson/NumberOfPerson';
+import { useForm } from 'react-hook-form';
+import { Button } from '@mui/material';
 
 interface BookingPageProps {
 	id: number;
 	userData?: UserData;
 }
 
+interface BookingFormValues {
+	[key: string]: string;
+}
+
 const BookingPage: FC<BookingPageProps> = ({ id, userData }) => {
 	const navigate = useNavigate();
 	const isLoggedIn = useContext(CurrentUserContext).isLoggedIn;
 
+	const {
+		register,
+		handleSubmit,
+		formState: { errors, isDirty, isValid },
+	} = useForm<BookingFormValues>({
+		mode: 'onChange',
+	});
+
 	const [isSuccessBooking, setIsSuccessBooking] = useState(false);
-	const [currentRestaurant, setcurrentRestaurant] = useState<Restaurant>();
+	const [errMessage, setErrMessage] = useState('');
+	const [currentRestaurant, setcurrentRestaurant] =
+		useState<Restaurant>(initRestaurant);
+	const [isAgreement, setIsAgreement] = useState(false);
 	const [bookingId, setBookingId] = useState('');
 	const [dataToSend, setDataToSend] = useState({
 		comment: '',
@@ -64,25 +83,37 @@ const BookingPage: FC<BookingPageProps> = ({ id, userData }) => {
 		fetchData();
 	}, [id, setcurrentRestaurant]);
 
-	const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-		event.preventDefault();
-		const formData = new FormData(event.currentTarget);
+	const handleBooking = (data: BookingFormValues) => {
+		if (!data) return;
 
-		const formDataObject: { [key: string]: any } = {};
-		formData.forEach((value, key) => {
-			formDataObject[key] = value;
-		});
+		const mergedFormData = { ...data, ...BookingformValues };
+		const additionalData = {
+			number_guests: localStorage.getItem('selected-number-of-people'),
+			date_reservation: localStorage.getItem('selected-date-formated'),
+			start_time_reservation: localStorage.getItem('selected-time'),
+		};
 
-		const mergedFormData = { ...formDataObject, ...formValues };
-		mergedFormData.zone = Number(mergedFormData.zone);
-		mergedFormData.number_guests = Number(mergedFormData.number_guests);
-		setDataToSend(mergedFormData);
+		const finalFormData = { ...mergedFormData, ...additionalData };
+		setDataToSend(finalFormData);
 
-		mainApi.bookEstablishment(id, mergedFormData).then((data) => {
-			if (!data) return;
-			setIsSuccessBooking(true);
-			setBookingId(data.id);
-		});
+		mainApi
+			.bookEstablishment(id, finalFormData, isLoggedIn)
+			.then((data) => {
+				setIsSuccessBooking(true);
+				setBookingId(data.id);
+			})
+			.catch((err) => {
+				if (err === ERROR_400) {
+					setErrMessage(INVALID_DATE_OR_TIME_RESERVATION_MESSAGE);
+				} else if (err === ERROR_403) {
+					setErrMessage(NOT_CONFIRMED_NUMBER_MESSAGE);
+				} else {
+					setErrMessage(SERVER_ERROR_MESSAGE);
+				}
+			})
+			.finally(() => {
+				setTimeout(() => setErrMessage(''), 4000);
+			});
 	};
 	const handleBackBtnClick = () => {
 		navigate(`/establishment/${id}`, { replace: true });
@@ -125,57 +156,66 @@ const BookingPage: FC<BookingPageProps> = ({ id, userData }) => {
 									{currentRestaurant?.telephone}
 								</p>
 							</div>
-							<div className="restaurant-page__map-icon">
-								<MapOutlinedIcon
-									fontSize="medium"
-									style={{ color: '#05887B' }}
-								/>
-							</div>
+							<LinkToYandexMap
+								city={currentRestaurant.cities}
+								address={currentRestaurant.address}
+							/>
 						</div>
-						<BookingForm booking onSubmit={handleSubmit}>
+						<BookingForm booking onSubmit={handleSubmit(handleBooking)}>
 							<TextField
+								{...register('zone', {
+									required: 'Поле обязательно для заполнения',
+								})}
 								id="outlined-select-currency"
 								select
 								name="zone"
 								label="Зона"
 								required
 								sx={{
-									backgroundColor: '#FCF8EA',
 									maxWidth: 328,
 								}}
 							>
 								{currentRestaurant?.zones.map((option) => (
-									<MenuItem
-										key={option.id}
-										value={option.id}
-										sx={{
-											background: '#FCF8EA',
-										}}
-									>
+									<MenuItem key={option.id} value={option.id}>
 										{option.zone}
 									</MenuItem>
 								))}
 							</TextField>
 							{inputs.map((option, index) => (
 								<TextField
-									required={option.required}
-									type={option.type}
-									inputProps={{ max: option.maxLength }}
-									name={option.id}
+									{...register(`${option.id}`, option.validationConfig)}
+									helperText={errors[option.id]?.message || ''}
+									error={!!errors[option.id]}
 									key={index}
 									label={option.label}
 									defaultValue={userData ? userData[option.id] : ''}
 									sx={{
-										backgroundColor: '#FCF8EA',
 										maxWidth: 328,
 										display: `${isLoggedIn && option.id === 'email' && 'none'}`,
+										'& .Mui-error': {
+											color: '#EC006C',
+										},
+										'& .MuiOutlinedInput-root': {
+											'&.Mui-error .MuiOutlinedInput-notchedOutline': {
+												borderColor: '#EC006C',
+											},
+										},
 									}}
 								/>
 							))}
 							<p className="booking-page__comment">Введите ваши пожелания</p>
+							<span
+								style={{
+									color: '#EC006C',
+									fontSize: '0.75rem',
+									textAlign: 'center',
+								}}
+							>
+								{errMessage}
+							</span>
 							<div className="checkbox-container">
 								<Checkbox
-									required
+									onChange={(e) => setIsAgreement(e.target.checked)}
 									sx={{
 										'& .MuiSvgIcon-root': { fontSize: 24, color: '#05887B' },
 									}}
@@ -185,9 +225,19 @@ const BookingPage: FC<BookingPageProps> = ({ id, userData }) => {
 									соглашения
 								</p>
 							</div>
-							<button type="submit" className="search-form__btn">
-								{<TodayIcon />} Забронировать
-							</button>
+							<Button
+								sx={{
+									backgroundColor: '#05887B',
+									textTransform: 'none',
+									borderRadius: '8px',
+									padding: '10px 24px 10px 16px',
+								}}
+								disabled={!isValid || !isAgreement}
+								type="submit"
+								variant="contained"
+							>
+								Забронировать
+							</Button>
 						</BookingForm>
 					</>
 				)}

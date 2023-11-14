@@ -41,6 +41,7 @@ import BusinessLanding from '../BusinessLanding/BusinessLanding';
 import ProtectedClientRouteElement from '../ProptectedClientRoute/ProtectedClientRoute';
 import SendProblem from '../SendProblem/SendProblem';
 import Help from '../Help/Help';
+import ResetPassword from '../ResetPassword/ResetPassword';
 import ProptectedBusinessRouteElement from '../ProptectedBusinessRoute/ProptectedBusinessRoute';
 import { mainApi } from '../../utils/mainApi';
 import RestaurantReviews from '../RestaurantReviews/RestaurantReviews';
@@ -186,6 +187,9 @@ function App() {
 				} else {
 					setRegErrorMessage(REG_ERROR_MESSAGE);
 				}
+			})
+			.finally(() => {
+				setTimeout(() => setIsSuccessRegister(false), 3000);
 			});
 	};
 
@@ -201,7 +205,7 @@ function App() {
 				});
 			})
 			.catch((error) => {
-				if (error === ERROR_401) {
+				if (error === ERROR_409) {
 					setUpdateUserInfo({
 						message: DUPLICATE_EMAIL_PHONE_MESSAGE,
 						isSuccess: false,
@@ -265,14 +269,8 @@ function App() {
 										<Recomended
 											establishments={allEstablishments}
 											nearest={false}
-											link="Все"
+											link=""
 											title="Рекомендации"
-										/>
-										<Recomended
-											establishments={allEstablishments}
-											nearest
-											link="На карте"
-											title="Ближайшие"
 										/>
 									</>
 								)}
@@ -413,6 +411,7 @@ function App() {
 					)}
 					<Route path="/support" element={<SendProblem />} />
 					<Route path="/help" element={<Help />} />
+					<Route path="/resetpass" element={<ResetPassword />} />
 					<Route path="*" element={<NotFoundPage />} />
 				</Routes>
 			</CurrentUserContext.Provider>

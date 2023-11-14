@@ -12,10 +12,10 @@ class MainApi {
 
 	_sendFetchRequest(path: string, settings: RequestInit) {
 		return fetch(`${this._baseUrl}${path}`, settings).then((res) => {
-			if (res.ok) {
-				return res.json();
+			if (!res.ok) {
+				return Promise.reject(`Error: ${res.status}`);
 			}
-			return Promise.reject(res);
+			return res.json();
 		});
 	}
 
@@ -110,17 +110,37 @@ class MainApi {
 		});
 	}
 
-	bookEstablishment(id: number, formData: ReservationFormValues) {
+	bookEstablishment = (
+		id: number,
+		formData: ReservationFormValues,
+		isLoggedIn: boolean
+	) => {
+		const headers = isLoggedIn
+			? {
+					authorization: 'Bearer ' + localStorage.getItem('access-token'),
+					'Content-Type': 'application/json',
+			  }
+			: ({
+					'Content-Type': 'application/json',
+			  } as Record<string, string>);
+
 		return this._sendFetchRequest(
 			`/api/v1/establishments/${id}/reservations/`,
 			{
 				method: 'POST',
-				headers: {
-					'Content-Type': 'application/json',
-				},
+				headers,
 				body: JSON.stringify(formData),
 			}
 		);
+	};
+
+	getAllCities() {
+		return this._sendFetchRequest(`/api/v1/cities/`, {
+			method: 'GET',
+			headers: {
+				'Content-Type': 'application/json',
+			},
+		});
 	}
 }
 

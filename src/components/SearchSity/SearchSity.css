@@ -1,0 +1,46 @@
+.search-sity__section {
+	height: 100%;
+	width: 100%;
+	overflow: scroll;
+	padding: 16px;
+	position: fixed;
+	left: 0;
+	top: 0;
+	background: var(--m-3-white, #fff);
+	z-index: 10;
+}
+
+.search-sity__back {
+	display: flex;
+	margin-bottom: 24px;
+}
+
+.search-sity__text {
+	margin-left: 2px;
+	font-family: 'Roboto';
+	color: #1d1b20;
+	font-size: 18px;
+	font-weight: 500;
+	line-height: 24px;
+	letter-spacing: 0.2px;
+}
+
+.search-sity__list {
+	padding: 0;
+	margin-top: 16px;
+}
+
+.search-sity__button {
+	all: unset;
+}
+
+.search-sity__city {
+	height: 40px;
+	list-style: none;
+	font-family: 'Roboto';
+	font-size: 16px;
+	font-style: normal;
+	font-weight: 400;
+	line-height: 24px;
+	letter-spacing: 0.5px;
+}
