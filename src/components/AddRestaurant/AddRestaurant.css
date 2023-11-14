@@ -41,7 +41,7 @@
 	position: relative;
 }
 
-.add-restaurant__label-input {
+/* .add-restaurant__label-input {
 	font-family: Roboto;
 	font-size: 16px;
 	font-weight: 400;
@@ -54,6 +54,19 @@
 	transform: translateY(-50%);
 	transition: 0.3s;
 	pointer-events: none;
+} */
+
+.add-restaurant__label-input {
+	padding: 0 2px;
+	position: absolute;
+	top: -8px;
+	left: 20px;
+	font-family: Roboto;
+	font-size: 12px;
+	font-weight: 400;
+	line-height: 16px;
+	color: #49454f;
+	background: #fff;
 }
 
 .add-restaurant__input {
@@ -65,19 +78,19 @@
 	border: 1px solid #79747e;
 	border-radius: 4px;
 	font-family: Roboto;
-	font-size: 14px;
+	font-size: 16px;
 	font-weight: 400;
 	line-height: 24px;
 	letter-spacing: 0.5px;
 	outline: none;
 }
 
-.add-restaurant__input:focus ~ .add-restaurant__label-input {
+/* .add-restaurant__input:focus ~ .add-restaurant__label-input {
 	padding: 0 2px;
 	top: 0px;
 	left: 15px;
 	font-size: 12px;
-}
+} */
 
 @media screen and (max-width: 340px) {
 	.add-restaurant__input {

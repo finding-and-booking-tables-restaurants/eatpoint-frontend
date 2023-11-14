@@ -1,6 +1,7 @@
 import './AddRestaurant.css';
 import { useState, ChangeEvent } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { SubmitHandler, useForm } from 'react-hook-form';
 import {
 	availableKitchen,
 	availableType,
@@ -17,6 +18,15 @@ import { InputsZoneData } from '../../types/InputsZoneData';
 
 function AddRestaurant() {
 	const navigate = useNavigate();
+	const {
+		watch,
+		register,
+		setValue,
+		handleSubmit,
+		formState: { errors, isValid },
+	} = useForm<RestaurantData>({
+		mode: 'onChange',
+	});
 	const [formData, setFormData] = useState<RestaurantData>({
 		name: '',
 		types: [],
@@ -200,7 +210,37 @@ function AddRestaurant() {
 		});
 	};
 
-	function handleSubmit(evt: React.FormEvent) {
+	// const handleAddRestaurantSubmit: SubmitHandler<RestaurantData> = async (
+	// 	data
+	// ) => {
+	// 	try {
+	// 		const formDataSend = {
+	// 			name: data.name,
+	// 			types: data.types,
+	// 			cities: data.cities,
+	// 			address: data.address,
+	// 			kitchens: data.kitchens,
+	// 			services: data.services,
+	// 			zones: data.zones,
+	// 			average_check: data.average_check,
+	// 			poster: data.poster,
+	// 			email: data.email,
+	// 			telephone: data.telephone,
+	// 			description: data.description,
+	// 			worked: data.worked,
+	// 			images: data.images,
+	// 			socials: [],
+	// 		};
+
+	// 		await mainApi.createMyEstablishment(formDataSend);
+	// 		navigate('/business-profile');
+	// 	} catch (err) {
+	// 		console.error(err);
+	// 		alert('Что-то пошло не так');
+	// 	}
+	// };
+
+	function handleAddRestaurantSubmit(evt: React.FormEvent) {
 		evt.preventDefault();
 
 		const formDataSend = {
@@ -220,9 +260,9 @@ function AddRestaurant() {
 			images: formData.images,
 			socials: [],
 		};
-
+		console.log(formDataSend);
 		mainApi
-			.createMyEstablishment(formDataSend, formData.poster)
+			.createMyEstablishment(formDataSend)
 			.then(() => {
 				navigate('/business-profile');
 			})
@@ -240,11 +280,14 @@ function AddRestaurant() {
 					<Link to="/business-profile" className="add-restautant__backBtn" />
 					<h2 className="add-restaurant__title">Новое заведение</h2>
 				</div>
-				<form className="add-restaurant__form" onSubmit={handleSubmit}>
+				<form
+					className="add-restaurant__form"
+					onSubmit={handleAddRestaurantSubmit}
+				>
 					<div className="add-restaurant__box-relative">
 						<input
 							className="add-restaurant__input"
-							// placeholder="Название"
+							placeholder="Название"
 							type="text"
 							maxLength={30}
 							name="name"
@@ -263,7 +306,7 @@ function AddRestaurant() {
 					<div className="add-restaurant__box-relative">
 						<input
 							className="add-restaurant__input"
-							// placeholder="Город"
+							placeholder="Город"
 							type="text"
 							maxLength={30}
 							name="cities"
@@ -282,7 +325,7 @@ function AddRestaurant() {
 					<div className="add-restaurant__box-relative">
 						<input
 							className="add-restaurant__input"
-							// placeholder="Адрес"
+							placeholder="Адрес"
 							type="text"
 							maxLength={30}
 							name="address"
@@ -301,7 +344,7 @@ function AddRestaurant() {
 					<div className="add-restaurant__box-relative">
 						<input
 							className="add-restaurant__input"
-							// placeholder="Телефон (+7 *** ***-**-**)"
+							placeholder="Телефон (+7 *** ***-**-**)"
 							type="text"
 							name="telephone"
 							id="add-restaurant-telephone"
@@ -321,7 +364,7 @@ function AddRestaurant() {
 					<div className="add-restaurant__box-relative">
 						<input
 							className="add-restaurant__input"
-							// placeholder="Email заведения"
+							placeholder="Email заведения"
 							type="email"
 							name="email"
 							id="add-restaurant-email"
@@ -484,7 +527,6 @@ function AddRestaurant() {
 							id="add-restaurant-description"
 							maxLength={500}
 							onChange={handleInputChange}
-							required
 						></textarea>
 					</div>
 					<h3 className="add-restaurant__category_padding-bot">Обложка</h3>
