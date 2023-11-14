@@ -24,7 +24,6 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { styled } from '@mui/material/styles';
 import ChatBubbleOutlineOutlinedIcon from '@mui/icons-material/ChatBubbleOutlineOutlined';
 import DeckOutlinedIcon from '@mui/icons-material/DeckOutlined';
-import MapOutlinedIcon from '@mui/icons-material/MapOutlined';
 import AccessTimeOutlinedIcon from '@mui/icons-material/AccessTimeOutlined';
 import { useContext, useEffect, useState } from 'react';
 import RatingAndReviews from '../RatingAndReviews/RatingAndReviews';
@@ -40,6 +39,7 @@ import { pluralizeReviews } from '../../utils/pluralizeReviews';
 import { formatRating } from '../../utils/formatRating';
 import { calculateBlackRubles } from '../../utils/calculateBlackRubles';
 import CurrentUserContext from '../../contexts/CurrentUserContext';
+import LinkToYandexMap from '../LinkToYandexMap/LinkToYandexMap';
 
 export default function RestaurantPage({ id }: { id: number }) {
 	const [isModalOpen, setIsModalOpen] = useState(false);
@@ -294,9 +294,11 @@ export default function RestaurantPage({ id }: { id: number }) {
 								{currentRestaurant?.telephone}
 							</p>
 						</div>
-						<div className="restaurant-page__map-icon">
-							<MapOutlinedIcon fontSize="medium" style={{ color: '#05887B' }} />
-						</div>
+
+						<LinkToYandexMap
+							city={currentRestaurant?.cities}
+							address={currentRestaurant?.address}
+						/>
 					</div>
 					<div className="restaurant-page__features-container">
 						{currentRestaurant?.kitchens.map((kitchen) => (
