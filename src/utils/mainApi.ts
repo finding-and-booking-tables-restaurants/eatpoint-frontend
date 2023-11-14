@@ -67,18 +67,29 @@ class MainApi {
 		});
 	}
 
-	bookEstablishment(id: number, formData: ReservationFormValues) {
+	bookEstablishment = (
+		id: number,
+		formData: ReservationFormValues,
+		isLoggedIn: boolean
+	) => {
+		const headers = isLoggedIn
+			? {
+					authorization: 'Bearer ' + localStorage.getItem('access-token'),
+					'Content-Type': 'application/json',
+			  }
+			: ({
+					'Content-Type': 'application/json',
+			  } as Record<string, string>);
+
 		return this._sendFetchRequest(
 			`/api/v1/establishments/${id}/reservations/`,
 			{
 				method: 'POST',
-				headers: {
-					'Content-Type': 'application/json',
-				},
+				headers,
 				body: JSON.stringify(formData),
 			}
 		);
-	}
+	};
 
 	getAllCities() {
 		return this._sendFetchRequest(`/api/v1/cities/`, {

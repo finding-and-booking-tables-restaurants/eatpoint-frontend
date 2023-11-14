@@ -51,6 +51,7 @@ const BookingPage: FC<BookingPageProps> = ({ id, userData }) => {
 	});
 
 	const [isSuccessBooking, setIsSuccessBooking] = useState(false);
+	const [errMessage, setErrMessage] = useState('');
 	const [currentRestaurant, setcurrentRestaurant] = useState<Restaurant>();
 	const [isAgreement, setIsAgreement] = useState(false);
 	const [bookingId, setBookingId] = useState('');
@@ -95,7 +96,7 @@ const BookingPage: FC<BookingPageProps> = ({ id, userData }) => {
 		setDataToSend(finalFormData);
 
 		mainApi
-			.bookEstablishment(id, finalFormData)
+			.bookEstablishment(id, finalFormData, isLoggedIn)
 			.then((data) => {
 				setIsSuccessBooking(true);
 				setBookingId(data.id);
@@ -193,6 +194,7 @@ const BookingPage: FC<BookingPageProps> = ({ id, userData }) => {
 								/>
 							))}
 							<p className="booking-page__comment">Введите ваши пожелания</p>
+							<span>{errMessage}</span>
 							<div className="checkbox-container">
 								<Checkbox
 									onChange={(e) => setIsAgreement(e.target.checked)}
