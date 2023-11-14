@@ -137,30 +137,32 @@ const BookingPage: FC<BookingPageProps> = ({ id, userData }) => {
 					/>
 				) : (
 					<>
-						<div className="booking-page__heading">
-							<button
-								className="booking-page__back-btn"
-								onClick={handleBackBtnClick}
-							>
-								{<ArrowBackIcon />}
-							</button>
-							<h1 className="booking-page__title">Бронирование</h1>
-						</div>
-						<div className="restaurant-page__address-container restaurant-page__address-container-booking">
-							<div>
-								<p className="restaurant-page__address-text">Адрес</p>
-								<p className="restaurant-page__address">
-									{currentRestaurant?.cities}, {currentRestaurant?.address}
-								</p>
-								<p className="restaurant-page__phone">
-									{currentRestaurant?.telephone}
-								</p>
+						<>
+							<div className="booking-page__heading">
+								<button
+									className="booking-page__back-btn"
+									onClick={handleBackBtnClick}
+								>
+									{<ArrowBackIcon />}
+								</button>
+								<h1 className="booking-page__title">Бронирование</h1>
 							</div>
-							<LinkToYandexMap
-								city={currentRestaurant.cities}
-								address={currentRestaurant.address}
-							/>
-						</div>
+							<div className="restaurant-page__address-container restaurant-page__address-container-booking">
+								<div>
+									<p className="restaurant-page__address-text">Адрес</p>
+									<p className="restaurant-page__address">
+										{currentRestaurant?.cities}, {currentRestaurant?.address}
+									</p>
+									<p className="restaurant-page__phone">
+										{currentRestaurant?.telephone}
+									</p>
+								</div>
+								<LinkToYandexMap
+									city={currentRestaurant.cities}
+									address={currentRestaurant.address}
+								/>
+							</div>
+						</>
 						<BookingForm booking onSubmit={handleSubmit(handleBooking)}>
 							<TextField
 								{...register('zone', {

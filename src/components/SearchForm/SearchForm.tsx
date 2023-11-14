@@ -4,10 +4,14 @@ function SearchForm({
 	children,
 	onSubmit,
 	booking,
+	isSearching,
+	restPage,
 }: {
 	children?: ReactNode;
 	onSubmit: (event: React.FormEvent<HTMLFormElement>) => void;
 	booking?: boolean;
+	restPage?: boolean;
+	isSearching?: boolean;
 }) {
 	function handleSubmit(evt: React.FormEvent<HTMLFormElement>) {
 		evt.preventDefault();
@@ -17,7 +21,10 @@ function SearchForm({
 	return (
 		<form
 			onSubmit={handleSubmit}
-			className={`search-form ${booking && 'search-form_booking'}`}
+			style={{ padding: `${isSearching && 0}` }}
+			className={`search-form ${booking && 'search-form_booking'} ${
+				restPage && 'search-form_rest-page'
+			}`}
 		>
 			{children}
 		</form>

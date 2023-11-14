@@ -8,6 +8,9 @@ import RestCard from '../RestCard/RestCard';
 import FilterMenu from '../FilterMenu/FilterMenu';
 import { Restaurant } from '../../utils/constants';
 import { formatRating } from '../../utils/formatRating';
+import { Button } from '@mui/material';
+import TuneIcon from '@mui/icons-material/Tune';
+import ClearIcon from '@mui/icons-material/Clear';
 
 interface SearchResultsProps {
 	searchEstablishments: Restaurant[];
@@ -38,6 +41,11 @@ function SearchResults({
 		string[]
 	>([]);
 	const [areFiltersSelected, setAreFiltersSelected] = useState(false);
+	const numberOfFilters =
+		selectedKitchenFilters.length +
+		selectedTypeFilters.length +
+		(selectedCheckFilters ? 1 : 0) +
+		selectedServiceFilters.length;
 
 	useEffect(() => {
 		setMainArr(searchEstablishments);
@@ -170,7 +178,7 @@ function SearchResults({
 				{!isSearching && (
 					<h2 className="search-results__title">Найди свой стол</h2>
 				)}
-				<SearchForm onSubmit={onSubmit}>
+				<SearchForm isSearching={isSearching} onSubmit={onSubmit}>
 					<SearchInput
 						handleFilterClick={handleToggleFilterBtn}
 						query={query}
@@ -179,23 +187,71 @@ function SearchResults({
 					/>
 					{isSearching && (
 						<div className="search-results__box-filters">
-							<button
+							{/* <button
+								type="button"
 								className="search-input__filter-btn"
 								onClick={handleToggleFilterBtn}
 							>
 								Фильтры
-							</button>
+							</button> */}
+							<Button
+								variant={areFiltersSelected ? 'contained' : 'outlined'}
+								onClick={handleToggleFilterBtn}
+								sx={{
+									textTransform: 'none',
+									borderRadius: '8px',
+									minWidth: `${areFiltersSelected ? 'fit-content' : '100%'}`,
+									maxHeight: '32px',
+									borderColor: '#006C60',
+									p: '5px 10px',
+									color: '#49454F',
+									backgroundColor: `${
+										areFiltersSelected ? '#E4F4F1' : 'transparent'
+									}`,
+								}}
+								startIcon={<TuneIcon />}
+							>
+								{`Фильтры ${numberOfFilters > 0 ? `(${numberOfFilters})` : ''}`}
+							</Button>
 							{areFiltersSelected && (
-								<button
+								// <button
+								// 	type="button"
+								// 	onClick={handleResetFilters}
+								// 	className="search-results__reset-filters"
+								// >
+								// 	Сбросить фильтры
+								// </button>
+								<Button
+									variant="outlined"
 									onClick={handleResetFilters}
-									className="search-results__reset-filters"
+									sx={{
+										textTransform: 'none',
+										borderRadius: '8px',
+										maxWidth: 'max-content',
+										maxHeight: '32px',
+										borderColor: '#006C60',
+										color: '#49454F',
+										p: '5px 10px',
+									}}
+									endIcon={<ClearIcon />}
 								>
 									Сбросить фильтры
-								</button>
+								</Button>
 							)}
 						</div>
 					)}
-					<SearchBtn />
+					{/* <SearchBtn /> */}
+					<Button
+						variant="contained"
+						sx={{
+							backgroundColor: '#c41a68',
+							textTransform: 'none',
+							borderRadius: '8px',
+							minHeight: '40px',
+						}}
+					>
+						Искать
+					</Button>
 				</SearchForm>
 				<FilterMenu
 					isOpen={isOpen}

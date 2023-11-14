@@ -337,12 +337,21 @@ export default function RestaurantPage({ id }: { id: number }) {
 					</div>
 				</div>
 				<BookingForm
-					booking={false}
+					restPage
 					onSubmit={handleBookBtnClick}
 					children={
-						<button className="search-form__btn">
-							{<TodayIcon />} Забронировать{' '}
-						</button>
+						<Button
+							variant="contained"
+							type="submit"
+							sx={{
+								backgroundColor: '#05887B',
+								textTransform: 'none',
+								borderRadius: '8px',
+								minHeight: '40px',
+							}}
+						>
+							Забронировать
+						</Button>
 					}
 				/>
 				{/* подробнее о ресторане */}

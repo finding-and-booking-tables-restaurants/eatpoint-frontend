@@ -14,13 +14,19 @@ import { numOfPeople } from '../../utils/constants';
 interface BookingFormProps {
 	children?: ReactNode;
 	onSubmit: (event: React.FormEvent<HTMLFormElement>) => void;
-	booking: boolean;
+	booking?: boolean;
+	restPage?: boolean;
 }
 
-const BookingForm: FC<BookingFormProps> = ({ children, onSubmit, booking }) => {
+const BookingForm: FC<BookingFormProps> = ({
+	children,
+	onSubmit,
+	booking,
+	restPage,
+}) => {
 	return (
 		<div className="booking-form">
-			<SearchForm booking={booking} onSubmit={onSubmit}>
+			<SearchForm booking={booking} restPage={restPage} onSubmit={onSubmit}>
 				<div className="search-results__flex-box">
 					<TimePickerValue />
 					<DatePickerValue />
