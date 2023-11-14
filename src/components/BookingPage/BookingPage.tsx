@@ -8,6 +8,7 @@ import MenuItem from '@mui/material/MenuItem';
 import Checkbox from '@mui/material/Checkbox';
 import TodayIcon from '@mui/icons-material/Today';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import LinkToYandexMap from '../LinkToYandexMap/LinkToYandexMap';
 import {
 	API_URL,
 	Restaurant,
@@ -143,12 +144,10 @@ const BookingPage: FC<BookingPageProps> = ({ id, userData }) => {
 									{currentRestaurant?.telephone}
 								</p>
 							</div>
-							<div className="restaurant-page__map-icon">
-								<MapOutlinedIcon
-									fontSize="medium"
-									style={{ color: '#05887B' }}
-								/>
-							</div>
+							<LinkToYandexMap
+							city={currentRestaurant!.cities}
+							address={currentRestaurant!.address}
+						/>
 						</div>
 						<BookingForm booking onSubmit={handleSubmit(handleBooking)}>
 							<TextField
