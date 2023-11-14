@@ -11,6 +11,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import CurrentUserContext from '../../contexts/CurrentUserContext';
 import { handlePageReload } from '../../utils/pageReloader';
 import { getCityNameByLocation } from '../../utils/getCityByLocation';
+import { Link } from '@mui/material';
 
 const Header = ({
 	handleRestart,
@@ -50,15 +51,6 @@ const Header = ({
 	const handleLocationClick = (event: React.MouseEvent<HTMLDivElement>) => {
 		setAnchorElCity(event.currentTarget);
 	};
-	const handleCityMenuClose = (event: React.MouseEvent<HTMLLIElement>) => {
-		const selectedCity = (event.currentTarget as HTMLLIElement).innerText;
-		if (event.currentTarget.id === 'basic-menu') {
-			setAnchorElCity(null);
-			return;
-		}
-		setCity(selectedCity || city);
-		setAnchorElCity(null);
-	};
 
 	const handleNavClose = (event: React.MouseEvent<HTMLLIElement>) => {
 		setAnchorElNav(null);
@@ -68,10 +60,10 @@ const Header = ({
 		navigate(clickPath);
 	};
 
-	const hadleLogoClick = () => {
-		navigate('/');
-		handleRestart && handleRestart(true);
-	};
+	// const hadleLogoClick = () => {
+	// 	navigate('/');
+	// 	handleRestart && handleRestart(true);
+	// };
 
 	useEffect(() => {
 		if (localStorage.getItem('city')) return;
@@ -87,31 +79,13 @@ const Header = ({
 
 	return (
 		<header className="header">
-			<img
-				onClick={hadleLogoClick}
-				className="header__logo"
-				src={logo}
-				alt="лого"
-			/>
+			<Link href="/">
+				<img className="header__logo" src={logo} alt="лого" />
+			</Link>
 			<div onClick={handleLocationClick} className="header__location-btn">
 				<img src={place} alt="" />
 				<p className="header__location">{city}</p>
 			</div>
-			{/* <Menu
-				id="basic-menu"
-				anchorEl={anchorElCity}
-				open={openCityMenu}
-				onClose={handleCityMenuClose}
-				MenuListProps={{
-					'aria-labelledby': 'basic-button',
-				}}
-			>
-				{cities.map((city: string, index: number) => (
-					<MenuItem key={index} onClick={handleCityMenuClose}>
-						{city}
-					</MenuItem>
-				))}
-			</Menu> */}
 			{openCityMenu && (
 				<SearchCity onClose={() => setAnchorElCity(null)} setSity={setCity} />
 			)}
