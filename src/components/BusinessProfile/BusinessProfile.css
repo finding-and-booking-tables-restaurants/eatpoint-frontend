@@ -51,7 +51,7 @@
 	width: 18px;
 	height: 18px;
 	border: none;
-	background: url('../../images/business-profile__editBtn.svg') no-repeat;
+	background: url('../../images/business-profile__editProfileBtn.svg') no-repeat;
 	cursor: pointer;
 }
 
@@ -68,7 +68,7 @@
 	color: #006c60;
 	width: 100%;
 	border: 1px solid #006c60;
-	border-radius: 100px;
+	border-radius: 8px;
 	background-color: initial;
 	cursor: pointer;
 	font-family: Roboto;
@@ -105,8 +105,9 @@
 	margin: 0;
 	padding: 0;
 	padding: 24px 0;
+	gap: 16px;
 	list-style: none;
 	display: grid;
-	/* justify-content: center; */
+	justify-content: center;
 	grid-template-columns: repeat(1, minmax(0, 328px));
 }

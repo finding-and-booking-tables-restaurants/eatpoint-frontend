@@ -1,4 +1,4 @@
-import './LinkToYandexMap.css'
+import './LinkToYandexMap.css';
 import MapOutlinedIcon from '@mui/icons-material/MapOutlined';
 
 interface ILinkToYandexMapProps {

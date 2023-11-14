@@ -1,7 +1,8 @@
 .checkbox-item {
 	display: flex;
-	justify-content: space-between;
+	/* justify-content: space-between; */
 	align-items: center;
+	gap: 30px;
 }
 
 .checkbox-item__box {
@@ -50,4 +51,12 @@
 	z-index: 100;
 	border: none;
 	outline: none;
+}
+
+.checkbox-item__name {
+	font-family: Roboto;
+	font-size: 16px;
+	font-weight: 400;
+	line-height: 24px;
+	letter-spacing: 0.5px;
 }

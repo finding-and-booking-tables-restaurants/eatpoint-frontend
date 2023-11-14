@@ -1,13 +1,23 @@
 import './SelectWorkTime.css';
-import * as React from 'react';
+import React from 'react';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import { timesForTimePicker } from '../../../utils/constants';
+import { getFullDayName } from '../../../utils/constants';
 
 interface SelectWorkTimeProps {
 	text: string;
-	onTimeChange?: ((start: string, end: string) => void) | undefined;
+	onTimeChange?:
+		| ((day: string, start: string, end: string) => void)
+		| undefined;
+	selectedTimeStart?: string;
+	selectedTimeEnd?: string;
+	inputFieldsDisabled?: boolean;
+	onDayOffChange?: ((day: string, dayOffValue: boolean) => void) | undefined;
+	// handleDayOffCheckboxChange?: (
+	// 	event: React.ChangeEvent<HTMLInputElement>
+	// ) => void | undefined;
 }
 
 const ITEM_HEIGHT = 48;
@@ -21,11 +31,29 @@ const MenuProps = {
 	},
 };
 
-function SelectWorkTime({ text, onTimeChange }: SelectWorkTimeProps) {
+function SelectWorkTime({
+	text,
+	onTimeChange,
+	selectedTimeStart,
+	selectedTimeEnd,
+	onDayOffChange,
+}: SelectWorkTimeProps) {
 	const [timeStart, setTimeStart] = React.useState<string>(
-		timesForTimePicker[0]
+		selectedTimeStart || timesForTimePicker[0]
 	);
-	const [timeEnd, setTimeEnd] = React.useState<string>(timesForTimePicker[0]);
+	const [timeEnd, setTimeEnd] = React.useState<string>(
+		selectedTimeEnd || timesForTimePicker[0]
+	);
+	const [inputFieldsDisabled, setInputFieldsDisabled] =
+		React.useState<boolean>(false);
+
+	const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+		setInputFieldsDisabled(event.target.checked);
+
+		if (onDayOffChange) {
+			onDayOffChange(getFullDayName(text), event.target.checked);
+		}
+	};
 
 	const handleChangeTimeStart = (
 		event: SelectChangeEvent<typeof timeStart>
@@ -36,7 +64,7 @@ function SelectWorkTime({ text, onTimeChange }: SelectWorkTimeProps) {
 		setTimeStart(value);
 
 		if (onTimeChange) {
-			onTimeChange(value, timeEnd);
+			onTimeChange(getFullDayName(text), value, timeEnd);
 		}
 	};
 
@@ -47,7 +75,7 @@ function SelectWorkTime({ text, onTimeChange }: SelectWorkTimeProps) {
 		setTimeEnd(value);
 
 		if (onTimeChange) {
-			onTimeChange(timeStart, value);
+			onTimeChange(getFullDayName(text), timeStart, value);
 		}
 	};
 
@@ -62,7 +90,8 @@ function SelectWorkTime({ text, onTimeChange }: SelectWorkTimeProps) {
 					onChange={handleChangeTimeStart}
 					inputProps={{ 'aria-label': 'Without label' }}
 					MenuProps={MenuProps}
-					sx={{ backgroundColor: '#FDFAF2' }}
+					disabled={inputFieldsDisabled}
+					// sx={{ backgroundColor: '#FDFAF2' }}
 				>
 					{timesForTimePicker.map((time, i) => (
 						<MenuItem key={i} value={time} sx={{ backgroundColor: '#FDFAF2' }}>
@@ -71,6 +100,7 @@ function SelectWorkTime({ text, onTimeChange }: SelectWorkTimeProps) {
 					))}
 				</Select>
 			</FormControl>
+
 			<FormControl sx={{ m: 1, width: 116 }}>
 				<Select
 					labelId="demo-multiple-name-label"
@@ -79,7 +109,8 @@ function SelectWorkTime({ text, onTimeChange }: SelectWorkTimeProps) {
 					onChange={handleChangeTimeEnd}
 					inputProps={{ 'aria-label': 'Without label' }}
 					MenuProps={MenuProps}
-					sx={{ backgroundColor: '#FDFAF2' }}
+					disabled={inputFieldsDisabled}
+					// sx={{ backgroundColor: '#FDFAF2' }}
 				>
 					{timesForTimePicker.map((time, i) => (
 						<MenuItem key={i} value={time} sx={{ backgroundColor: '#FDFAF2' }}>
@@ -88,6 +119,12 @@ function SelectWorkTime({ text, onTimeChange }: SelectWorkTimeProps) {
 					))}
 				</Select>
 			</FormControl>
+			<input
+				type="checkbox"
+				className="checkbox-item__input"
+				name="example"
+				onChange={handleCheckboxChange}
+			/>
 		</div>
 	);
 }

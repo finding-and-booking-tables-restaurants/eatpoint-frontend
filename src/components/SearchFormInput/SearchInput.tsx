@@ -1,7 +1,7 @@
 import './SearchInput.css';
 import { MouseEvent, ChangeEvent } from 'react';
-import SearchIcon from '@mui/icons-material/Search';
-import Button from '@mui/material/Button';
+// import SearchIcon from '@mui/icons-material/Search';
+// import Button from '@mui/material/Button';
 interface SearchInputProps {
 	handleFilterClick: (evt: MouseEvent<HTMLButtonElement>) => void;
 	query: string;
@@ -20,15 +20,22 @@ function SearchInput({
 	};
 	return (
 		<div className="search-input">
-			<input
-				className="search-input__input"
-				placeholder="По названию, типу заведения"
-				maxLength={25}
-				value={query}
-				onChange={handleInputChange}
-				required
-			/>
-			{!isSearching ? (
+			<div className="search-input__box-field">
+				<label className="search-input__label" htmlFor="searchInput">
+					Поиск
+				</label>
+				<input
+					className="search-input__input"
+					id="searchInput"
+					placeholder="Адрес, кухня, название"
+					maxLength={25}
+					autoComplete="off"
+					value={query}
+					onChange={handleInputChange}
+					required
+				/>
+			</div>
+			{/* {!isSearching ? (
 				<Button
 					sx={{
 						padding: '0',
@@ -52,7 +59,7 @@ function SearchInput({
 						handleFilterClick(evt)
 					}
 				/>
-			)}
+			)} */}
 		</div>
 	);
 }
