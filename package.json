@@ -7,6 +7,7 @@
 		"@emotion/styled": "^11.11.0",
 		"@fontsource/roboto": "^5.0.8",
 		"@fontsource/roboto-condensed": "^5.0.8",
+		"@fontsource/roboto-flex": "^5.0.8",
 		"@fontsource/ubuntu": "^5.0.8",
 		"@material/web": "^1.0.0",
 		"@mui/icons-material": "^5.14.13",

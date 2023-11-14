@@ -1,6 +1,5 @@
 import { TextField, Button, Typography, Box, Container } from '@mui/material';
 import React, { useContext, useEffect, useState } from 'react';
-import CheckIcon from '@mui/icons-material/Check';
 import Header from '../Header/Header';
 import Footer from '../Footer/Footer';
 import CurrentUserContext from '../../contexts/CurrentUserContext';
@@ -100,14 +99,14 @@ const Profile: React.FC<IUserFormProps> = ({
 					variant="h1"
 					component="h1"
 					sx={{
-						fontFamily: 'Ubuntu',
-						fontSize: '30px',
-						fontWeight: '400',
+						fontFamily: 'Roboto',
+						fontSize: '26px',
+						fontWeight: '600',
 						lineHeight: '36px',
 						mt: 4,
 						ml: 0,
 						marginTop: 2.5,
-						mb: 2,
+						mb: 1.5,
 					}}
 				>
 					Профиль
@@ -136,6 +135,7 @@ const Profile: React.FC<IUserFormProps> = ({
 									message: 'Введите корректное имя',
 								},
 							})}
+							label="Имя"
 							placeholder="Введите имя"
 							variant="outlined"
 							error={!!errors.firstName}
@@ -143,11 +143,6 @@ const Profile: React.FC<IUserFormProps> = ({
 							sx={{
 								'.css-md26zr-MuiInputBase-root-MuiOutlinedInput-root': {
 									height: '48px',
-								},
-							}}
-							InputProps={{
-								sx: {
-									backgroundColor: '#FDFAF2',
 								},
 							}}
 							fullWidth
@@ -169,6 +164,7 @@ const Profile: React.FC<IUserFormProps> = ({
 									message: 'Введите корректную фамилию',
 								},
 							})}
+							label="Фамилия"
 							placeholder="Введите фамилию"
 							variant="outlined"
 							error={!!errors.lastName}
@@ -177,11 +173,6 @@ const Profile: React.FC<IUserFormProps> = ({
 								marginTop: 2,
 								'.css-md26zr-MuiInputBase-root-MuiOutlinedInput-root': {
 									height: '48px',
-								},
-							}}
-							InputProps={{
-								sx: {
-									backgroundColor: '#FDFAF2',
 								},
 							}}
 							fullWidth
@@ -203,6 +194,7 @@ const Profile: React.FC<IUserFormProps> = ({
 									message: 'Максимальная длина - 12 символов',
 								},
 							})}
+							label="Моб. телефон в виде +7(...)... .. .."
 							placeholder="Введите номер телефона"
 							variant="outlined"
 							name="telephone"
@@ -213,11 +205,6 @@ const Profile: React.FC<IUserFormProps> = ({
 								marginTop: 2,
 								'.css-md26zr-MuiInputBase-root-MuiOutlinedInput-root': {
 									height: '48px',
-								},
-							}}
-							InputProps={{
-								sx: {
-									backgroundColor: '#FDFAF2',
 								},
 							}}
 							fullWidth
@@ -239,6 +226,7 @@ const Profile: React.FC<IUserFormProps> = ({
 									message: 'Введите менее 50 символов',
 								},
 							})}
+							label="Эл. почта"
 							placeholder="Введите email"
 							type="email"
 							name="email"
@@ -250,11 +238,6 @@ const Profile: React.FC<IUserFormProps> = ({
 								marginTop: 2,
 								'.css-md26zr-MuiInputBase-root-MuiOutlinedInput-root': {
 									height: '48px',
-								},
-							}}
-							InputProps={{
-								sx: {
-									backgroundColor: '#FDFAF2',
 								},
 							}}
 							fullWidth
@@ -289,11 +272,6 @@ const Profile: React.FC<IUserFormProps> = ({
 										height: '48px',
 									},
 								}}
-								InputProps={{
-									sx: {
-										backgroundColor: '#FDFAF2',
-									},
-								}}
 								placeholder="Текущий пароль"
 								fullWidth
 							/>
@@ -308,10 +286,6 @@ const Profile: React.FC<IUserFormProps> = ({
 									},
 								}}
 								InputProps={{
-									sx: {
-										backgroundColor: '#FDFAF2',
-									},
-								}}
 								placeholder="Новый пароль"
 								fullWidth
 							/>
@@ -334,34 +308,41 @@ const Profile: React.FC<IUserFormProps> = ({
 					{message ? (
 						<Typography
 							fontFamily="Ubuntu"
-							fontSize="12px"
+							fontSize="20px"
 							fontWeight="500"
 							lineHeight="26px"
 							letterSpacing="0.2px"
 							color="#006C60"
 							textAlign="center"
-							mb="26px"
+							mt="135px"
 						>
 							{message}
 						</Typography>
 					) : (
 						<Button
 							type="submit"
-							startIcon={<CheckIcon />}
 							variant="contained"
 							sx={{
 								textTransform: 'none',
 								backgroundColor: '#05887B',
-								borderRadius: '100px',
+								borderRadius: '8px',
 								width: '100%',
 								height: '40px',
-								mt: '16px',
+								mt: 17,
 								mb: 3,
 								padding: '10px 24px 10px 16px',
 							}}
 							disabled={!isDirty || !isValid}
 						>
-							Сохранить изменения
+							<Typography
+								fontFamily="Roboto"
+								fontSize="14px"
+								fontWeight="500"
+								lineHeight="20px"
+								letterSpacing="0.1px"
+							>
+								Сохранить изменения
+							</Typography>
 						</Button>
 					)}
 				</Box>

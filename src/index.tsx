@@ -5,6 +5,8 @@ import '@fontsource/roboto/300.css';
 import '@fontsource/roboto/400.css';
 import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
+import '@fontsource/roboto-flex';
+import '@fontsource/roboto-flex/400.css';
 import '@fontsource/roboto-condensed';
 import '@fontsource/roboto-condensed/300.css';
 import '@fontsource/roboto-condensed/400.css';
