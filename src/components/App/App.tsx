@@ -186,6 +186,9 @@ function App() {
 				} else {
 					setRegErrorMessage(REG_ERROR_MESSAGE);
 				}
+			})
+			.finally(() => {
+				setTimeout(() => setIsSuccessRegister(false), 3000);
 			});
 	};
 
