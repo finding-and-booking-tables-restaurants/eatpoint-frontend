@@ -221,6 +221,7 @@ function App() {
 	};
 
 	function handleSearchEstablishments() {
+		if (!query) return;
 		setIsSearching(true);
 		mainApi
 			.getEstablishmentsBySearchQuery(query, 50)
