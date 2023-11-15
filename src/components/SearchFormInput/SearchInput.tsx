@@ -27,6 +27,7 @@ function SearchInput({
 				<input
 					className="search-input__input"
 					id="searchInput"
+					type="search"
 					placeholder="Адрес, кухня, название"
 					maxLength={25}
 					autoComplete="off"
