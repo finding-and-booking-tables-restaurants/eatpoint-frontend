@@ -93,6 +93,18 @@ const LoginForm: React.FC<ILoginFormProps> = ({
 								message: 'Введите корректный адрес электронной почты',
 							},
 						})}
+						sx={{
+							'.css-1d3z3hw-MuiOutlinedInput-notchedOutline': {
+								borderColor: '#79747E',
+							},
+							'.css-1jy569b-MuiFormLabel-root-MuiInputLabel-root.Mui-focused': {
+								color: '#79747E',
+							},
+							'.css-md26zr-MuiInputBase-root-MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline':
+								{
+									borderColor: '#79747E',
+								},
+						}}
 						label="Эл. почта"
 						error={!!errors.email}
 						helperText={errors.email?.message || ''}
@@ -117,6 +129,18 @@ const LoginForm: React.FC<ILoginFormProps> = ({
 									'Пароль должен содержать хотя бы одну заглавную букву, строчную букву и цифру',
 							},
 						})}
+						sx={{
+							'.css-1d3z3hw-MuiOutlinedInput-notchedOutline': {
+								borderColor: '#79747E',
+							},
+							'.css-1jy569b-MuiFormLabel-root-MuiInputLabel-root.Mui-focused': {
+								color: '#79747E',
+							},
+							'.css-md26zr-MuiInputBase-root-MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline':
+								{
+									borderColor: '#79747E',
+								},
+						}}
 						label="Пароль"
 						error={!!errors.password}
 						helperText={errors.password?.message || ''}
