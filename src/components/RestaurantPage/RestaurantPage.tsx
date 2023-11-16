@@ -35,11 +35,13 @@ import Footer from '../Footer/Footer';
 import AddReview from '../AddReview/AddReview';
 import { mainApi } from '../../utils/mainApi';
 import { ReviewType } from '../../types/Reviews';
-import { pluralizeReviews } from '../../utils/pluralizeReviews';
 import { formatRating } from '../../utils/formatRating';
 import { calculateBlackRubles } from '../../utils/calculateBlackRubles';
 import CurrentUserContext from '../../contexts/CurrentUserContext';
 import LinkToYandexMap from '../LinkToYandexMap/LinkToYandexMap';
+import StarIcon from '@mui/icons-material/Star';
+import StarHalfIcon from '@mui/icons-material/StarHalf';
+import StarBorderIcon from '@mui/icons-material/StarBorder';
 
 export default function RestaurantPage({ id }: { id: number }) {
 	const [isModalOpen, setIsModalOpen] = useState(false);
@@ -127,6 +129,23 @@ export default function RestaurantPage({ id }: { id: number }) {
 			₽
 		</span>
 	));
+
+	const maxStars = 5;
+	const filledStars = Math.floor(formatRating(currentRestaurant.rating));
+	const hasHalfStar =
+		formatRating(currentRestaurant.rating) - filledStars >= 0.5;
+
+	const starElements = Array.from({ length: maxStars }).map((_, i) => {
+		if (i < filledStars) {
+			return <StarIcon key={i} className="restaurant-page__rating-star" />;
+		} else if (i === filledStars && hasHalfStar) {
+			return <StarHalfIcon key={i} className="restaurant-page__rating-star" />;
+		} else {
+			return (
+				<StarBorderIcon key={i} className="restaurant-page__rating-star" />
+			);
+		}
+	});
 
 	return (
 		<>
@@ -272,14 +291,16 @@ export default function RestaurantPage({ id }: { id: number }) {
 						<h2 className="restaurant-page__name">{currentRestaurant?.name}</h2>
 					</div>
 					<div className="restaurant-page__info">
+						<div className="restaurant-page__stars-container">
+							{starElements}
+						</div>
 						<p className="restaurant-page__rating">
-							<span className="restaurant-page__rating-star">&#9733;</span>{' '}
 							{formatRating(currentRestaurant.rating)}
 						</p>
 						<div className="restaurant-page__reviews-container">
 							<ChatBubbleOutlineOutlinedIcon fontSize="small" />
 							<p className="restaurant-page__reviews">
-								{pluralizeReviews(currentRestaurantReviews.length)}
+								{currentRestaurantReviews.length}
 							</p>
 						</div>
 						<div>{rubles}</div>
