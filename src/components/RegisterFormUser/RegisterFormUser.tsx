@@ -122,7 +122,7 @@ const RegisterFormUser: React.FC<IRegisterFormUserProps> = ({
 								},
 								pattern: {
 									value: /^[a-zA-Z\u0430-\u044f\u0410-\u042fёЁ\s]*$/,
-									message: 'Введите корректное имя',
+									message: 'Введите имя',
 								},
 							})}
 							label="Имя"
@@ -150,7 +150,7 @@ const RegisterFormUser: React.FC<IRegisterFormUserProps> = ({
 								},
 								pattern: {
 									value: /^[a-zA-Z\u0430-\u044f\u0410-\u042fёЁ\s]*$/,
-									message: 'Введите корректную фамилию',
+									message: 'Введите фамилию',
 								},
 							})}
 							label="Фамилия"
@@ -164,7 +164,7 @@ const RegisterFormUser: React.FC<IRegisterFormUserProps> = ({
 						/>
 						<TextField
 							{...register('telephone', {
-								required: 'Поле обязательно для заполнения',
+								required: 'Введите телефон',
 								pattern: {
 									value: /^\+(?:[0-9] ?){6,14}[0-9]$/,
 									message: 'Введите корректный номер моб. телефона',
@@ -189,7 +189,7 @@ const RegisterFormUser: React.FC<IRegisterFormUserProps> = ({
 						/>
 						<TextField
 							{...register('email', {
-								required: 'Поле обязательно для заполнения',
+								required: 'Введите эл. почту',
 								pattern: {
 									value:
 										/^(?!.*(__|-{2}))[A-Z0-9._%+-]+\S@[A-Z0-9.-]+\.[A-Z]{2,4}$/i,
@@ -219,7 +219,7 @@ const RegisterFormUser: React.FC<IRegisterFormUserProps> = ({
 						/>
 						<TextField
 							{...register('password', {
-								required: 'Поле обязательно для заполнения',
+								required: 'Введите пароль',
 								minLength: {
 									value: 8,
 									message: 'Введите не менее 8 символов',
@@ -247,7 +247,7 @@ const RegisterFormUser: React.FC<IRegisterFormUserProps> = ({
 						/>
 						<TextField
 							{...register('confirmPassword', {
-								required: 'Поле обязательно для заполнения',
+								required: 'Введите пароль',
 								validate: (value) =>
 									value === password || 'Пароли должны совпадать',
 							})}
