@@ -132,7 +132,7 @@ const Profile: React.FC<IUserFormProps> = ({
 								},
 								pattern: {
 									value: /^[a-zA-Z\u0430-\u044f\u0410-\u042fёЁ\s]*$/,
-									message: 'Введите корректное имя',
+									message: 'Имя введено не корректно',
 								},
 							})}
 							label="Имя"
