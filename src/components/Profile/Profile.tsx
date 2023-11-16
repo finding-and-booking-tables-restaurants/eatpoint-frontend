@@ -150,7 +150,7 @@ const Profile: React.FC<IUserFormProps> = ({
 						/>
 						<TextField
 							{...register('lastName', {
-								required: 'Поле обязательно для заполнения',
+								required: 'Введите фамилию',
 								minLength: {
 									value: 2,
 									message: 'Минимальная длина - 2 символа',
@@ -180,7 +180,7 @@ const Profile: React.FC<IUserFormProps> = ({
 						/>
 						<TextField
 							{...register('telephone', {
-								required: 'Поле обязательно для заполнения',
+								required: 'Введите телефон',
 								pattern: {
 									value: /^\+(?:[0-9] ?){6,14}[0-9]$/,
 									message: 'Введите корректный номер телефона',
@@ -211,7 +211,7 @@ const Profile: React.FC<IUserFormProps> = ({
 						/>
 						<TextField
 							{...register('email', {
-								required: 'Поле обязательно для заполнения',
+								required: 'Введите эл. почту',
 								pattern: {
 									value:
 										/^(?!.*(__|-{2}))[A-Z0-9._%+-]+\S@[A-Z0-9.-]+\.[A-Z]{2,4}$/i,
