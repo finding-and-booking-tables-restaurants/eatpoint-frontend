@@ -150,7 +150,7 @@ const RegisterFormUser: React.FC<IRegisterFormUserProps> = ({
 								},
 								pattern: {
 									value: /^[a-zA-Z\u0430-\u044f\u0410-\u042fёЁ\s]*$/,
-									message: 'Фамилия введена не корректно',
+									message: 'Введите корректную фамилию',
 								},
 							})}
 							label="Фамилия"
@@ -167,7 +167,7 @@ const RegisterFormUser: React.FC<IRegisterFormUserProps> = ({
 								required: 'Поле обязательно для заполнения',
 								pattern: {
 									value: /^\+(?:[0-9] ?){6,14}[0-9]$/,
-									message: 'Введите корректный номер телефона',
+									message: 'Введите корректный номер моб. телефона',
 								},
 								minLength: {
 									value: 10,

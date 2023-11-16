@@ -183,7 +183,7 @@ const Profile: React.FC<IUserFormProps> = ({
 								required: 'Введите телефон',
 								pattern: {
 									value: /^\+(?:[0-9] ?){6,14}[0-9]$/,
-									message: 'Введите корректный номер телефона',
+									message: 'Введите корректный номер моб. телефона',
 								},
 								minLength: {
 									value: 10,
