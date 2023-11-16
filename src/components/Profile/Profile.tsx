@@ -121,7 +121,7 @@ const Profile: React.FC<IUserFormProps> = ({
 					<div>
 						<TextField
 							{...register('firstName', {
-								required: 'Поле обязательно для заполнения',
+								required: 'Введите имя',
 								minLength: {
 									value: 2,
 									message: 'Минимальная длина - 2 символа',
