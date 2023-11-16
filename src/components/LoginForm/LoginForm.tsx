@@ -86,7 +86,7 @@ const LoginForm: React.FC<ILoginFormProps> = ({
 				>
 					<TextField
 						{...register('email', {
-							required: 'Поле обязательно для заполнения',
+							required: 'Введите эл. почту',
 							pattern: {
 								value:
 									/^(?!.*(__|-{2}))[A-Z0-9._%+-]+\S@[A-Z0-9.-]+\.[A-Z]{2,4}$/i,
@@ -118,7 +118,7 @@ const LoginForm: React.FC<ILoginFormProps> = ({
 					/>
 					<TextField
 						{...register('password', {
-							required: 'Поле обязательно для заполнения',
+							required: 'Введите пароль',
 							minLength: {
 								value: 6,
 								message: 'Минимальная длина - 6 символов',
