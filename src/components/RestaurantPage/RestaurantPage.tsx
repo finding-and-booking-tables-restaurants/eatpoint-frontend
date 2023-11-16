@@ -298,7 +298,10 @@ export default function RestaurantPage({ id }: { id: number }) {
 							{formatRating(currentRestaurant.rating)}
 						</p>
 						<div className="restaurant-page__reviews-container">
-							<ChatBubbleOutlineOutlinedIcon fontSize="small" />
+							<ChatBubbleOutlineOutlinedIcon
+								sx={{ color: '#49454F' }}
+								fontSize="small"
+							/>
 							<p className="restaurant-page__reviews">
 								{currentRestaurantReviews.length}
 							</p>

@@ -119,15 +119,6 @@ const LoginForm: React.FC<ILoginFormProps> = ({
 					<TextField
 						{...register('password', {
 							required: 'Поле обязательно для заполнения',
-							minLength: {
-								value: 6,
-								message: 'Минимальная длина - 6 символов',
-							},
-							pattern: {
-								value: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{6,}$/,
-								message:
-									'Пароль должен содержать хотя бы одну заглавную букву, строчную букву и цифру',
-							},
 						})}
 						sx={{
 							'.css-1d3z3hw-MuiOutlinedInput-notchedOutline': {
@@ -237,7 +228,7 @@ const LoginForm: React.FC<ILoginFormProps> = ({
 						</Button>
 					</Stack>
 				</Box>
-				<Button
+				{/* <Button
 					variant="text"
 					sx={{
 						padding: 0,
@@ -251,7 +242,7 @@ const LoginForm: React.FC<ILoginFormProps> = ({
 					}}
 				>
 					Забыли пароль
-				</Button>
+				</Button> */}
 			</Container>
 			<Footer />
 		</>

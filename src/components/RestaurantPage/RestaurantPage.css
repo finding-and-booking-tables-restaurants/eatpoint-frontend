@@ -60,7 +60,6 @@
 .restaurant-page__reviews-container {
 	display: flex;
 	flex-direction: row;
-	color: #05887b;
 }
 
 .restaurant-page__reviews {
@@ -69,7 +68,7 @@
 	font-weight: 500;
 	line-height: 20px;
 	letter-spacing: 0.1px;
-	color: #05887b;
+	color: #49454f;
 }
 
 .restaurant-page__info {
@@ -89,10 +88,11 @@
 .restaurant-page__stars-container {
 	display: flex;
 	gap: 4px;
+	align-items: center;
 }
 
 .restaurant-page__rating-star {
-	color: #c41a68;
+	color: #49454f;
 	width: 16px !important;
 	height: 16px !important;
 }
