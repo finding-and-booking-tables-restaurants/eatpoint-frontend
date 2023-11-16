@@ -1,4 +1,5 @@
 import React, { Children, FC, ReactNode, useEffect, useState } from 'react';
+import { Typography } from '@mui/material';
 import SearchForm from '../SearchForm/SearchForm';
 import DatePickerValue from '../DatePickerValue/DatePickerValue';
 import TimePickerValue from '../TimePickerValue/TimePickerValue';
@@ -27,6 +28,16 @@ const BookingForm: FC<BookingFormProps> = ({
 	return (
 		<div className="booking-form">
 			<SearchForm booking={booking} restPage={restPage} onSubmit={onSubmit}>
+				<Typography
+					variant="h2"
+					fontFamily="Ubuntu"
+					fontSize="30px"
+					fontWeight="400"
+					lineHeight="36px"
+					color="#fff"
+				>
+					Забронировать стол
+				</Typography>
 				<div className="search-results__flex-box">
 					<TimePickerValue />
 					<DatePickerValue />
