@@ -221,10 +221,13 @@ function App() {
 	};
 
 	function handleSearchEstablishments() {
+		const city = localStorage.getItem('city');
 		if (!query) return;
+		if (!city) return;
+
 		setIsSearching(true);
 		mainApi
-			.getEstablishmentsBySearchQuery(query, 50)
+			.getEstablishmentsBySearchQuery(query, 50, city)
 			.then((data) => {
 				setSearchEstablishments(data.results);
 			})

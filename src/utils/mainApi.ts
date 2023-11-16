@@ -34,9 +34,13 @@ class MainApi {
 		});
 	}
 
-	getEstablishmentsBySearchQuery(query: string, pageSize: number) {
+	getEstablishmentsBySearchQuery(
+		query: string,
+		pageSize: number,
+		city: string
+	) {
 		return this._sendFetchRequest(
-			`/api/v1/establishments/?page_size=${pageSize}&search=${query}`,
+			`/api/v1/establishments/?cities=${city}&page_size=${pageSize}&search=${query}`,
 			{ headers: this._headers }
 		);
 	}
