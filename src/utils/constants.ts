@@ -391,7 +391,7 @@ const INVALID_AUTH_DATA_ERROR_MESSAGE =
 const AUTH_ERROR_MESSAGE = 'При авторизации пользователя произошла ошибка.';
 const UPDATE_USER_INFO_ERROR_MESSAGE =
 	'При обновлении профиля произошла ошибка.';
-const UPDATE_USER_INFO_MESSAGE = 'Данные успешно обновлены';
+const UPDATE_USER_INFO_MESSAGE = 'Изменения успешно сохранены';
 const DUPLICATE_EMAIL_PHONE_MESSAGE =
 	'Пользователь с таким email или телефоном уже существует';
 
