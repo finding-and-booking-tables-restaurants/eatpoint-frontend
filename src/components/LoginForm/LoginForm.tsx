@@ -86,7 +86,7 @@ const LoginForm: React.FC<ILoginFormProps> = ({
 				>
 					<TextField
 						{...register('email', {
-							required: 'Поле обязательно для заполнения',
+							required: 'Введите эл. почту',
 							pattern: {
 								value:
 									/^(?!.*(__|-{2}))[A-Z0-9._%+-]+\S@[A-Z0-9.-]+\.[A-Z]{2,4}$/i,
@@ -95,7 +95,7 @@ const LoginForm: React.FC<ILoginFormProps> = ({
 						})}
 						sx={{
 							'.css-1d3z3hw-MuiOutlinedInput-notchedOutline': {
-								borderColor: '#79747E',
+								borderColor: requestErrorMessage ? 'red' : '#79747E',
 							},
 							'.css-1jy569b-MuiFormLabel-root-MuiInputLabel-root.Mui-focused': {
 								color: '#79747E',
@@ -118,11 +118,12 @@ const LoginForm: React.FC<ILoginFormProps> = ({
 					/>
 					<TextField
 						{...register('password', {
-							required: 'Поле обязательно для заполнения',
+							required: 'Введите пароль',
+							},
 						})}
 						sx={{
 							'.css-1d3z3hw-MuiOutlinedInput-notchedOutline': {
-								borderColor: '#79747E',
+								borderColor: requestErrorMessage ? 'red' : '#79747E',
 							},
 							'.css-1jy569b-MuiFormLabel-root-MuiInputLabel-root.Mui-focused': {
 								color: '#79747E',

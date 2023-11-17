@@ -386,12 +386,11 @@ const EMAIL_ALREADY_REGISTERED_MESSAGE =
 	'Пользователь с таким email или телефоном уже существует.';
 const INCORRECT_ADD_USER_DATA = 'Переданы некорректные данные при регистрации';
 const REG_ERROR_MESSAGE = 'При регистрации пользователя произошла ошибка.';
-const INVALID_AUTH_DATA_ERROR_MESSAGE =
-	'Вы ввели неправильный логин или пароль.';
+const INVALID_AUTH_DATA_ERROR_MESSAGE = 'Эл. почта или пароль не верны';
 const AUTH_ERROR_MESSAGE = 'При авторизации пользователя произошла ошибка.';
 const UPDATE_USER_INFO_ERROR_MESSAGE =
 	'При обновлении профиля произошла ошибка.';
-const UPDATE_USER_INFO_MESSAGE = 'Данные успешно обновлены';
+const UPDATE_USER_INFO_MESSAGE = 'Изменения успешно сохранены';
 const DUPLICATE_EMAIL_PHONE_MESSAGE =
 	'Пользователь с таким email или телефоном уже существует';
 
