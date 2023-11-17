@@ -1,51 +1,64 @@
-import React, { Children, FC, ReactNode, useEffect, useState } from 'react';
-import { Typography } from '@mui/material';
-import SearchForm from '../SearchForm/SearchForm';
+import React, { FC, ReactNode } from 'react';
+import { Box, Typography } from '@mui/material';
 import DatePickerValue from '../DatePickerValue/DatePickerValue';
 import TimePickerValue from '../TimePickerValue/TimePickerValue';
 import NumberOfPerson from '../NumberOfPerson/NumberOfPerson';
-import SearchBtn from '../SearchFormBtn/SearchBtn';
-import TextField from '@mui/material/TextField';
-import MenuItem from '@mui/material/MenuItem';
+
 import '../SearchResults/SearchResults.css';
 import '../SearchFormBtn/SearchBtn.css';
 import './BookingForm.css';
-import { numOfPeople } from '../../utils/constants';
+import { useLocation } from 'react-router-dom';
 
 interface BookingFormProps {
 	children?: ReactNode;
 	onSubmit: (event: React.FormEvent<HTMLFormElement>) => void;
-	booking?: boolean;
-	restPage?: boolean;
 }
 
-const BookingForm: FC<BookingFormProps> = ({
-	children,
-	onSubmit,
-	booking,
-	restPage,
-}) => {
+const BookingForm: FC<BookingFormProps> = ({ children, onSubmit }) => {
+	const location = useLocation();
+	const chechLocation = (path: string) => {
+		return location.pathname.includes(path) ? true : false;
+	};
+
 	return (
-		<div className="booking-form">
-			<SearchForm booking={booking} restPage={restPage} onSubmit={onSubmit}>
-				<Typography
-					variant="h2"
-					fontFamily="Ubuntu"
-					fontSize="30px"
-					fontWeight="400"
-					lineHeight="36px"
-					color="#fff"
+		<Box
+			component="form"
+			display="flex"
+			flexDirection={{
+				xs: 'column',
+				sm: `${chechLocation('/establishment') ? 'row' : 'column'}`,
+			}}
+			flexWrap="wrap"
+			justifyContent="center"
+			onSubmit={onSubmit}
+			gap={{
+				xs: '16px',
+				sm: `${chechLocation('/booking') ? '24px' : '16px'}`,
+			}}
+		>
+			<Box
+				display={'flex'}
+				flexWrap={'wrap'}
+				gap={{
+					xs: '16px',
+					sm: `${chechLocation('/booking') ? '32px' : '16px'}`,
+				}}
+				// justifyContent={'space-between'}
+				// width={'100%'}
+			>
+				<Box
+					sx={{
+						display: 'flex',
+						gap: { xs: '8px' },
+					}}
 				>
-					Забронировать стол
-				</Typography>
-				<div className="search-results__flex-box">
 					<TimePickerValue />
 					<DatePickerValue />
-				</div>
+				</Box>
 				<NumberOfPerson />
-				{children}
-			</SearchForm>
-		</div>
+			</Box>
+			{children}
+		</Box>
 	);
 };
 

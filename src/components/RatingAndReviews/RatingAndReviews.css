@@ -1,11 +1,3 @@
-.rating-and-reviews {
-	padding: 24px 16px;
-	display: flex;
-	flex-direction: column;
-	gap: 16px;
-	margin-bottom: auto;
-}
-
 .rating-and-reviews__heading {
 	font-family: 'Roboto', sans-serif;
 	color: #1d1b20;
@@ -35,6 +27,7 @@
 	display: inline-flex;
 	gap: 40px;
 	justify-content: center;
+	order: 1;
 }
 
 .rating-container {

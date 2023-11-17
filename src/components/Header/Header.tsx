@@ -11,7 +11,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import CurrentUserContext from '../../contexts/CurrentUserContext';
 import { handlePageReload } from '../../utils/pageReloader';
 import { getCityNameByLocation } from '../../utils/getCityByLocation';
-import { Link } from '@mui/material';
+import { Box, Link } from '@mui/material';
 
 const Header = ({
 	handleRestart,
@@ -77,8 +77,25 @@ const Header = ({
 		localStorage.setItem('city', 'Москва');
 	}, [savedCity]);
 
+	// display: inline-flex;
+	// width: 92%;
+	// margin: 14px 12px;
+	// gap: 11px;
+	// align-items: center;
+	// justify-content: space-between;
+
 	return (
-		<header className="header">
+		<Box
+			component="header"
+			display="flex"
+			m="0 auto"
+			gap="11px"
+			alignItems="center"
+			justifyContent="space-between"
+			minWidth={{ xs: '320px', sm: '550px', md: '725px', lg: '1068px' }}
+			maxWidth={{ xs: '320px', sm: '550px', md: 'auto', lg: 'auto' }}
+			p="14px 0"
+		>
 			<Link href="/">
 				<img className="header__logo" src={logo} alt="лого" />
 			</Link>
@@ -159,7 +176,7 @@ const Header = ({
 					</MenuItem>
 				</Menu>
 			)}
-		</header>
+		</Box>
 	);
 };
 
