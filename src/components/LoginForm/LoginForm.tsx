@@ -119,7 +119,6 @@ const LoginForm: React.FC<ILoginFormProps> = ({
 					<TextField
 						{...register('password', {
 							required: 'Введите пароль',
-							},
 						})}
 						sx={{
 							'.css-1d3z3hw-MuiOutlinedInput-notchedOutline': {
