@@ -8,7 +8,7 @@ import RestCard from '../RestCard/RestCard';
 import FilterMenu from '../FilterMenu/FilterMenu';
 import { Restaurant } from '../../utils/constants';
 import { formatRating } from '../../utils/formatRating';
-import { Button } from '@mui/material';
+import { Box, Button, Typography } from '@mui/material';
 import TuneIcon from '@mui/icons-material/Tune';
 import ClearIcon from '@mui/icons-material/Clear';
 
@@ -168,72 +168,128 @@ function SearchResults({
 		setIsOpen(!isOpen);
 	};
 
+	const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+
+	useEffect(() => {
+		const handleResize = () => {
+			setWindowWidth(window.innerWidth);
+		};
+
+		window.addEventListener('resize', handleResize);
+
+		return () => {
+			window.removeEventListener('resize', handleResize);
+		};
+	}, []);
+
 	return (
-		<section className="search-results">
-			<div
+		<Box component={'section'} className="search-results">
+			<Box
+				sx={{
+					height: {
+						xs: 'auto',
+						sm: `${!isSearching && '255px'} `,
+						md: `${!isSearching && '525px'} `,
+					},
+				}}
 				className={`search-results__bg-box ${
 					isSearching ? 'search-results__bg-box_none' : ''
 				}`}
 			>
-				{!isSearching && (
-					<h2 className="search-results__title">Найди свой стол</h2>
-				)}
-				<SearchForm isSearching={isSearching} onSubmit={onSubmit}>
-					<SearchInput query={query} setQuery={setQuery} />
-					{isSearching && (
-						<div className="search-results__box-filters">
-							<Button
-								variant={areFiltersSelected ? 'contained' : 'outlined'}
-								onClick={handleToggleFilterBtn}
-								sx={{
-									textTransform: 'none',
-									borderRadius: '8px',
-									minWidth: `${areFiltersSelected ? 'fit-content' : '100%'}`,
-									maxHeight: '32px',
-									borderColor: '#006C60',
-									p: '5px 10px',
-									color: '#49454F',
-									backgroundColor: `${
-										areFiltersSelected ? '#E4F4F1' : 'transparent'
-									}`,
-								}}
-								startIcon={<TuneIcon />}
-							>
-								{`Фильтры ${numberOfFilters > 0 ? `(${numberOfFilters})` : ''}`}
-							</Button>
-							{areFiltersSelected && (
+				<Box
+					m={{ xs: '32px auto 0 auto', md: 'auto' }}
+					maxWidth={{ xs: '360px', sm: '725px', md: '1068px' }}
+					minWidth={{
+						xs: '328px',
+						sm: 'auto',
+						lg: `${isSearching ? '1068px' : 'auto'}`,
+					}}
+				>
+					{!isSearching && (
+						<Typography
+							component={'h2'}
+							sx={{
+								color: 'white',
+								textAlign: 'center',
+								fontSize: { xs: '24px', sm: '36px', md: '57px' },
+								lineHeight: { sm: '42px', md: '64px' },
+								fontWeight: { xs: 400, sm: 600 },
+								mb: { xs: 0, sm: '10px', md: '100px', lg: '160px' },
+							}}
+						>
+							{windowWidth > 900
+								? 'Откройте двери лучших ресторанов вашего города'
+								: 'Найди свой стол'}
+						</Typography>
+					)}
+					<SearchForm isSearching={isSearching} onSubmit={onSubmit}>
+						<SearchInput
+							query={query}
+							setQuery={setQuery}
+							isSearching={isSearching}
+						/>
+						{isSearching && (
+							<div className="search-results__box-filters">
 								<Button
-									variant="outlined"
-									onClick={handleResetFilters}
+									variant={areFiltersSelected ? 'contained' : 'outlined'}
+									onClick={handleToggleFilterBtn}
 									sx={{
 										textTransform: 'none',
 										borderRadius: '8px',
-										maxWidth: 'max-content',
+										minWidth: {
+											xs: `${areFiltersSelected ? 'fit-content' : '100%'}`,
+											sm: '137px',
+										},
 										maxHeight: '32px',
 										borderColor: '#006C60',
-										color: '#49454F',
 										p: '5px 10px',
+										color: '#49454F',
+										backgroundColor: `${
+											areFiltersSelected ? '#E4F4F1' : 'transparent'
+										}`,
 									}}
-									endIcon={<ClearIcon />}
+									startIcon={<TuneIcon />}
 								>
-									Сбросить фильтры
+									{`Фильтры ${
+										numberOfFilters > 0 ? `(${numberOfFilters})` : ''
+									}`}
 								</Button>
-							)}
-						</div>
-					)}
-					<Button
-						variant="contained"
-						type="submit"
-						sx={{
-							backgroundColor: '#c41a68',
-							textTransform: 'none',
-							borderRadius: '8px',
-							minHeight: '40px',
-						}}
-					>
-						Искать
-					</Button>
-				</SearchForm>
+								{areFiltersSelected && (
+									<Button
+										variant="outlined"
+										onClick={handleResetFilters}
+										sx={{
+											textTransform: 'none',
+											borderRadius: '8px',
+											maxWidth: 'max-content',
+											maxHeight: '32px',
+											borderColor: '#006C60',
+											color: '#49454F',
+											p: '5px 10px',
+										}}
+										endIcon={<ClearIcon />}
+									>
+										Сбросить фильтры
+									</Button>
+								)}
+							</div>
+						)}
+						<Button
+							variant="contained"
+							type="submit"
+							sx={{
+								backgroundColor: '#05887B',
+								textTransform: 'none',
+								borderRadius: '8px',
+								minHeight: '40px',
+								minWidth: { xs: '100%', sm: '225px', md: '355px' },
+								display: { xs: 'flex', sm: `${isSearching ? 'none' : 'flex'}` },
+							}}
+						>
+							Искать
+						</Button>
+					</SearchForm>
+				</Box>
 				<FilterMenu
 					isOpen={isOpen}
 					setIsOpen={setIsOpen}
@@ -246,9 +302,13 @@ function SearchResults({
 					selectedCheckFilters={selectedCheckFilters}
 					selectedServiceFilters={selectedServiceFilters}
 				/>
-			</div>
+			</Box>
 			{isSearching && (
-				<div className="search-results__cards-container">
+				<Box
+					maxWidth={{ xs: '328px', sm: '688px', lg: '1050px' }}
+					minWidth={{ xs: '328px', sm: '550px', lg: '1050px' }}
+					m="auto"
+				>
 					<h2 id="search-results" className="search-results__title_results">
 						Результаты поиска
 					</h2>
@@ -256,7 +316,12 @@ function SearchResults({
 						Найдено {mainArr.length} заведений
 					</p>
 
-					<ul className="search-results__list">
+					<Box
+						display={'flex'}
+						flexWrap={'wrap'}
+						p="24px 0"
+						gap={{ xs: '16px', sm: '32px', md: '24px' }}
+					>
 						{mainArr.map((restaurant: Restaurant, index: number) => (
 							<RestCard
 								key={index}
@@ -270,10 +335,10 @@ function SearchResults({
 								average_check={restaurant.average_check}
 							/>
 						))}
-					</ul>
-				</div>
+					</Box>
+				</Box>
 			)}
-		</section>
+		</Box>
 	);
 }
 

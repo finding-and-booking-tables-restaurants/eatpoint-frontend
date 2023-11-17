@@ -1,8 +1,9 @@
 import React from 'react';
 import './Review.css';
 import { useLocation } from 'react-router-dom';
-import { Button } from '@mui/material';
+import { Box, Button } from '@mui/material';
 import ModeEditOutlineOutlinedIcon from '@mui/icons-material/ModeEditOutlineOutlined';
+import StarIcon from '@mui/icons-material/Star';
 
 interface ReviewProps {
 	name: string;
@@ -19,7 +20,10 @@ const Review: React.FC<ReviewProps> = ({ name, date, text, rating }) => {
 			<p className="review__name">{name}</p>
 			<p className="review__date">{date}</p>
 			<p className="review__text">{text}</p>
-			<p className="review__rating">{rating}</p>
+			<Box className="review__rating">
+				<StarIcon sx={{ width: '24px' }} />
+				<p>{rating}</p>
+			</Box>
 			{location.pathname.includes('restaurant-reviews') && (
 				<Button
 					// onClick={openAddReviewModal}

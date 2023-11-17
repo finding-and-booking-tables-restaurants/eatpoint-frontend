@@ -2,7 +2,7 @@ import './RestaurantItem.css';
 import { useState } from 'react';
 import RatingIcon from '../../../images/star-icon.svg';
 import ReviewsIcon from '../../../images/message-icon.svg';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Establishment } from '../../../types/getMyRestaurantTypes';
 import DeleteCardConfirm from '../../DeleteCardConfirm/DeleteCardConfirm';
 
@@ -35,6 +35,9 @@ function RestaurantItem({
 	const handleOpenDeleteModal = () => {
 		setDeleteModalOpen(true);
 	};
+
+	const navigate = useNavigate();
+
 	return (
 		<li className="restaurant">
 			<div className="restaurant__box-card">
@@ -76,7 +79,10 @@ function RestaurantItem({
 					<button className="restaurant__optionBtn restaurant__optionBtn_reservation">
 						Нет новых
 					</button>
-					<button className="restaurant__optionBtn restaurant__optionBtn_reviews">
+					<button
+						onClick={() => navigate(`/restaurant-reviews/${id}`)}
+						className="restaurant__optionBtn restaurant__optionBtn_reviews"
+					>
 						Отзывы
 					</button>
 				</div>

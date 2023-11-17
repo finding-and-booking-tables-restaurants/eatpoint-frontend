@@ -27,7 +27,7 @@ import { mainApi } from '../../utils/mainApi';
 import { ThemeProvider } from '@emotion/react';
 import { selectTheme } from '../NumberOfPerson/NumberOfPerson';
 import { useForm } from 'react-hook-form';
-import { Button } from '@mui/material';
+import { Box, Button } from '@mui/material';
 
 interface BookingPageProps {
 	id: number;
@@ -119,9 +119,22 @@ const BookingPage: FC<BookingPageProps> = ({ id, userData }) => {
 		navigate(`/establishment/${id}`, { replace: true });
 	};
 
+	// .booking-page {
+	// margin: auto;
+	// max-width: 92%;
+	// display: flex;
+	// flex-direction: column;
+	// align-content: center;
+	// flex-wrap: wrap;
+
 	return (
 		<ThemeProvider theme={selectTheme}>
-			<div className="booking-page">
+			<Box
+				sx={{
+					m: 'auto',
+					maxWidth: { xs: '92%', sm: '700px' },
+				}}
+			>
 				{isSuccessBooking ? (
 					<SuccessBooking
 						bookingId={bookingId}
@@ -163,58 +176,72 @@ const BookingPage: FC<BookingPageProps> = ({ id, userData }) => {
 								/>
 							</div>
 						</>
-						<BookingForm booking onSubmit={handleSubmit(handleBooking)}>
-							<TextField
-								{...register('zone', {
-									required: 'Поле обязательно для заполнения',
-								})}
-								id="outlined-select-currency"
-								select
-								name="zone"
-								label="Зона"
-								required
-								sx={{
-									maxWidth: 328,
-								}}
+						<BookingForm onSubmit={handleSubmit(handleBooking)}>
+							<Box
+								display="flex"
+								flexWrap={'wrap'}
+								rowGap={{ xs: '16px', sm: '32px' }}
+								columnGap={{ xs: '16px', sm: '40px' }}
 							>
-								{currentRestaurant?.zones.map((option) => (
-									<MenuItem key={option.id} value={option.id}>
-										{option.zone}
-									</MenuItem>
-								))}
-							</TextField>
-							{inputs.map((option, index) => (
 								<TextField
-									{...register(`${option.id}`, option.validationConfig)}
-									helperText={errors[option.id]?.message || ''}
-									error={!!errors[option.id]}
-									key={index}
-									label={option.label}
-									defaultValue={userData ? userData[option.id] : ''}
+									{...register('zone', {
+										required: 'Поле обязательно для заполнения',
+									})}
+									id="outlined-select-currency"
+									select
+									name="zone"
+									label="Зона"
+									required
 									sx={{
-										maxWidth: 328,
-										display: `${isLoggedIn && option.id === 'email' && 'none'}`,
-										'& .Mui-error': {
-											color: '#EC006C',
-										},
-										'& .MuiOutlinedInput-root': {
-											'&.Mui-error .MuiOutlinedInput-notchedOutline': {
-												borderColor: '#EC006C',
-											},
-										},
+										minWidth: 328,
 									}}
-								/>
-							))}
-							<p className="booking-page__comment">Введите ваши пожелания</p>
-							<span
-								style={{
-									color: '#EC006C',
-									fontSize: '0.75rem',
-									textAlign: 'center',
-								}}
-							>
-								{errMessage}
-							</span>
+								>
+									{currentRestaurant?.zones.map((option) => (
+										<MenuItem key={option.id} value={option.id}>
+											{option.zone}
+										</MenuItem>
+									))}
+								</TextField>
+								{inputs.map((option, index) => (
+									<TextField
+										{...register(`${option.id}`, option.validationConfig)}
+										helperText={errors[option.id]?.message || ''}
+										error={!!errors[option.id]}
+										key={index}
+										label={option.label}
+										defaultValue={userData ? userData[option.id] : ''}
+										sx={{
+											minWidth: 328,
+											display: `${
+												isLoggedIn && option.id === 'email' && 'none'
+											}`,
+											'& .Mui-error': {
+												color: '#EC006C',
+											},
+											'& .MuiOutlinedInput-root': {
+												'&.Mui-error .MuiOutlinedInput-notchedOutline': {
+													borderColor: '#EC006C',
+												},
+											},
+										}}
+									/>
+								))}
+								<p
+									style={{ flexBasis: '100%' }}
+									className="booking-page__comment"
+								>
+									Введите ваши пожелания
+								</p>
+								<span
+									style={{
+										color: '#EC006C',
+										fontSize: '0.75rem',
+										textAlign: 'center',
+									}}
+								>
+									{errMessage}
+								</span>
+							</Box>
 							<div className="checkbox-container">
 								<Checkbox
 									onChange={(e) => setIsAgreement(e.target.checked)}
@@ -233,6 +260,7 @@ const BookingPage: FC<BookingPageProps> = ({ id, userData }) => {
 									textTransform: 'none',
 									borderRadius: '8px',
 									padding: '10px 24px 10px 16px',
+									mb: '24px',
 								}}
 								disabled={!isValid || !isAgreement}
 								type="submit"
@@ -243,7 +271,7 @@ const BookingPage: FC<BookingPageProps> = ({ id, userData }) => {
 						</BookingForm>
 					</>
 				)}
-			</div>
+			</Box>
 		</ThemeProvider>
 	);
 };

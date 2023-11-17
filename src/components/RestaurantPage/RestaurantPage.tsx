@@ -15,6 +15,8 @@ import {
 	DialogContent,
 	IconButton,
 	Backdrop,
+	Box,
+	Typography,
 } from '@mui/material';
 import ModeEditOutlineOutlinedIcon from '@mui/icons-material/ModeEditOutlineOutlined';
 import CloseIcon from '@mui/icons-material/Close';
@@ -265,185 +267,243 @@ export default function RestaurantPage({ id }: { id: number }) {
 				</DialogContent>
 			</Dialog>
 			<main className="restaurant-page">
-				<div className="restaurant-page__photo-container">
-					<img
-						className="restaurant-page__photo"
-						src={currentRestaurant?.poster}
-						alt="Ресторан"
-					/>
-					<div className="restaurant-page__favorite">
-						<Checkbox
-							icon={<FavoriteBorder />}
-							checkedIcon={<Favorite />}
-							style={{ width: 41, height: 41 }}
+				<Box display="flex" flexDirection={{ xs: 'column', md: 'column' }}>
+					<Box
+						sx={{
+							position: 'relative',
+							width: { xs: '100%', sm: '100%' },
+							height: { xs: '75vw', sm: '43vw', md: '23vw' },
+						}}
+					>
+						<img
+							className="restaurant-page__photo"
+							src={currentRestaurant?.poster}
+							alt="Ресторан"
 						/>
-					</div>
-					<div className="restaurant-page__more-photo-btn">
-						{currentRestaurant.images.length > 0 && (
-							<AllPhotosButton onClick={openModal} variant="text" size="small">
-								Все фото
-							</AllPhotosButton>
-						)}
-					</div>
-				</div>
-				<div className="restaurant-page__info-container">
-					<div>
-						<h2 className="restaurant-page__name">{currentRestaurant?.name}</h2>
-					</div>
-					<div className="restaurant-page__info">
-						<div className="restaurant-page__stars-container">
-							{starElements}
-						</div>
-						<p className="restaurant-page__rating">
-							{formatRating(currentRestaurant.rating)}
-						</p>
-						<div className="restaurant-page__reviews-container">
-							<ChatBubbleOutlineOutlinedIcon
-								sx={{ color: '#49454F' }}
-								fontSize="small"
+						<div className="restaurant-page__favorite">
+							<Checkbox
+								icon={<FavoriteBorder />}
+								checkedIcon={<Favorite />}
+								style={{ width: 41, height: 41 }}
 							/>
-							<p className="restaurant-page__reviews">
-								{currentRestaurantReviews.length}
-							</p>
 						</div>
-						<div>{rubles}</div>
-					</div>
-					<div className="restaurant-page__address-container">
+						<div className="restaurant-page__more-photo-btn">
+							{currentRestaurant.images.length > 0 && (
+								<AllPhotosButton
+									onClick={openModal}
+									variant="text"
+									size="small"
+								>
+									Все фото
+								</AllPhotosButton>
+							)}
+						</div>
+					</Box>
+					<div className="restaurant-page__info-container">
 						<div>
-							<p className="restaurant-page__address-text">Адрес</p>
-							<p className="restaurant-page__address">
-								{currentRestaurant?.cities}, {currentRestaurant?.address}
+							<h2 className="restaurant-page__name">
+								{currentRestaurant?.name}
+							</h2>
+						</div>
+						<div className="restaurant-page__info">
+							<div className="restaurant-page__stars-container">
+								{starElements}
+							</div>
+							<p className="restaurant-page__rating">
+								{formatRating(currentRestaurant.rating)}
 							</p>
-							<p className="restaurant-page__phone">
-								{currentRestaurant?.telephone}
-							</p>
+							<div className="restaurant-page__reviews-container">
+								<ChatBubbleOutlineOutlinedIcon
+									sx={{ color: '#49454F' }}
+									fontSize="small"
+								/>
+								<p className="restaurant-page__reviews">
+									{currentRestaurantReviews.length}
+								</p>
+							</div>
+							<div>{rubles}</div>
+						</div>
+						<div className="restaurant-page__address-container">
+							<div>
+								<p className="restaurant-page__address-text">Адрес</p>
+								<p className="restaurant-page__address">
+									{currentRestaurant?.cities}, {currentRestaurant?.address}
+								</p>
+								<p className="restaurant-page__phone">
+									{currentRestaurant?.telephone}
+								</p>
+							</div>
+
+							<LinkToYandexMap
+								city={currentRestaurant?.cities}
+								address={currentRestaurant?.address}
+							/>
 						</div>
 
-						<LinkToYandexMap
-							city={currentRestaurant?.cities}
-							address={currentRestaurant?.address}
-						/>
-					</div>
-					<div className="restaurant-page__features-container">
-						{currentRestaurant?.kitchens.map((kitchen, index) => (
-							<p className="restaurant-page__feature" key={index}>
-								{kitchen}
+						<div className="restaurant-page__features-container">
+							{currentRestaurant?.kitchens.map((kitchen, index) => (
+								<p className="restaurant-page__feature" key={index}>
+									{kitchen}
+								</p>
+							))}
+							{currentRestaurant?.types.map((type, index) => (
+								<p className="restaurant-page__feature" key={index}>
+									{type}
+								</p>
+							))}
+							{currentRestaurant?.services.map((service, index) => (
+								<p className="restaurant-page__feature" key={index}>
+									{service}
+								</p>
+							))}
+						</div>
+						<div className="restaurant-page__description">
+							<p className="restaurant-page__description-text">
+								{descriptionToShow}
+								{currentRestaurant.description.length > 330 &&
+								!showFullDescription
+									? '...'
+									: ''}
 							</p>
-						))}
-						{currentRestaurant?.types.map((type, index) => (
-							<p className="restaurant-page__feature" key={index}>
-								{type}
-							</p>
-						))}
-						{currentRestaurant?.services.map((service, index) => (
-							<p className="restaurant-page__feature" key={index}>
-								{service}
-							</p>
-						))}
+							{!showFullDescription &&
+								currentRestaurant.description.length >= 330 && (
+									<button
+										className="restaurant-page__description-more-btn"
+										onClick={toggleDescription}
+									>
+										Читать далее
+									</button>
+								)}
+						</div>
 					</div>
-					<div className="restaurant-page__description">
-						<p className="restaurant-page__description-text">
-							{descriptionToShow}
-							{currentRestaurant.description.length > 330 &&
-							!showFullDescription
-								? '...'
-								: ''}
-						</p>
-						{!showFullDescription &&
-							currentRestaurant.description.length >= 330 && (
-								<button
-									className="restaurant-page__description-more-btn"
-									onClick={toggleDescription}
-								>
-									Читать далее
-								</button>
-							)}
-					</div>
-				</div>
-				<BookingForm
-					restPage
-					onSubmit={handleBookBtnClick}
-					children={
-						<Button
-							variant="contained"
-							type="submit"
-							sx={{
-								backgroundColor: '#05887B',
-								textTransform: 'none',
-								borderRadius: '8px',
-								minHeight: '40px',
-							}}
-						>
-							Забронировать
-						</Button>
-					}
-				/>
-				{/* подробнее о ресторане */}
-				<div className="restaurant-page__about-container">
+				</Box>
+				<Box
+					sx={{
+						backgroundColor: '#991a55',
+						maxWidth: { xs: '100%', sm: 'calc(92% - 32px)' },
+						m: 'auto',
+					}}
+					p="16px 16px 24px 16px"
+				>
+					<Typography
+						variant="h2"
+						fontFamily="Ubuntu"
+						fontSize="30px"
+						fontWeight="400"
+						lineHeight="36px"
+						color="#fff"
+						mb="16px"
+						sx={{
+							textAlign: { xs: 'start', sm: 'center' },
+						}}
+					>
+						Забронировать стол
+					</Typography>
+					<BookingForm
+						onSubmit={handleBookBtnClick}
+						children={
+							<Button
+								variant="contained"
+								type="submit"
+								sx={{
+									backgroundColor: '#05887B',
+									textTransform: 'none',
+									borderRadius: '8px',
+									minHeight: '40px',
+									minWidth: '328px',
+								}}
+							>
+								Забронировать
+							</Button>
+						}
+					/>
+				</Box>
+				<Box
+					sx={{
+						maxWidth: '92%',
+						m: '0 auto',
+					}}
+				>
 					<h3 className="restaurant-page__about-title">
 						Подробнее о ресторане
 					</h3>
-					<div className="restaurant-page__zone-container">
-						<DeckOutlinedIcon />
-						<div className="restaurant-page__zone-info">
-							<h4 className="restaurant-page__zone-title">Зонирование</h4>
-							<div className="restaurant-page__zones">
-								{currentRestaurant?.zones
-									.filter((zone) => zone.available_seats > 0)
-									.map((zone) => (
-										<p className="restaurant-page__zone-item" key={zone.id}>
-											{zone.zone}
+					<Box
+						display="flex"
+						flexDirection={{ xs: 'column', sm: 'row' }}
+						justifyContent={'start'}
+						alignItems="flex-start"
+						gap={{ xs: '0', sm: '32px' }}
+						borderBottom={{ xs: '', sm: '1px solid #CAC4D0' }}
+						pb={{ xs: '0', sm: '10px' }}
+					>
+						<div className="restaurant-page__time-container">
+							<AccessTimeOutlinedIcon fontSize="medium" />
+							<div className="restaurant-page__time-info">
+								<h4 className="restaurant-page__time-title">Рабочее время</h4>
+								{currentRestaurant?.worked.map((day) => {
+									const { day: dayOfWeek, start, end, day_off } = day;
+
+									const dayAbbreviation = getDayAbbreviation(dayOfWeek);
+									const displayText = day_off
+										? `${dayAbbreviation} - выходной`
+										: `${dayAbbreviation} с ${start} до ${end}`;
+
+									return (
+										<p className="restaurant-page__time" key={day.day}>
+											{displayText}
 										</p>
-									))}
+									);
+								})}
 							</div>
 						</div>
-					</div>
-					<div className="restaurant-page__about-line"></div>
-					<div className="restaurant-page__time-container">
-						<AccessTimeOutlinedIcon fontSize="medium" />
-						<div className="restaurant-page__time-info">
-							<h4 className="restaurant-page__time-title">Рабочее время</h4>
-							{currentRestaurant?.worked.map((day) => {
-								const { day: dayOfWeek, start, end, day_off } = day;
-
-								const dayAbbreviation = getDayAbbreviation(dayOfWeek);
-								const displayText = day_off
-									? `${dayAbbreviation} - выходной`
-									: `${dayAbbreviation} с ${start} до ${end}`;
-
-								return (
-									<p className="restaurant-page__time" key={day.day}>
-										{displayText}
-									</p>
-								);
-							})}
+						<div className="restaurant-page__about-line"></div>
+						<div className="restaurant-page__zone-container">
+							<DeckOutlinedIcon />
+							<div className="restaurant-page__zone-info">
+								<h4 className="restaurant-page__zone-title">Зонирование</h4>
+								<div className="restaurant-page__zones">
+									{currentRestaurant?.zones
+										.filter((zone) => zone.seats > 0)
+										.map((zone) => (
+											<p className="restaurant-page__zone-item" key={zone.id}>
+												{zone.zone}
+												{','}
+											</p>
+										))}
+								</div>
+							</div>
 						</div>
-					</div>
-					<div className="restaurant-page__about-line"></div>
-				</div>
-				<RatingAndReviews
-					headingText="Рейтинг и отзывы"
-					reviews={currentRestaurantReviews}
-					rating={formatRating(currentRestaurant.rating)}
-				>
-					{!isLoggedIn || role !== 'client' ? (
-						''
-					) : (
-						<Button
-							onClick={openAddReviewModal}
-							startIcon={<ModeEditOutlineOutlinedIcon />}
-							variant="outlined"
-							sx={{
-								color: '#006C60',
-								border: '1px solid #006C60',
-								borderRadius: '100px',
-								textTransform: 'none',
-							}}
-						>
-							Оставить свой отзыв
-						</Button>
-					)}
-				</RatingAndReviews>
+						<div className="restaurant-page__about-line"></div>
+					</Box>
+				</Box>
+				<Box maxWidth={'92%'} m="0 auto">
+					<RatingAndReviews
+						headingText="Рейтинг и отзывы"
+						reviews={currentRestaurantReviews}
+						rating={formatRating(currentRestaurant.rating)}
+					>
+						{!isLoggedIn || role !== 'client' ? (
+							''
+						) : (
+							<Button
+								onClick={openAddReviewModal}
+								startIcon={<ModeEditOutlineOutlinedIcon />}
+								variant="outlined"
+								sx={{
+									color: '#006C60',
+									border: '1px solid #006C60',
+									borderRadius: '8px',
+									textTransform: 'none',
+									maxHeight: '40px',
+									minWidth: '328px',
+									order: { xs: 1, sm: 2 },
+								}}
+							>
+								Оставить свой отзыв
+							</Button>
+						)}
+					</RatingAndReviews>
+				</Box>
 			</main>
 			<Footer />
 			<AddReview

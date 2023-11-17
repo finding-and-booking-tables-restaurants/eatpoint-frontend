@@ -1,16 +1,13 @@
 import { ReactNode } from 'react';
 import './SearchForm.css';
+import { Box } from '@mui/material';
 function SearchForm({
 	children,
 	onSubmit,
-	booking,
 	isSearching,
-	restPage,
 }: {
 	children?: ReactNode;
 	onSubmit: (event: React.FormEvent<HTMLFormElement>) => void;
-	booking?: boolean;
-	restPage?: boolean;
 	isSearching?: boolean;
 }) {
 	function handleSubmit(evt: React.FormEvent<HTMLFormElement>) {
@@ -19,15 +16,19 @@ function SearchForm({
 		onSubmit(evt);
 	}
 	return (
-		<form
+		<Box
+			sx={{
+				flexDirection: { xs: 'colum', sm: `${isSearching ? 'column' : 'row'}` },
+				backgroundColor: { xs: 'white', sm: 'transparent' },
+				justifyContent: 'center',
+			}}
+			component={'form'}
 			onSubmit={handleSubmit}
 			style={{ padding: `${isSearching && 0}` }}
-			className={`search-form ${booking && 'search-form_booking'} ${
-				restPage && 'search-form_rest-page'
-			}`}
+			className="search-form"
 		>
 			{children}
-		</form>
+		</Box>
 	);
 }
 
