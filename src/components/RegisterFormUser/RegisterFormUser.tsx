@@ -111,7 +111,7 @@ const RegisterFormUser: React.FC<IRegisterFormUserProps> = ({
 					>
 						<TextField
 							{...register('firstName', {
-								required: 'Поле обязательно для заполнения',
+								required: 'Введите имя',
 								minLength: {
 									value: 2,
 									message: 'Введите не менее 2 символов',
@@ -122,7 +122,7 @@ const RegisterFormUser: React.FC<IRegisterFormUserProps> = ({
 								},
 								pattern: {
 									value: /^[a-zA-Z\u0430-\u044f\u0410-\u042fёЁ\s]*$/,
-									message: 'Введите имя',
+									message: 'Имя введено не корректно',
 								},
 							})}
 							label="Имя"
@@ -139,7 +139,7 @@ const RegisterFormUser: React.FC<IRegisterFormUserProps> = ({
 
 						<TextField
 							{...register('lastName', {
-								required: 'Поле обязательно для заполнения',
+								required: 'Введите фамилию',
 								minLength: {
 									value: 2,
 									message: 'Введите не менее 2 символов',
@@ -150,7 +150,7 @@ const RegisterFormUser: React.FC<IRegisterFormUserProps> = ({
 								},
 								pattern: {
 									value: /^[a-zA-Z\u0430-\u044f\u0410-\u042fёЁ\s]*$/,
-									message: 'Введите фамилию',
+									message: 'Фамилия введена не корректно',
 								},
 							})}
 							label="Фамилия"
@@ -249,7 +249,7 @@ const RegisterFormUser: React.FC<IRegisterFormUserProps> = ({
 							{...register('confirmPassword', {
 								required: 'Введите пароль',
 								validate: (value) =>
-									value === password || 'Пароли должны совпадать',
+									value === password || 'Пароли не совпадают',
 							})}
 							label="Пароль повторно"
 							margin="dense"

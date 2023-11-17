@@ -95,7 +95,7 @@ const LoginForm: React.FC<ILoginFormProps> = ({
 						})}
 						sx={{
 							'.css-1d3z3hw-MuiOutlinedInput-notchedOutline': {
-								borderColor: '#79747E',
+								borderColor: requestErrorMessage ? 'red' : '#79747E',
 							},
 							'.css-1jy569b-MuiFormLabel-root-MuiInputLabel-root.Mui-focused': {
 								color: '#79747E',
@@ -123,15 +123,10 @@ const LoginForm: React.FC<ILoginFormProps> = ({
 								value: 6,
 								message: 'Минимальная длина - 6 символов',
 							},
-							pattern: {
-								value: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{6,}$/,
-								message:
-									'Пароль должен содержать хотя бы одну заглавную букву, строчную букву и цифру',
-							},
 						})}
 						sx={{
 							'.css-1d3z3hw-MuiOutlinedInput-notchedOutline': {
-								borderColor: '#79747E',
+								borderColor: requestErrorMessage ? 'red' : '#79747E',
 							},
 							'.css-1jy569b-MuiFormLabel-root-MuiInputLabel-root.Mui-focused': {
 								color: '#79747E',
