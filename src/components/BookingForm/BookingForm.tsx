@@ -43,7 +43,7 @@ const BookingForm: FC<BookingFormProps> = ({ children, onSubmit }) => {
 					xs: '16px',
 					sm: `${chechLocation('/booking') ? '32px' : '16px'}`,
 				}}
-				// justifyContent={'space-between'}
+				justifyContent="center"
 				// width={'100%'}
 			>
 				<Box

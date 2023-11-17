@@ -182,6 +182,7 @@ const BookingPage: FC<BookingPageProps> = ({ id, userData }) => {
 								flexWrap={'wrap'}
 								rowGap={{ xs: '16px', sm: '32px' }}
 								columnGap={{ xs: '16px', sm: '40px' }}
+								justifyContent={'center'}
 							>
 								<TextField
 									{...register('zone', {
