@@ -119,9 +119,6 @@ const LoginForm: React.FC<ILoginFormProps> = ({
 					<TextField
 						{...register('password', {
 							required: 'Введите пароль',
-							minLength: {
-								value: 6,
-								message: 'Минимальная длина - 6 символов',
 							},
 						})}
 						sx={{
