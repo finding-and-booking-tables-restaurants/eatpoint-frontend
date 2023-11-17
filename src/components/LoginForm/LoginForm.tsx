@@ -232,7 +232,7 @@ const LoginForm: React.FC<ILoginFormProps> = ({
 						</Button>
 					</Stack>
 				</Box>
-				<Button
+				{/* <Button
 					variant="text"
 					sx={{
 						padding: 0,
@@ -246,7 +246,7 @@ const LoginForm: React.FC<ILoginFormProps> = ({
 					}}
 				>
 					Забыли пароль
-				</Button>
+				</Button> */}
 			</Container>
 			<Footer />
 		</>

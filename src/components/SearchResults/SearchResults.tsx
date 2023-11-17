@@ -179,21 +179,9 @@ function SearchResults({
 					<h2 className="search-results__title">Найди свой стол</h2>
 				)}
 				<SearchForm isSearching={isSearching} onSubmit={onSubmit}>
-					<SearchInput
-						handleFilterClick={handleToggleFilterBtn}
-						query={query}
-						setQuery={setQuery}
-						isSearching={isSearching}
-					/>
+					<SearchInput query={query} setQuery={setQuery} />
 					{isSearching && (
 						<div className="search-results__box-filters">
-							{/* <button
-								type="button"
-								className="search-input__filter-btn"
-								onClick={handleToggleFilterBtn}
-							>
-								Фильтры
-							</button> */}
 							<Button
 								variant={areFiltersSelected ? 'contained' : 'outlined'}
 								onClick={handleToggleFilterBtn}
@@ -214,13 +202,6 @@ function SearchResults({
 								{`Фильтры ${numberOfFilters > 0 ? `(${numberOfFilters})` : ''}`}
 							</Button>
 							{areFiltersSelected && (
-								// <button
-								// 	type="button"
-								// 	onClick={handleResetFilters}
-								// 	className="search-results__reset-filters"
-								// >
-								// 	Сбросить фильтры
-								// </button>
 								<Button
 									variant="outlined"
 									onClick={handleResetFilters}
@@ -240,7 +221,6 @@ function SearchResults({
 							)}
 						</div>
 					)}
-					{/* <SearchBtn /> */}
 					<Button
 						variant="contained"
 						type="submit"
