@@ -94,7 +94,9 @@ const Header = ({
 		setInputValue(e.target.value);
 	};
 	const redirectToSearchPage = () => {
-		history(`/?q=${inputValue}`);
+		if (inputValue) {
+			history(`/?q=${inputValue}`);
+		}
 	};
 
 	return (
@@ -197,6 +199,11 @@ const Header = ({
 							label="Поиск"
 							placeholder="Адрес, кухня, название"
 							type="text"
+							onKeyUp={(e) => {
+								if (e.key === 'Enter' && inputValue) {
+									redirectToSearchPage();
+								}
+							}}
 							sx={{
 								maxWidth: {
 									xs: '100%',
@@ -232,7 +239,6 @@ const Header = ({
 							variant="contained"
 							type="submit"
 							sx={{
-								marginTop: '16px',
 								backgroundColor: '#05887B',
 								textTransform: 'none',
 								borderRadius: '8px',

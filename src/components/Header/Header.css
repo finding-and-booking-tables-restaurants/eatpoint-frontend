@@ -51,4 +51,7 @@
 
 .header__search-input {
 	margin-top: 24px;
+	display: flex;
+	gap: 16px;
+	flex-wrap: wrap;
 }
