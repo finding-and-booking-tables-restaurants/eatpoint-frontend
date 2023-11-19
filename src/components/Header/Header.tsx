@@ -5,19 +5,15 @@ import './Header.css';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import SearchCity from '../SearchSity/SearchSity';
-import cities from '../../fakeData/cities';
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import { useLocation, useNavigate } from 'react-router-dom';
 import CurrentUserContext from '../../contexts/CurrentUserContext';
 import { handlePageReload } from '../../utils/pageReloader';
 import { getCityNameByLocation } from '../../utils/getCityByLocation';
 import { Box, Link } from '@mui/material';
+import { maxWidthBoxConfig, minWidthBoxConfig } from '../../utils/constants';
 
-const Header = ({
-	handleRestart,
-}: {
-	handleRestart?: (value: boolean) => void;
-}) => {
+const Header = () => {
 	const navigate = useNavigate();
 	const location = useLocation();
 	const isLoggedIn = useContext(CurrentUserContext).isLoggedIn;
@@ -60,11 +56,6 @@ const Header = ({
 		navigate(clickPath);
 	};
 
-	// const hadleLogoClick = () => {
-	// 	navigate('/');
-	// 	handleRestart && handleRestart(true);
-	// };
-
 	useEffect(() => {
 		if (localStorage.getItem('city')) return;
 		getCityNameByLocation()
@@ -77,13 +68,6 @@ const Header = ({
 		localStorage.setItem('city', 'Москва');
 	}, [savedCity]);
 
-	// display: inline-flex;
-	// width: 92%;
-	// margin: 14px 12px;
-	// gap: 11px;
-	// align-items: center;
-	// justify-content: space-between;
-
 	return (
 		<Box
 			component="header"
@@ -92,8 +76,8 @@ const Header = ({
 			gap="11px"
 			alignItems="center"
 			justifyContent="space-between"
-			minWidth={{ xs: '320px', sm: '550px', md: '725px', lg: '1068px' }}
-			maxWidth={{ xs: '320px', sm: '550px', md: 'auto', lg: 'auto' }}
+			minWidth={maxWidthBoxConfig}
+			maxWidth={minWidthBoxConfig}
 			p="14px 0"
 		>
 			<Link href="/">

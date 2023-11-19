@@ -14,6 +14,7 @@ import { ILoginFormData, ILoginFormProps } from '../../types/commonTypes';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import Header from '../Header/Header';
 import Footer from '../Footer/Footer';
+import { maxWidthBoxConfig, minWidthBoxConfig } from '../../utils/constants';
 
 const LoginForm: React.FC<ILoginFormProps> = ({
 	onLogin,
@@ -55,7 +56,14 @@ const LoginForm: React.FC<ILoginFormProps> = ({
 	return (
 		<>
 			<Header />
-			<Container sx={{ mb: 6, minHeight: 'calc(100vh - 219px)' }}>
+			<Container
+				sx={{
+					mb: 6,
+					minHeight: 'calc(100vh - 219px)',
+					minWidth: maxWidthBoxConfig,
+					maxWidth: minWidthBoxConfig,
+				}}
+			>
 				<Typography
 					variant="h1"
 					component="h1"

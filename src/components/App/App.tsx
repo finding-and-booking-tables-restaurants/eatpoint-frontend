@@ -259,7 +259,7 @@ function App() {
 						path="/"
 						element={
 							<>
-								<Header handleRestart={handleRestart} />
+								<Header />
 								<SearchResults
 									searchEstablishments={searchEstablishments}
 									setAllEstablishments={setSearchEstablishments}
