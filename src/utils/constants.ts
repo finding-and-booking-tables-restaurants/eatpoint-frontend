@@ -421,7 +421,8 @@ export {
 	NOT_CONFIRMED_NUMBER_MESSAGE,
 };
 
-export const API_URL = 'https://eatpoint.sytes.net';
+export const API_URL =
+	process.env.REACT_APP_API_URL || 'https://eatpoint.sytes.net';
 
 export const helpLinkList = [
 	// Список якорных ссылок на странице помощи
@@ -591,3 +592,4 @@ export const minWidthBoxConfig = {
 	md: '880px',
 	lg: 'auto',
 };
+

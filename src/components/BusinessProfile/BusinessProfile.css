@@ -1,7 +1,3 @@
-.business-profile {
-	padding: 16px 16px 0 16px;
-}
-
 .business-profile__box-profile {
 	padding-bottom: 24px;
 	display: flex;
@@ -66,7 +62,7 @@
 	gap: 12px;
 	height: 40px;
 	color: #006c60;
-	width: 100%;
+	max-width: 328px;
 	border: 1px solid #006c60;
 	border-radius: 8px;
 	background-color: initial;
@@ -93,7 +89,7 @@
 
 .business-profile__list-title {
 	padding-top: 36px;
-	font-family: Ubuntu;
+	font-family: 'Ubuntu';
 	font-size: 30px;
 	font-weight: 400;
 	line-height: 36px;
@@ -107,7 +103,8 @@
 	padding: 24px 0;
 	gap: 16px;
 	list-style: none;
-	display: grid;
-	justify-content: center;
-	grid-template-columns: repeat(1, minmax(0, 328px));
+	justify-content: start;
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
 }

@@ -394,7 +394,7 @@ export default function RestaurantPage({ id }: { id: number }) {
 						color="#fff"
 						mb="16px"
 						sx={{
-							textAlign: { xs: 'start', sm: 'center' },
+							textAlign: 'center',
 						}}
 					>
 						Забронировать стол
@@ -410,7 +410,9 @@ export default function RestaurantPage({ id }: { id: number }) {
 									textTransform: 'none',
 									borderRadius: '8px',
 									minHeight: '40px',
+									maxWidth: '328px',
 									minWidth: '328px',
+									alignSelf: 'center',
 								}}
 							>
 								Забронировать
