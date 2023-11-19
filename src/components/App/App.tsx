@@ -69,6 +69,9 @@ function App() {
 
 	const [isSearching, setIsSearching] = useState(false);
 
+	const queryParams = new URLSearchParams(location.search);
+	const queryHeader = queryParams.get('q');
+
 	useEffect(() => {
 		const accessToken = localStorage.getItem('access-token');
 		const refreshToken = localStorage.getItem('refresh-token');
@@ -96,7 +99,13 @@ function App() {
 					}
 				});
 		}
-	}, []);
+
+		if (queryHeader) {
+			handleSearchEstablishments();
+			queryParams.delete('q')
+			navigate('/', { replace: true });
+		}
+	}, [location.pathname, navigate, queryHeader]);
 
 	useEffect(() => {
 		if (isLoggedIn) {
@@ -222,12 +231,12 @@ function App() {
 
 	function handleSearchEstablishments() {
 		const city = localStorage.getItem('city');
-		if (!query) return;
+		if (!query && !queryHeader) return;
 		if (!city) return;
 
 		setIsSearching(true);
 		mainApi
-			.getEstablishmentsBySearchQuery(query, 50, city)
+			.getEstablishmentsBySearchQuery(query || queryHeader!, 50, city)
 			.then((data) => {
 				setSearchEstablishments(data.results);
 			})
@@ -264,7 +273,7 @@ function App() {
 									searchEstablishments={searchEstablishments}
 									setAllEstablishments={setSearchEstablishments}
 									onSubmit={handleSearchEstablishments}
-									query={query}
+									query={query || queryHeader!}
 									setQuery={setQuery}
 									isSearching={isSearching}
 								/>

@@ -592,3 +592,4 @@ export const minWidthBoxConfig = {
 	md: '880px',
 	lg: 'auto',
 };
+

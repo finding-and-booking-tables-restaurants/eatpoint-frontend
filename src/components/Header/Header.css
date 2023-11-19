@@ -1,3 +1,16 @@
+.header {
+	width: 92%;
+	margin: 14px 12px;
+}
+
+.header__main-container {
+	width: 100%;
+	display: inline-flex;
+	gap: 11px;
+	align-items: center;
+	justify-content: space-between;
+}
+
 .header__location-btn {
 	display: inline-flex;
 	gap: 8px;
@@ -34,4 +47,13 @@
 
 .header__logo {
 	cursor: pointer;
+}
+
+.header__search-input {
+	width: 90%;
+	margin: 0 auto;
+	margin-top: 24px;
+	display: flex;
+	gap: 16px;
+	flex-wrap: wrap;
 }
