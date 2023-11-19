@@ -9,7 +9,7 @@
 	padding: 0;
 	padding-left: 16px;
 	max-width: 247px;
-	width: 93%;
+	width: 60%;
 	height: 56px;
 	border: 1px solid #79747e;
 	border-radius: 4px;
@@ -38,6 +38,7 @@
 }
 
 .input-zone__close-btn {
+	margin-left: 8px;
 	width: 14px;
 	height: 14px;
 	border: none;

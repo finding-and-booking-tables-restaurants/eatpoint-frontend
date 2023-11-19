@@ -25,7 +25,12 @@ interface RestaurantData {
 		day_off?: boolean;
 	}[];
 	socials?: { name: string }[];
-	images?: { name: string; image: string }[];
+	// images?: { name: string; image: string }[];
+	images?: {
+		id?: number;
+		image?: string;
+		name?: string;
+	}[];
 }
 
 export type { RestaurantData };
@@ -34,4 +39,9 @@ export interface Zone {
 	zone?: string;
 	seats?: number;
 	available_seats?: number;
+}
+
+export interface ImageFile {
+	file: File;
+	preview: string;
 }

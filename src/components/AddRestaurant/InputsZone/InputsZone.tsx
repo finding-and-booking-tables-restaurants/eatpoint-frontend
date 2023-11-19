@@ -18,6 +18,8 @@ function InputsZone({
 	onAddSeats,
 	formData = [],
 }: InputsZoneProps) {
+	// console.log(formData[index]?.zone);
+	// console.log(formData[index]?.seats);
 	return (
 		<div className="input-zone__flex-box">
 			<input
@@ -39,7 +41,12 @@ function InputsZone({
 				name="seats"
 				value={formData[index]?.seats || ''}
 				// value={formData && formData[index] ? formData[index].seats : ''}
-				onChange={(evt) => onAddSeats(parseInt(evt.target.value), index)}
+				// onChange={(evt) => onAddSeats(parseInt(evt.target.value), index)}
+				onChange={(evt) => {
+					const value = parseInt(evt.target.value, 10);
+					const newValue: number = isNaN(value) ? 0 : Math.min(value, 100);
+					onAddSeats(newValue, index);
+				}}
 			/>
 			{index !== 0 && (
 				<button

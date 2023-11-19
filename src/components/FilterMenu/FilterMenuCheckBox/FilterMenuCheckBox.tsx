@@ -26,7 +26,7 @@ function FilterMenuCheckBox({
 					checked={isChecked}
 				/>
 			</div>
-			<p className="checkbox-item__name">{text}</p>
+			<p className="checkbox-item__name">{text} руб</p>
 		</li>
 	);
 }
