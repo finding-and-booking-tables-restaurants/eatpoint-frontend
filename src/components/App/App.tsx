@@ -102,6 +102,8 @@ function App() {
 
 		if (queryHeader) {
 			handleSearchEstablishments();
+			queryParams.delete('q')
+			navigate('/', { replace: true });
 		}
 	}, [location.pathname, navigate, queryHeader]);
 
@@ -266,7 +268,7 @@ function App() {
 						path="/"
 						element={
 							<>
-								<Header handleRestart={handleRestart} />
+								<Header />
 								<SearchResults
 									searchEstablishments={searchEstablishments}
 									setAllEstablishments={setSearchEstablishments}

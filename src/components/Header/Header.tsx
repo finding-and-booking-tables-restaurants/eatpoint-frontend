@@ -12,12 +12,10 @@ import { handlePageReload } from '../../utils/pageReloader';
 import { getCityNameByLocation } from '../../utils/getCityByLocation';
 import { Button, InputAdornment, Link, TextField } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
+import { Box } from '@mui/material';
+import { maxWidthBoxConfig, minWidthBoxConfig } from '../../utils/constants';
 
-const Header = ({
-	handleRestart,
-}: {
-	handleRestart?: (value: boolean) => void;
-}) => {
+const Header = () => {
 	const navigate = useNavigate();
 	const location = useLocation();
 	const isLoggedIn = useContext(CurrentUserContext).isLoggedIn;
@@ -41,7 +39,6 @@ const Header = ({
 	);
 	const [isSearchingRestorants, setIsSearchingRestorants] =
 		React.useState(false);
-	const [isOpen, setIsOpen] = useState(false);
 
 	const handleNavClick = (event: React.MouseEvent<HTMLButtonElement>) => {
 		setAnchorElNav(event.currentTarget);
@@ -63,16 +60,6 @@ const Header = ({
 		if (clickPath === 'basic-menu') return;
 		if (clickPath === location.pathname) handlePageReload();
 		navigate(clickPath);
-	};
-
-	// const hadleLogoClick = () => {
-	// 	navigate('/');
-	// 	handleRestart && handleRestart(true);
-	// };
-
-	const handleToggleFilterBtn = (evt: any) => {
-		evt.preventDefault();
-		setIsOpen(!isOpen);
 	};
 
 	useEffect(() => {
@@ -101,98 +88,104 @@ const Header = ({
 
 	return (
 		<>
-			<header className="header">
-				<div className="header__main-container">
-					<Link href="/">
-						<img className="header__logo" src={logo} alt="лого" />
-					</Link>
-					<div onClick={handleLocationClick} className="header__location-btn">
-						<img src={place} alt="" />
-						<p className="header__location">{city}</p>
-					</div>
-					{openCityMenu && (
-						<SearchCity
-							onClose={() => setAnchorElCity(null)}
-							setSity={setCity}
-						/>
-					)}
-
-					{location.pathname !== '/' && (
-						<button
-							onClick={handleSearchClick}
-							className="header__srch-btn"
-						></button>
-					)}
-					<button onClick={handleNavClick} className="header__nav-btn"></button>
-					{!isLoggedIn ? (
-						<Menu
-							id="basic-menu"
-							anchorEl={anchorElNav}
-							open={openNav}
-							onClose={handleNavClose}
-							MenuListProps={{
-								'aria-labelledby': 'basic-button',
-							}}
-						>
-							<MenuItem id="/signin" onClick={handleNavClose}>
-								<KeyboardArrowRightIcon /> Вход
-							</MenuItem>
-							<MenuItem
-								id={`${
-									chechLocation('/business') ||
-									chechLocation('/business-signup')
-										? '/business-signup'
-										: '/user-signup'
-								}`}
-								onClick={handleNavClose}
-							>
-								<KeyboardArrowRightIcon /> Регистрация
-							</MenuItem>
-							{!chechLocation('/business') && (
-								<MenuItem id="/business" onClick={handleNavClose}>
-									<KeyboardArrowRightIcon /> Для ресторанов
-								</MenuItem>
-							)}
-						</Menu>
-					) : role === 'client' ? (
-						<Menu
-							id="basic-menu"
-							anchorEl={anchorElNav}
-							open={openNav}
-							onClose={handleNavClose}
-							MenuListProps={{
-								'aria-labelledby': 'basic-button',
-							}}
-						>
-							<MenuItem id="/user-profile" onClick={handleNavClose}>
-								<KeyboardArrowRightIcon /> Профиль
-							</MenuItem>
-							<MenuItem id="/user-bookings" onClick={handleNavClose}>
-								<KeyboardArrowRightIcon /> Мои брони
-							</MenuItem>
-							<MenuItem id="signout" onClick={handleLogOut}>
-								<KeyboardArrowRightIcon /> Выход
-							</MenuItem>
-						</Menu>
-					) : (
-						<Menu
-							id="basic-menu"
-							anchorEl={anchorElNav}
-							open={openNav}
-							onClose={handleNavClose}
-							MenuListProps={{
-								'aria-labelledby': 'basic-button',
-							}}
-						>
-							<MenuItem id="/business-profile" onClick={handleNavClose}>
-								<KeyboardArrowRightIcon /> Личный кабинет
-							</MenuItem>
-							<MenuItem id="signout" onClick={handleLogOut}>
-								<KeyboardArrowRightIcon /> Выход
-							</MenuItem>
-						</Menu>
-					)}
+			<Box
+				component="header"
+				display="flex"
+				m="0 auto"
+				gap="11px"
+				alignItems="center"
+				justifyContent="space-between"
+				minWidth={maxWidthBoxConfig}
+				maxWidth={minWidthBoxConfig}
+				p="14px 0"
+			>
+				<Link href="/">
+					<img className="header__logo" src={logo} alt="лого" />
+				</Link>
+				<div onClick={handleLocationClick} className="header__location-btn">
+					<img src={place} alt="" />
+					<p className="header__location">{city}</p>
 				</div>
+				{openCityMenu && (
+					<SearchCity onClose={() => setAnchorElCity(null)} setSity={setCity} />
+				)}
+
+				{location.pathname !== '/' && (
+					<button
+						onClick={handleSearchClick}
+						className="header__srch-btn"
+					></button>
+				)}
+				<button onClick={handleNavClick} className="header__nav-btn"></button>
+				{!isLoggedIn ? (
+					<Menu
+						id="basic-menu"
+						anchorEl={anchorElNav}
+						open={openNav}
+						onClose={handleNavClose}
+						MenuListProps={{
+							'aria-labelledby': 'basic-button',
+						}}
+					>
+						<MenuItem id="/signin" onClick={handleNavClose}>
+							<KeyboardArrowRightIcon /> Вход
+						</MenuItem>
+						<MenuItem
+							id={`${
+								chechLocation('/business') || chechLocation('/business-signup')
+									? '/business-signup'
+									: '/user-signup'
+							}`}
+							onClick={handleNavClose}
+						>
+							<KeyboardArrowRightIcon /> Регистрация
+						</MenuItem>
+						{!chechLocation('/business') && (
+							<MenuItem id="/business" onClick={handleNavClose}>
+								<KeyboardArrowRightIcon /> Для ресторанов
+							</MenuItem>
+						)}
+					</Menu>
+				) : role === 'client' ? (
+					<Menu
+						id="basic-menu"
+						anchorEl={anchorElNav}
+						open={openNav}
+						onClose={handleNavClose}
+						MenuListProps={{
+							'aria-labelledby': 'basic-button',
+						}}
+					>
+						<MenuItem id="/user-profile" onClick={handleNavClose}>
+							<KeyboardArrowRightIcon /> Профиль
+						</MenuItem>
+						<MenuItem id="/user-bookings" onClick={handleNavClose}>
+							<KeyboardArrowRightIcon /> Мои брони
+						</MenuItem>
+						<MenuItem id="signout" onClick={handleLogOut}>
+							<KeyboardArrowRightIcon /> Выход
+						</MenuItem>
+					</Menu>
+				) : (
+					<Menu
+						id="basic-menu"
+						anchorEl={anchorElNav}
+						open={openNav}
+						onClose={handleNavClose}
+						MenuListProps={{
+							'aria-labelledby': 'basic-button',
+						}}
+					>
+						<MenuItem id="/business-profile" onClick={handleNavClose}>
+							<KeyboardArrowRightIcon /> Личный кабинет
+						</MenuItem>
+						<MenuItem id="signout" onClick={handleLogOut}>
+							<KeyboardArrowRightIcon /> Выход
+						</MenuItem>
+					</Menu>
+				)}
+			</Box>
+			<>
 				{isSearchingRestorants && (
 					<div className="header__search-input">
 						<TextField
@@ -200,9 +193,7 @@ const Header = ({
 							placeholder="Адрес, кухня, название"
 							type="text"
 							onKeyUp={(e) => {
-								if (e.key === 'Enter' && inputValue) {
-									redirectToSearchPage();
-								}
+								if (e.key === 'Enter' && inputValue) redirectToSearchPage();
 							}}
 							sx={{
 								maxWidth: {
@@ -250,7 +241,7 @@ const Header = ({
 						</Button>
 					</div>
 				)}
-			</header>
+			</>
 		</>
 	);
 };
