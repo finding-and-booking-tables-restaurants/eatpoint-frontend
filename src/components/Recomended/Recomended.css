@@ -38,11 +38,3 @@
 .recomended__button p {
 	margin: 0;
 }
-
-.recomended__cards-container {
-	display: flex;
-	flex-direction: row;
-	flex-wrap: wrap;
-	align-items: start;
-	gap: 16px;
-}

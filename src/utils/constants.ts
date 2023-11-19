@@ -386,12 +386,11 @@ const EMAIL_ALREADY_REGISTERED_MESSAGE =
 	'Пользователь с таким email или телефоном уже существует.';
 const INCORRECT_ADD_USER_DATA = 'Переданы некорректные данные при регистрации';
 const REG_ERROR_MESSAGE = 'При регистрации пользователя произошла ошибка.';
-const INVALID_AUTH_DATA_ERROR_MESSAGE =
-	'Вы ввели неправильный логин или пароль.';
+const INVALID_AUTH_DATA_ERROR_MESSAGE = 'Эл. почта или пароль не верны';
 const AUTH_ERROR_MESSAGE = 'При авторизации пользователя произошла ошибка.';
 const UPDATE_USER_INFO_ERROR_MESSAGE =
 	'При обновлении профиля произошла ошибка.';
-const UPDATE_USER_INFO_MESSAGE = 'Данные успешно обновлены';
+const UPDATE_USER_INFO_MESSAGE = 'Изменения успешно сохранены';
 const DUPLICATE_EMAIL_PHONE_MESSAGE =
 	'Пользователь с таким email или телефоном уже существует';
 
@@ -422,7 +421,8 @@ export {
 	NOT_CONFIRMED_NUMBER_MESSAGE,
 };
 
-export const API_URL = 'https://eatpoint.sytes.net';
+export const API_URL =
+	process.env.REACT_APP_API_URL || 'https://eatpoint.sytes.net';
 
 export const helpLinkList = [
 	// Список якорных ссылок на странице помощи
@@ -579,3 +579,16 @@ export const helpInfoLinks = [
 		],
 	},
 ];
+
+export const maxWidthBoxConfig = {
+	xs: '320px',
+	sm: '550px',
+	md: '725px',
+	lg: '1068px',
+};
+export const minWidthBoxConfig = {
+	xs: '320px',
+	sm: '668px',
+	md: '880px',
+	lg: 'auto',
+};

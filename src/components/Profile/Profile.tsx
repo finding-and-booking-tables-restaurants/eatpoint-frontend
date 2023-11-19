@@ -1,6 +1,5 @@
 import { TextField, Button, Typography, Box, Container } from '@mui/material';
 import React, { useContext, useEffect, useState } from 'react';
-import CheckIcon from '@mui/icons-material/Check';
 import Header from '../Header/Header';
 import Footer from '../Footer/Footer';
 import CurrentUserContext from '../../contexts/CurrentUserContext';
@@ -100,14 +99,14 @@ const Profile: React.FC<IUserFormProps> = ({
 					variant="h1"
 					component="h1"
 					sx={{
-						fontFamily: 'Ubuntu',
-						fontSize: '30px',
-						fontWeight: '400',
+						fontFamily: 'Roboto',
+						fontSize: '26px',
+						fontWeight: '600',
 						lineHeight: '36px',
 						mt: 4,
 						ml: 0,
 						marginTop: 2.5,
-						mb: 2,
+						mb: 1.5,
 					}}
 				>
 					Профиль
@@ -122,7 +121,7 @@ const Profile: React.FC<IUserFormProps> = ({
 					<div>
 						<TextField
 							{...register('firstName', {
-								required: 'Поле обязательно для заполнения',
+								required: 'Введите имя',
 								minLength: {
 									value: 2,
 									message: 'Минимальная длина - 2 символа',
@@ -133,9 +132,10 @@ const Profile: React.FC<IUserFormProps> = ({
 								},
 								pattern: {
 									value: /^[a-zA-Z\u0430-\u044f\u0410-\u042fёЁ\s]*$/,
-									message: 'Введите корректное имя',
+									message: 'Имя введено не корректно',
 								},
 							})}
+							label="Имя"
 							placeholder="Введите имя"
 							variant="outlined"
 							error={!!errors.firstName}
@@ -145,17 +145,12 @@ const Profile: React.FC<IUserFormProps> = ({
 									height: '48px',
 								},
 							}}
-							InputProps={{
-								sx: {
-									backgroundColor: '#FDFAF2',
-								},
-							}}
 							fullWidth
 							onBlur={handleBlur}
 						/>
 						<TextField
 							{...register('lastName', {
-								required: 'Поле обязательно для заполнения',
+								required: 'Введите фамилию',
 								minLength: {
 									value: 2,
 									message: 'Минимальная длина - 2 символа',
@@ -166,9 +161,10 @@ const Profile: React.FC<IUserFormProps> = ({
 								},
 								pattern: {
 									value: /^[a-zA-Z\u0430-\u044f\u0410-\u042fёЁ\s]*$/,
-									message: 'Введите корректную фамилию',
+									message: 'Фамилия введена не корректно',
 								},
 							})}
+							label="Фамилия"
 							placeholder="Введите фамилию"
 							variant="outlined"
 							error={!!errors.lastName}
@@ -179,20 +175,15 @@ const Profile: React.FC<IUserFormProps> = ({
 									height: '48px',
 								},
 							}}
-							InputProps={{
-								sx: {
-									backgroundColor: '#FDFAF2',
-								},
-							}}
 							fullWidth
 							onBlur={handleBlur}
 						/>
 						<TextField
 							{...register('telephone', {
-								required: 'Поле обязательно для заполнения',
+								required: 'Введите телефон',
 								pattern: {
 									value: /^\+(?:[0-9] ?){6,14}[0-9]$/,
-									message: 'Введите корректный номер телефона',
+									message: 'Введите корректный номер моб. телефона',
 								},
 								minLength: {
 									value: 10,
@@ -203,6 +194,7 @@ const Profile: React.FC<IUserFormProps> = ({
 									message: 'Максимальная длина - 12 символов',
 								},
 							})}
+							label="Моб. телефон в виде +7(...)... .. .."
 							placeholder="Введите номер телефона"
 							variant="outlined"
 							name="telephone"
@@ -215,16 +207,11 @@ const Profile: React.FC<IUserFormProps> = ({
 									height: '48px',
 								},
 							}}
-							InputProps={{
-								sx: {
-									backgroundColor: '#FDFAF2',
-								},
-							}}
 							fullWidth
 						/>
 						<TextField
 							{...register('email', {
-								required: 'Поле обязательно для заполнения',
+								required: 'Введите эл. почту',
 								pattern: {
 									value:
 										/^(?!.*(__|-{2}))[A-Z0-9._%+-]+\S@[A-Z0-9.-]+\.[A-Z]{2,4}$/i,
@@ -239,6 +226,7 @@ const Profile: React.FC<IUserFormProps> = ({
 									message: 'Введите менее 50 символов',
 								},
 							})}
+							label="Эл. почта"
 							placeholder="Введите email"
 							type="email"
 							name="email"
@@ -250,11 +238,6 @@ const Profile: React.FC<IUserFormProps> = ({
 								marginTop: 2,
 								'.css-md26zr-MuiInputBase-root-MuiOutlinedInput-root': {
 									height: '48px',
-								},
-							}}
-							InputProps={{
-								sx: {
-									backgroundColor: '#FDFAF2',
 								},
 							}}
 							fullWidth
@@ -289,11 +272,6 @@ const Profile: React.FC<IUserFormProps> = ({
 										height: '48px',
 									},
 								}}
-								InputProps={{
-									sx: {
-										backgroundColor: '#FDFAF2',
-									},
-								}}
 								placeholder="Текущий пароль"
 								fullWidth
 							/>
@@ -308,10 +286,6 @@ const Profile: React.FC<IUserFormProps> = ({
 									},
 								}}
 								InputProps={{
-									sx: {
-										backgroundColor: '#FDFAF2',
-									},
-								}}
 								placeholder="Новый пароль"
 								fullWidth
 							/>
@@ -334,34 +308,41 @@ const Profile: React.FC<IUserFormProps> = ({
 					{message ? (
 						<Typography
 							fontFamily="Ubuntu"
-							fontSize="12px"
+							fontSize="20px"
 							fontWeight="500"
 							lineHeight="26px"
 							letterSpacing="0.2px"
 							color="#006C60"
 							textAlign="center"
-							mb="26px"
+							mt="135px"
 						>
 							{message}
 						</Typography>
 					) : (
 						<Button
 							type="submit"
-							startIcon={<CheckIcon />}
 							variant="contained"
 							sx={{
 								textTransform: 'none',
 								backgroundColor: '#05887B',
-								borderRadius: '100px',
+								borderRadius: '8px',
 								width: '100%',
 								height: '40px',
-								mt: '16px',
+								mt: 17,
 								mb: 3,
 								padding: '10px 24px 10px 16px',
 							}}
 							disabled={!isDirty || !isValid}
 						>
-							Сохранить изменения
+							<Typography
+								fontFamily="Roboto"
+								fontSize="14px"
+								fontWeight="500"
+								lineHeight="20px"
+								letterSpacing="0.1px"
+							>
+								Сохранить изменения
+							</Typography>
 						</Button>
 					)}
 				</Box>

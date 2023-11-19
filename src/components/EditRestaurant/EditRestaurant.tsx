@@ -9,12 +9,15 @@ import {
 	availableKitchen,
 	availableType,
 	availableService,
+	maxWidthBoxConfig,
+	minWidthBoxConfig,
 } from '../../utils/constants';
 import { RestaurantData } from '../../types/addRestaurantTypes';
 import { mainApi } from '../../utils/mainApi';
 import { daysOfWeek } from '../../utils/constants';
 import InputsZone from '../AddRestaurant/InputsZone/InputsZone';
 import { InputsZoneData } from '../../types/InputsZoneData';
+import { Box } from '@mui/material';
 
 interface ImageFile {
 	file: File;
@@ -274,7 +277,13 @@ function EditRestaurant() {
 	return (
 		<>
 			<Header />
-			<section className="add-restaurant">
+			<Box
+				component={'section'}
+				p={'16px 16px 0 16px'}
+				minWidth={maxWidthBoxConfig}
+				maxWidth={minWidthBoxConfig}
+				m={'auto auto 45px auto'}
+			>
 				<div className="add-restaurant__box">
 					<Link to="/business-profile" className="add-restautant__backBtn" />
 					<h2 className="add-restaurant__title">Редактировать заведение</h2>
@@ -538,7 +547,7 @@ function EditRestaurant() {
 				<Link to="/business-profile" className="add-restaurant__back-btn">
 					Назад
 				</Link>
-			</section>
+			</Box>
 			<Footer />
 		</>
 	);

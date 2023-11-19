@@ -7,6 +7,7 @@ import RatingChart from '../RatingChart/RatingChart';
 import Reviews from '../Reviews/Reviews';
 import { ReviewType } from '../../types/Reviews';
 import CurrentUserContext from '../../contexts/CurrentUserContext';
+import { Box } from '@mui/material';
 
 interface RatingAndReviewsProps {
 	rating: number;
@@ -21,8 +22,6 @@ const RatingAndReviews: React.FC<RatingAndReviewsProps> = ({
 	children,
 	headingText,
 }) => {
-	const isLoggedIn = useContext(CurrentUserContext).isLoggedIn;
-
 	const maxStars = 5;
 	const filledStars = Math.floor(rating);
 	const hasHalfStar = rating - filledStars >= 0.5;
@@ -38,18 +37,36 @@ const RatingAndReviews: React.FC<RatingAndReviewsProps> = ({
 	});
 
 	return (
-		<section className="rating-and-reviews">
+		<Box
+			component={'section'}
+			sx={{
+				p: '24px 0',
+				display: 'flex',
+				flexDirection: 'column',
+				gap: '16px',
+				alignItems: { xs: 'auto', sm: 'start' },
+			}}
+		>
 			<h2 className="rating-and-reviews__heading">{headingText}</h2>
-			{children}
-			<div className="rating-and-reviews__container">
-				<div className="rating-container">
-					<p className="rating">{rating}</p>
-					<div className="stars-container">{starElements}</div>
+			<Box
+				display={'flex'}
+				flexDirection={{ xs: 'column', sm: 'row' }}
+				gap={{ xs: '16px', sm: '32px' }}
+				alignItems={'center'}
+				justifyContent={'space-between'}
+				width={'100%'}
+			>
+				{children}
+				<div className="rating-and-reviews__container">
+					<div className="rating-container">
+						<p className="rating">{rating}</p>
+						<div className="stars-container">{starElements}</div>
+					</div>
+					<RatingChart reviews={reviews} />
 				</div>
-				<RatingChart reviews={reviews} />
-			</div>
+			</Box>
 			<Reviews reviews={reviews} />
-		</section>
+		</Box>
 	);
 };
 

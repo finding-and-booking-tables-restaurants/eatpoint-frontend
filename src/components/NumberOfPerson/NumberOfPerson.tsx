@@ -44,6 +44,7 @@ export default function SelectTextFields() {
 					margin: 'auto',
 					borderRadius: '8px',
 					backgroundColor: 'white',
+					justifySelf: 'start',
 				}}
 			>
 				{numOfPeople.map((option) => (

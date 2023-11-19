@@ -7,7 +7,6 @@ import {
 	Button,
 	FormControlLabel,
 	Checkbox,
-	checkboxClasses,
 } from '@mui/material';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -15,6 +14,7 @@ import { ILoginFormData, ILoginFormProps } from '../../types/commonTypes';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import Header from '../Header/Header';
 import Footer from '../Footer/Footer';
+import { maxWidthBoxConfig, minWidthBoxConfig } from '../../utils/constants';
 
 const LoginForm: React.FC<ILoginFormProps> = ({
 	onLogin,
@@ -56,12 +56,19 @@ const LoginForm: React.FC<ILoginFormProps> = ({
 	return (
 		<>
 			<Header />
-			<Container sx={{ mb: 6, minHeight: 'calc(100vh - 219px)' }}>
+			<Container
+				sx={{
+					mb: 6,
+					minHeight: 'calc(100vh - 219px)',
+					minWidth: maxWidthBoxConfig,
+					maxWidth: minWidthBoxConfig,
+				}}
+			>
 				<Typography
 					variant="h1"
 					component="h1"
 					sx={{
-						fontFamily: 'Ubuntu',
+						fontFamily: 'Roboto',
 						fontSize: '26px',
 						fontWeight: '400',
 						lineHeight: '32px',
@@ -79,7 +86,6 @@ const LoginForm: React.FC<ILoginFormProps> = ({
 					sx={{
 						'& > :not(style)': {
 							m: 1,
-							// height: '48px',
 							width: '100%',
 							ml: 0,
 							mb: 1,
@@ -88,13 +94,26 @@ const LoginForm: React.FC<ILoginFormProps> = ({
 				>
 					<TextField
 						{...register('email', {
-							required: 'Поле обязательно для заполнения',
+							required: 'Введите эл. почту',
 							pattern: {
 								value:
 									/^(?!.*(__|-{2}))[A-Z0-9._%+-]+\S@[A-Z0-9.-]+\.[A-Z]{2,4}$/i,
-								message: 'Электронная почта введена не корректно',
+								message: 'Введите корректный адрес электронной почты',
 							},
 						})}
+						sx={{
+							'.css-1d3z3hw-MuiOutlinedInput-notchedOutline': {
+								borderColor: requestErrorMessage ? 'red' : '#79747E',
+							},
+							'.css-1jy569b-MuiFormLabel-root-MuiInputLabel-root.Mui-focused': {
+								color: '#79747E',
+							},
+							'.css-md26zr-MuiInputBase-root-MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline':
+								{
+									borderColor: '#79747E',
+								},
+						}}
+						label="Эл. почта"
 						error={!!errors.email}
 						helperText={errors.email?.message || ''}
 						onBlur={handleBlur}
@@ -103,23 +122,25 @@ const LoginForm: React.FC<ILoginFormProps> = ({
 						placeholder="Эл. почта"
 						name="email"
 						type="text"
-						required
 						fullWidth
-						sx={{
-							'.css-md26zr-MuiInputBase-root-MuiOutlinedInput-root': {
-								height: '48px',
-							},
-						}}
-						InputProps={{
-							sx: {
-								backgroundColor: '#FDFAF2',
-							},
-						}}
 					/>
 					<TextField
 						{...register('password', {
-							required: 'Поле обязательно для заполнения',
+							required: 'Введите пароль',
 						})}
+						sx={{
+							'.css-1d3z3hw-MuiOutlinedInput-notchedOutline': {
+								borderColor: requestErrorMessage ? 'red' : '#79747E',
+							},
+							'.css-1jy569b-MuiFormLabel-root-MuiInputLabel-root.Mui-focused': {
+								color: '#79747E',
+							},
+							'.css-md26zr-MuiInputBase-root-MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline':
+								{
+									borderColor: '#79747E',
+								},
+						}}
+						label="Пароль"
 						error={!!errors.password}
 						helperText={errors.password?.message || ''}
 						onBlur={handleBlur}
@@ -127,39 +148,24 @@ const LoginForm: React.FC<ILoginFormProps> = ({
 						variant="outlined"
 						placeholder="Пароль"
 						type="password"
-						required
 						fullWidth
-						sx={{
-							marginTop: 2,
-							'.css-md26zr-MuiInputBase-root-MuiOutlinedInput-root': {
-								height: '48px',
-							},
-						}}
-						InputProps={{
-							sx: {
-								backgroundColor: '#FDFAF2',
-							},
-						}}
 					/>
-					<span
-						style={{
-							display: 'block',
-							minHeight: '15px',
-							color: 'red',
-							fontSize: '12px',
-							margin: '5px',
-						}}
-					>
-						{requestErrorMessage}
-					</span>
+					{requestErrorMessage && (
+						<span
+							style={{
+								display: 'block',
+								minHeight: '15px',
+								color: 'red',
+								fontSize: '10px',
+								margin: '5px',
+							}}
+						>
+							{requestErrorMessage}
+						</span>
+					)}
 					<FormControlLabel
 						control={
 							<Checkbox
-								sx={{
-									[`&, &.${checkboxClasses.checked}`]: {
-										color: '#05887B',
-									},
-								}}
 								checked={rememberMe}
 								onChange={(e) => setRememberMe(e.target.checked)}
 							/>
@@ -170,11 +176,11 @@ const LoginForm: React.FC<ILoginFormProps> = ({
 						label={
 							<Typography
 								sx={{
+									fontFamily: 'Roboto',
 									maxWidth: '264px',
 									fontSize: '16px',
 									fontWeight: '400',
 									lineHeight: '24px',
-									mt: '2px',
 									ml: '13px',
 								}}
 							>
@@ -186,7 +192,7 @@ const LoginForm: React.FC<ILoginFormProps> = ({
 						<Button
 							variant="outlined"
 							sx={{
-								borderRadius: '100px',
+								borderRadius: '6px',
 								borderColor: '#006C60',
 								height: '40px',
 								width: '156px',
@@ -211,7 +217,7 @@ const LoginForm: React.FC<ILoginFormProps> = ({
 							disabled={!isDirty || !isValid}
 							sx={{
 								backgroundColor: '#05887B',
-								borderRadius: '100px',
+								borderRadius: '6px',
 								height: '40px',
 								width: '156px',
 							}}
@@ -233,13 +239,14 @@ const LoginForm: React.FC<ILoginFormProps> = ({
 				{/* <Button
 					variant="text"
 					sx={{
-						ml: 1,
+						padding: 0,
+						paddingTop: '10px',
 						color: '#05887B',
 						fontSize: '16px',
 						fontWeight: '400',
 						lineHeight: '24px',
 						letterSpacing: '0.5px',
-						textTransform: 'capitalize',
+						textTransform: 'none',
 					}}
 				>
 					Забыли пароль

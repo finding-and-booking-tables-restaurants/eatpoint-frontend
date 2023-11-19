@@ -5,7 +5,7 @@ import Header from '../Header/Header';
 import Footer from '../Footer/Footer';
 
 import './UserBookings.css';
-import { Button } from '@mui/material';
+import { Box, Button } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 
 const UserBookings = () => {
@@ -44,9 +44,24 @@ const UserBookings = () => {
 	return (
 		<>
 			<Header />
-			<div className="user-bookings">
+			<Box
+				minWidth={{ xs: '100%', sm: '550px', md: '725px', lg: '1068px' }}
+				maxWidth={{ xs: '100%', sm: '720px', md: 'auto', lg: 'auto' }}
+				m={'auto'}
+			>
 				<h2 className="user-bookings-title">Мои бронирования</h2>
-				<div className="user-bookings-container">
+				<Box
+					sx={{
+						display: 'flex',
+						flexDirection: 'column',
+						gap: '16px',
+						alignItems: 'start',
+						justifyContent: 'start',
+						padding: '16px',
+						backgroundColor: { xs: '#d5ede4', md: 'transparent' },
+						minHeight: 'calc(100vh - 250px)',
+					}}
+				>
 					<p
 						className={`user-bookings-closest ${
 							!userBookings.length && 'user-bookings-none'
@@ -73,24 +88,32 @@ const UserBookings = () => {
 							К поиску ресторанов
 						</Button>
 					)}
-
-					{UserBooking.length &&
-						userBookings.map((booking, index) => (
-							<UserBooking
-								key={index}
-								poster={booking.establishment.poster}
-								name={booking.establishment.name}
-								date={booking.date_reservation}
-								time={booking.start_time_reservation}
-								people={booking.number_guests}
-								zone={booking.zone}
-								adress={booking.establishment.address}
-								id={booking.id}
-								handleDeleteBooking={handleDeleteBooking}
-							/>
-						))}
-				</div>
-			</div>
+					<Box
+						display="flex"
+						flexDirection="row"
+						flexWrap="wrap"
+						justifyContent={'center'}
+						gap={{ xs: '32px', md: '24px' }}
+					>
+						{UserBooking.length &&
+							userBookings.map((booking, index) => (
+								<UserBooking
+									key={index}
+									poster={booking.establishment.poster}
+									name={booking.establishment.name}
+									date={booking.date_reservation}
+									time={booking.start_time_reservation}
+									people={booking.number_guests}
+									zone={booking.zone}
+									adress={booking.establishment.address}
+									bookingId={booking.id}
+									establishmentId={booking.establishment.id}
+									handleDeleteBooking={handleDeleteBooking}
+								/>
+							))}
+					</Box>
+				</Box>
+			</Box>
 			<Footer />
 		</>
 	);

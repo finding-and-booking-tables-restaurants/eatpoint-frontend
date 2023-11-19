@@ -5,6 +5,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import placeIcon from '../../images/place-icon-black.svg';
 import notifIcon from '../../images/notification-icon.svg';
 import { pluralizePeople } from '../../utils/pluralizePeople';
+import { useNavigate } from 'react-router-dom';
 
 interface UserBookingProps {
 	poster: string;
@@ -14,7 +15,8 @@ interface UserBookingProps {
 	people: number;
 	zone: string;
 	adress: string;
-	id: number;
+	bookingId: number;
+	establishmentId: number;
 	handleDeleteBooking: (id: number) => void;
 }
 
@@ -26,12 +28,19 @@ const UserBooking: FC<UserBookingProps> = ({
 	people,
 	zone,
 	adress,
-	id,
+	bookingId,
+	establishmentId,
 	handleDeleteBooking,
 }) => {
+	const navigate = useNavigate();
+
+	const handleCardClick = () => {
+		navigate(`/establishment/${establishmentId}`);
+	};
+
 	return (
 		<div className="user-booking">
-			<div className="user-booking__heading">
+			<div className="user-booking__heading" onClick={handleCardClick}>
 				<img
 					className="user-booking__rest-poster"
 					src={poster}
@@ -44,20 +53,26 @@ const UserBooking: FC<UserBookingProps> = ({
 				<button className="user-booking__share-btn" />
 			</div>
 			<div className="user-booking__info">
-				<div className="user-booking__info-container">
+				<div className="user-booking__info-container" onClick={handleCardClick}>
 					<p className="user-booking__time">{date + ', ' + time}</p>
 					<p className="user-booking__people">
 						{pluralizePeople(people) + ', ' + zone}
 					</p>
 				</div>
-				<div className="user-booking__adress-container">
+				<div
+					className="user-booking__adress-container"
+					onClick={handleCardClick}
+				>
 					<img src={placeIcon} alt="" className="user-booking__adress-icon" />
 					<div className="user-booking__adress-text-container">
 						<p className="user-booking__adress-heading">Адрес</p>
 						<p className="user-booking__adress-text">{adress}</p>
 					</div>
 				</div>
-				<div className="user-booking__message-container">
+				<div
+					className="user-booking__message-container"
+					onClick={handleCardClick}
+				>
 					<img src={notifIcon} className="user-booking__message-icon" />
 					<p className="user-booking__message-text">
 						Ожидайте подтверждение от ресторана
@@ -65,7 +80,7 @@ const UserBooking: FC<UserBookingProps> = ({
 				</div>
 				<Button
 					onClick={() => {
-						handleDeleteBooking(id);
+						handleDeleteBooking(bookingId);
 					}}
 					sx={{
 						borderColor: '#05887B',
