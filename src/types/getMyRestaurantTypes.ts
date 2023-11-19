@@ -6,55 +6,55 @@ interface Worked {
 }
 
 interface Kitchen {
-	id: number;
+	id?: number;
 	name: string;
-	description: string;
-	slug: string;
+	description?: string;
+	slug?: string;
 }
 
 interface Type {
-	id: number;
+	id?: number;
 	name: string;
-	description: string;
-	slug: string;
+	description?: string;
+	slug?: string;
 }
 
 interface Service {
-	id: number;
+	id?: number;
 	name: string;
-	description: string;
-	slug: string;
+	description?: string;
+	slug?: string;
 }
 
 interface Zone {
-	id: number;
+	id?: number;
 	zone: string;
 	seats: number;
-	available_seats: number;
+	available_seats?: number;
 }
 
 interface Establishment {
-	id: number;
+	id?: number;
 	name: string;
 	cities: string;
 	address: string;
 	average_check: string;
 	description: string;
 	email: string;
-	images: string[];
-	is_favorited: boolean;
-	is_verified: boolean;
-	owner: string;
+	images?: string[];
+	is_favorited?: boolean;
+	is_verified?: boolean;
+	owner?: string;
 	poster: string;
-	rating: number | null;
-	review_count: number;
+	rating?: number | undefined;
+	review_count?: number | undefined;
 	telephone: string;
 	worked: Worked[];
 	kitchens: Kitchen[];
 	types: Type[];
 	services: Service[];
-	socials: [];
+	socials?: [];
 	zones: Zone[];
 }
 
-export type { Establishment };
+export type { Establishment, Zone, Service, Kitchen, Type };

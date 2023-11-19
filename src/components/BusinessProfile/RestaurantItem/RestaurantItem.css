@@ -42,17 +42,21 @@
 	font-weight: 400;
 	line-height: 20px;
 	letter-spacing: 0.25px;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	/* width: 90%; */
 }
 
 .restaurant__editBtn {
-	width: 40px;
-	height: 40px;
+	width: 20px;
+	height: 30px;
 	cursor: pointer;
 	border: none;
 	border-radius: 100px;
 	background: url('../../../images/business-profile__editBtn.svg') no-repeat
 		center;
-	background-color: #fcf7e7;
+	/* background-color: #fcf7e7; */
 	background-size: 18px 18px;
 }
 
@@ -64,6 +68,7 @@
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
+	/* gap: 20px; */
 }
 
 .restaurant__flex-box {
@@ -91,6 +96,18 @@
 	color: #49454f;
 }
 
+.restaurant__delete-btn {
+	width: 16px;
+	height: 18px;
+	border: none;
+	background: url('../../../images/business-profile__deleteBtn.svg') no-repeat;
+	cursor: pointer;
+}
+
+.restaurant__delete-btn:hover {
+	opacity: 0.7;
+}
+
 .restaurant__box-optionBtn {
 	display: flex;
 	align-items: center;
@@ -105,7 +122,7 @@
 	width: 144px;
 	height: 40px;
 	border: 1px solid #006c60;
-	border-radius: 100px;
+	border-radius: 8px;
 	background-color: initial;
 	cursor: pointer;
 	color: #006c60;

@@ -1,0 +1,50 @@
+.input-zone__flex-box {
+	padding: 8px 0;
+	display: flex;
+	align-items: center;
+	gap: 8px;
+}
+
+.input-zone__place {
+	padding: 0;
+	padding-left: 16px;
+	max-width: 247px;
+	width: 93%;
+	height: 56px;
+	border: 1px solid #79747e;
+	border-radius: 4px;
+	font-family: Roboto;
+	font-size: 14px;
+	font-weight: 400;
+	line-height: 24px;
+	letter-spacing: 0.5px;
+	outline: none;
+}
+
+.input-zone__num {
+	padding: 0;
+	padding-left: 16px;
+	max-width: 51px;
+	width: 93%;
+	height: 56px;
+	border: 1px solid #79747e;
+	border-radius: 4px;
+	font-family: Roboto;
+	font-size: 14px;
+	font-weight: 400;
+	line-height: 24px;
+	letter-spacing: 0.5px;
+	outline: none;
+}
+
+.input-zone__close-btn {
+	width: 14px;
+	height: 14px;
+	border: none;
+	background: url('../../../images/input-zone__close-btn.svg') no-repeat;
+	cursor: pointer;
+}
+
+.input-zone__close-btn:hover {
+	opacity: 0.7;
+}

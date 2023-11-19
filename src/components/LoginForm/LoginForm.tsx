@@ -8,11 +8,13 @@ import {
 	FormControlLabel,
 	Checkbox,
 } from '@mui/material';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ILoginFormData, ILoginFormProps } from '../../types/commonTypes';
+import { SubmitHandler, useForm } from 'react-hook-form';
 import Header from '../Header/Header';
 import Footer from '../Footer/Footer';
+import { maxWidthBoxConfig, minWidthBoxConfig } from '../../utils/constants';
 
 const LoginForm: React.FC<ILoginFormProps> = ({
 	onLogin,
@@ -20,47 +22,53 @@ const LoginForm: React.FC<ILoginFormProps> = ({
 }) => {
 	const navigate = useNavigate();
 
-	const [email, setEmail] = useState('');
-	const [password, setPassword] = useState('');
-	const [isFormValid, setIsFormValid] = useState(false);
 	const [rememberMe, setRememberMe] = useState(false);
 
-	const handleLogin = (e: React.FormEvent<HTMLFormElement>) => {
-		e.preventDefault();
-		const data: ILoginFormData = {
-			email,
-			password,
+	const {
+		watch,
+		register,
+		setValue,
+		handleSubmit,
+		formState: { errors, isDirty, isValid },
+	} = useForm<ILoginFormData>({
+		mode: 'onChange',
+	});
+
+	const handleLogin: SubmitHandler<ILoginFormData> = async (formData, e) => {
+		e?.preventDefault();
+		const data = {
+			email: formData.email.trim(),
+			password: formData.password.trim(),
 		};
 
 		onLogin(data, rememberMe);
+	};
+
+	const handleBlur = () => {
+		const emailValue = watch('email').trim();
+		setValue('email', emailValue, { shouldDirty: true });
 	};
 
 	const handleGoBackBtn = () => {
 		navigate(-1);
 	};
 
-	const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-		setEmail(e.target.value);
-	};
-
-	const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-		setPassword(e.target.value);
-	};
-
-	useEffect(() => {
-		const isFormFilled = [email, password].every(Boolean);
-		setIsFormValid(isFormFilled);
-	}, [email, password]);
-
 	return (
 		<>
 			<Header />
-			<Container sx={{ mb: 6, minHeight: 'calc(100vh - 219px)' }}>
+			<Container
+				sx={{
+					mb: 6,
+					minHeight: 'calc(100vh - 219px)',
+					minWidth: maxWidthBoxConfig,
+					maxWidth: minWidthBoxConfig,
+				}}
+			>
 				<Typography
 					variant="h1"
 					component="h1"
 					sx={{
-						fontFamily: 'Ubuntu',
+						fontFamily: 'Roboto',
 						fontSize: '26px',
 						fontWeight: '400',
 						lineHeight: '32px',
@@ -74,11 +82,10 @@ const LoginForm: React.FC<ILoginFormProps> = ({
 				</Typography>
 				<Box
 					component="form"
-					onSubmit={handleLogin}
+					onSubmit={handleSubmit(handleLogin)}
 					sx={{
 						'& > :not(style)': {
 							m: 1,
-							// height: '48px',
 							width: '100%',
 							ml: 0,
 							mb: 1,
@@ -86,52 +93,76 @@ const LoginForm: React.FC<ILoginFormProps> = ({
 					}}
 				>
 					<TextField
+						{...register('email', {
+							required: 'Введите эл. почту',
+							pattern: {
+								value:
+									/^(?!.*(__|-{2}))[A-Z0-9._%+-]+\S@[A-Z0-9.-]+\.[A-Z]{2,4}$/i,
+								message: 'Введите корректный адрес электронной почты',
+							},
+						})}
+						sx={{
+							'.css-1d3z3hw-MuiOutlinedInput-notchedOutline': {
+								borderColor: requestErrorMessage ? 'red' : '#79747E',
+							},
+							'.css-1jy569b-MuiFormLabel-root-MuiInputLabel-root.Mui-focused': {
+								color: '#79747E',
+							},
+							'.css-md26zr-MuiInputBase-root-MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline':
+								{
+									borderColor: '#79747E',
+								},
+						}}
+						label="Эл. почта"
+						error={!!errors.email}
+						helperText={errors.email?.message || ''}
+						onBlur={handleBlur}
 						margin="dense"
 						variant="outlined"
 						placeholder="Эл. почта"
 						name="email"
 						type="text"
-						onChange={handleEmailChange}
-						required
 						fullWidth
-						inputProps={{
-							style: {
-								height: '16px',
-								borderRadius: '4px',
-							},
-						}}
-						sx={{
-							backgroundColor: '#FDFAF2',
-						}}
 					/>
 					<TextField
+						{...register('password', {
+							required: 'Введите пароль',
+						})}
+						sx={{
+							'.css-1d3z3hw-MuiOutlinedInput-notchedOutline': {
+								borderColor: requestErrorMessage ? 'red' : '#79747E',
+							},
+							'.css-1jy569b-MuiFormLabel-root-MuiInputLabel-root.Mui-focused': {
+								color: '#79747E',
+							},
+							'.css-md26zr-MuiInputBase-root-MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline':
+								{
+									borderColor: '#79747E',
+								},
+						}}
+						label="Пароль"
+						error={!!errors.password}
+						helperText={errors.password?.message || ''}
+						onBlur={handleBlur}
 						margin="dense"
 						variant="outlined"
 						placeholder="Пароль"
 						type="password"
-						onChange={handlePasswordChange}
-						required
 						fullWidth
-						inputProps={{
-							style: {
-								height: '16px',
-							},
-						}}
-						sx={{
-							backgroundColor: '#FDFAF2',
-						}}
 					/>
-					<span
-						style={{
-							display: 'block',
-							minHeight: '15px',
-							color: 'red',
-							fontSize: '10px',
-							margin: '5px',
-						}}
-					>
-						{requestErrorMessage}
-					</span>
+					{requestErrorMessage && (
+						<span
+							style={{
+								display: 'block',
+								minHeight: '15px',
+								color: 'red',
+								fontSize: '10px',
+								margin: '5px',
+							}}
+						>
+							{requestErrorMessage}
+						</span>
+					)}
 					<FormControlLabel
 						control={
 							<Checkbox
@@ -145,11 +176,11 @@ const LoginForm: React.FC<ILoginFormProps> = ({
 						label={
 							<Typography
 								sx={{
+									fontFamily: 'Roboto',
 									maxWidth: '264px',
 									fontSize: '16px',
 									fontWeight: '400',
 									lineHeight: '24px',
-									mt: '2px',
 									ml: '13px',
 								}}
 							>
@@ -161,7 +192,7 @@ const LoginForm: React.FC<ILoginFormProps> = ({
 						<Button
 							variant="outlined"
 							sx={{
-								borderRadius: '100px',
+								borderRadius: '6px',
 								borderColor: '#006C60',
 								height: '40px',
 								width: '156px',
@@ -183,10 +214,10 @@ const LoginForm: React.FC<ILoginFormProps> = ({
 						<Button
 							type="submit"
 							variant="contained"
-							disabled={!isFormValid}
+							disabled={!isDirty || !isValid}
 							sx={{
 								backgroundColor: '#05887B',
-								borderRadius: '100px',
+								borderRadius: '6px',
 								height: '40px',
 								width: '156px',
 							}}
@@ -205,20 +236,21 @@ const LoginForm: React.FC<ILoginFormProps> = ({
 						</Button>
 					</Stack>
 				</Box>
-				<Button
+				{/* <Button
 					variant="text"
 					sx={{
-						ml: 1,
+						padding: 0,
+						paddingTop: '10px',
 						color: '#05887B',
 						fontSize: '16px',
 						fontWeight: '400',
 						lineHeight: '24px',
 						letterSpacing: '0.5px',
-						textTransform: 'capitalize',
+						textTransform: 'none',
 					}}
 				>
 					Забыли пароль
-				</Button>
+				</Button> */}
 			</Container>
 			<Footer />
 		</>

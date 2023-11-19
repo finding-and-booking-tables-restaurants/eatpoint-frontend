@@ -12,10 +12,10 @@ class MainApi {
 
 	_sendFetchRequest(path: string, settings: RequestInit) {
 		return fetch(`${this._baseUrl}${path}`, settings).then((res) => {
-			if (res.ok) {
-				return res.json();
+			if (!res.ok) {
+				return Promise.reject(`Error: ${res.status}`);
 			}
-			return Promise.reject(res);
+			return res.json();
 		});
 	}
 
@@ -34,9 +34,13 @@ class MainApi {
 		});
 	}
 
-	getEstablishmentsBySearchQuery(query: string, pageSize: number) {
+	getEstablishmentsBySearchQuery(
+		query: string,
+		pageSize: number,
+		city: string
+	) {
 		return this._sendFetchRequest(
-			`/api/v1/establishments/?page_size=${pageSize}&search=${query}`,
+			`/api/v1/establishments/?cities=${city}&page_size=${pageSize}&search=${query}`,
 			{ headers: this._headers }
 		);
 	}
@@ -50,14 +54,57 @@ class MainApi {
 		});
 	}
 
-	createEstablishment(data: RestaurantData) {
+	createMyEstablishment(data: RestaurantData) {
 		return this._sendFetchRequest(`/api/v1/business/establishments/`, {
 			method: 'POST',
+			headers: {
+				authorization: 'Bearer ' + localStorage.getItem('access-token'),
+			},
+			body: JSON.stringify(data),
+		});
+	}
+
+	// form-data
+	// createMyEstablishment(data: RestaurantData, files: FileList) {
+	// 	const formData = new FormData();
+
+	// 	Object.keys(data).forEach((key) => {
+	// 		if (Object.prototype.hasOwnProperty.call(data, key)) {
+	// 			formData.append(key, (data as any)[key]);
+	// 		}
+	// 	});
+
+	// 	for (let i = 0; i < files.length; i++) {
+	// 		formData.append('files', files[i]);
+	// 	}
+
+	// 	return this._sendFetchRequest(`/api/v1/business/establishments/`, {
+	// 		method: 'POST',
+	// 		headers: {
+	// 			authorization: 'Bearer ' + localStorage.getItem('access-token'),
+	// 		},
+	// 		body: formData,
+	// 	});
+	// }
+
+	editMyEstablishment(data: RestaurantData, id: string | undefined) {
+		return this._sendFetchRequest(`/api/v1/business/establishments/${id}/`, {
+			method: 'PATCH',
 			headers: {
 				authorization: 'Bearer ' + localStorage.getItem('access-token'),
 				'Content-Type': 'application/json',
 			},
 			body: JSON.stringify(data),
+		});
+	}
+
+	getMyEstablishmentById(id: string | undefined) {
+		return this._sendFetchRequest(`/api/v1/business/establishments/${id}/`, {
+			method: 'GET',
+			headers: {
+				authorization: 'Bearer ' + localStorage.getItem('access-token'),
+				'Content-Type': 'application/json',
+			},
 		});
 	}
 
@@ -67,17 +114,37 @@ class MainApi {
 		});
 	}
 
-	bookEstablishment(id: number, formData: ReservationFormValues) {
+	bookEstablishment = (
+		id: number,
+		formData: ReservationFormValues,
+		isLoggedIn: boolean
+	) => {
+		const headers = isLoggedIn
+			? {
+					authorization: 'Bearer ' + localStorage.getItem('access-token'),
+					'Content-Type': 'application/json',
+			  }
+			: ({
+					'Content-Type': 'application/json',
+			  } as Record<string, string>);
+
 		return this._sendFetchRequest(
 			`/api/v1/establishments/${id}/reservations/`,
 			{
 				method: 'POST',
-				headers: {
-					'Content-Type': 'application/json',
-				},
+				headers,
 				body: JSON.stringify(formData),
 			}
 		);
+	};
+
+	getAllCities() {
+		return this._sendFetchRequest(`/api/v1/cities/`, {
+			method: 'GET',
+			headers: {
+				'Content-Type': 'application/json',
+			},
+		});
 	}
 }
 

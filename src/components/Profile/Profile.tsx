@@ -1,6 +1,5 @@
 import { TextField, Button, Typography, Box, Container } from '@mui/material';
 import React, { useContext, useEffect, useState } from 'react';
-import CheckIcon from '@mui/icons-material/Check';
 import Header from '../Header/Header';
 import Footer from '../Footer/Footer';
 import CurrentUserContext from '../../contexts/CurrentUserContext';
@@ -9,8 +8,8 @@ import { IUserFormData, IUserFormProps } from '../../types/commonTypes';
 
 const Profile: React.FC<IUserFormProps> = ({
 	onUpdateUserInfo,
-	isSuccessUpdateUser,
-	setIsSuccessUpdateUser,
+	requestStatus: { message, isSuccess },
+	resetRequestMessage,
 }) => {
 	const userData = useContext(CurrentUserContext).currentUser;
 	const role = useContext(CurrentUserContext).currentRole;
@@ -34,6 +33,10 @@ const Profile: React.FC<IUserFormProps> = ({
 		defaultValues: defaultValues,
 	});
 
+	const handleChangePassword = (): void => {
+		setIsPasswordChangeVisible(!isPasswordChangeVisible);
+	};
+
 	const onSubmit: SubmitHandler<IUserFormData> = async (formData, e) => {
 		e?.preventDefault();
 
@@ -46,6 +49,7 @@ const Profile: React.FC<IUserFormProps> = ({
 		};
 
 		onUpdateUserInfo(formDataWithRole);
+		setIsPasswordChangeVisible(true);
 	};
 
 	const handleBlur = () => {
@@ -57,13 +61,10 @@ const Profile: React.FC<IUserFormProps> = ({
 		setValue('lastName', lastNameValue, { shouldDirty: true });
 	};
 
-	const handleChangePassword = (): void =>
-		setIsPasswordChangeVisible(!isPasswordChangeVisible);
-
 	useEffect(() => {
-		if (isSuccessUpdateUser) {
+		if (message) {
 			const timer = setTimeout(() => {
-				setIsSuccessUpdateUser(false);
+				resetRequestMessage();
 			}, 3000);
 
 			reset({
@@ -75,28 +76,37 @@ const Profile: React.FC<IUserFormProps> = ({
 
 			return () => clearTimeout(timer);
 		}
-	}, [isSuccessUpdateUser, setIsSuccessUpdateUser, reset, userData]);
+	}, [
+		message,
+		reset,
+		resetRequestMessage,
+		userData?.email,
+		userData?.first_name,
+		userData?.last_name,
+		userData?.telephone,
+	]);
 
 	useEffect(() => {
 		handleChangePassword();
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
 	return (
 		<>
 			<Header />
-			<Container fixed maxWidth="sm">
+			<Container fixed maxWidth="sm" sx={{ minHeight: 'calc(100vh - 172px)' }}>
 				<Typography
 					variant="h1"
 					component="h1"
 					sx={{
-						fontFamily: 'Ubuntu',
-						fontSize: '30px',
-						fontWeight: '400',
+						fontFamily: 'Roboto',
+						fontSize: '26px',
+						fontWeight: '600',
 						lineHeight: '36px',
 						mt: 4,
 						ml: 0,
 						marginTop: 2.5,
-						mb: 2,
+						mb: 1.5,
 					}}
 				>
 					Профиль
@@ -111,7 +121,7 @@ const Profile: React.FC<IUserFormProps> = ({
 					<div>
 						<TextField
 							{...register('firstName', {
-								required: 'Поле обязательно для заполнения',
+								required: 'Введите имя',
 								minLength: {
 									value: 2,
 									message: 'Минимальная длина - 2 символа',
@@ -122,9 +132,10 @@ const Profile: React.FC<IUserFormProps> = ({
 								},
 								pattern: {
 									value: /^[a-zA-Z\u0430-\u044f\u0410-\u042fёЁ\s]*$/,
-									message: 'Введите корректное имя',
+									message: 'Имя введено не корректно',
 								},
 							})}
+							label="Имя"
 							placeholder="Введите имя"
 							variant="outlined"
 							error={!!errors.firstName}
@@ -134,17 +145,12 @@ const Profile: React.FC<IUserFormProps> = ({
 									height: '48px',
 								},
 							}}
-							InputProps={{
-								sx: {
-									backgroundColor: '#FDFAF2',
-								},
-							}}
 							fullWidth
 							onBlur={handleBlur}
 						/>
 						<TextField
 							{...register('lastName', {
-								required: 'Поле обязательно для заполнения',
+								required: 'Введите фамилию',
 								minLength: {
 									value: 2,
 									message: 'Минимальная длина - 2 символа',
@@ -155,9 +161,10 @@ const Profile: React.FC<IUserFormProps> = ({
 								},
 								pattern: {
 									value: /^[a-zA-Z\u0430-\u044f\u0410-\u042fёЁ\s]*$/,
-									message: 'Введите корректное имя',
+									message: 'Фамилия введена не корректно',
 								},
 							})}
+							label="Фамилия"
 							placeholder="Введите фамилию"
 							variant="outlined"
 							error={!!errors.lastName}
@@ -168,31 +175,26 @@ const Profile: React.FC<IUserFormProps> = ({
 									height: '48px',
 								},
 							}}
-							InputProps={{
-								sx: {
-									backgroundColor: '#FDFAF2',
-								},
-							}}
 							fullWidth
 							onBlur={handleBlur}
 						/>
 						<TextField
 							{...register('telephone', {
-								required: 'Поле обязательно для заполнения',
+								required: 'Введите телефон',
 								pattern: {
 									value: /^\+(?:[0-9] ?){6,14}[0-9]$/,
-									message:
-										'Введите корректный номер телефона в международном формате',
+									message: 'Введите корректный номер моб. телефона',
 								},
 								minLength: {
-									value: 12,
-									message: 'Минимальная длина - 12 символов',
+									value: 10,
+									message: 'Минимальная длина - 10 символов',
 								},
 								maxLength: {
-									value: 14,
-									message: 'Максимальная длина - 14 символов',
+									value: 12,
+									message: 'Максимальная длина - 12 символов',
 								},
 							})}
+							label="Моб. телефон в виде +7(...)... .. .."
 							placeholder="Введите номер телефона"
 							variant="outlined"
 							name="telephone"
@@ -205,27 +207,26 @@ const Profile: React.FC<IUserFormProps> = ({
 									height: '48px',
 								},
 							}}
-							InputProps={{
-								sx: {
-									backgroundColor: '#FDFAF2',
-								},
-							}}
 							fullWidth
 						/>
 						<TextField
 							{...register('email', {
-								required: 'Обязательное поле',
+								required: 'Введите эл. почту',
 								pattern: {
 									value:
 										/^(?!.*(__|-{2}))[A-Z0-9._%+-]+\S@[A-Z0-9.-]+\.[A-Z]{2,4}$/i,
-									message: 'Введите корректный адрес электронной почты',
+									message: 'Электронная почта введена не корректно',
 								},
-
+								minLength: {
+									value: 5,
+									message: 'Введите не менее 5 символов',
+								},
 								maxLength: {
 									value: 50,
-									message: 'Максимальная длина - 50 символов',
+									message: 'Введите менее 50 символов',
 								},
 							})}
+							label="Эл. почта"
 							placeholder="Введите email"
 							type="email"
 							name="email"
@@ -239,14 +240,9 @@ const Profile: React.FC<IUserFormProps> = ({
 									height: '48px',
 								},
 							}}
-							InputProps={{
-								sx: {
-									backgroundColor: '#FDFAF2',
-								},
-							}}
 							fullWidth
 						/>
-						<Button
+						{/* <Button
 							onClick={handleChangePassword}
 							variant="outlined"
 							style={{
@@ -262,9 +258,9 @@ const Profile: React.FC<IUserFormProps> = ({
 							}}
 						>
 							Сменить пароль
-						</Button>
+						</Button> */}
 					</div>
-					{!isPasswordChangeVisible && (
+					{/* {!isPasswordChangeVisible && (
 						<div>
 							<TextField
 								type="password"
@@ -274,11 +270,6 @@ const Profile: React.FC<IUserFormProps> = ({
 									marginTop: 2,
 									'.css-md26zr-MuiInputBase-root-MuiOutlinedInput-root': {
 										height: '48px',
-									},
-								}}
-								InputProps={{
-									sx: {
-										backgroundColor: '#FDFAF2',
 									},
 								}}
 								placeholder="Текущий пароль"
@@ -295,10 +286,6 @@ const Profile: React.FC<IUserFormProps> = ({
 									},
 								}}
 								InputProps={{
-									sx: {
-										backgroundColor: '#FDFAF2',
-									},
-								}}
 								placeholder="Новый пароль"
 								fullWidth
 							/>
@@ -317,8 +304,8 @@ const Profile: React.FC<IUserFormProps> = ({
 								fullWidth
 							/>
 						</div>
-					)}
-					{isSuccessUpdateUser ? (
+					)} */}
+					{message ? (
 						<Typography
 							fontFamily="Ubuntu"
 							fontSize="20px"
@@ -327,28 +314,35 @@ const Profile: React.FC<IUserFormProps> = ({
 							letterSpacing="0.2px"
 							color="#006C60"
 							textAlign="center"
-							mb="26px"
+							mt="135px"
 						>
-							{`Изменения успешно внесены`}
+							{message}
 						</Typography>
 					) : (
 						<Button
 							type="submit"
-							startIcon={<CheckIcon />}
 							variant="contained"
 							sx={{
 								textTransform: 'none',
 								backgroundColor: '#05887B',
-								borderRadius: '100px',
+								borderRadius: '8px',
 								width: '100%',
 								height: '40px',
-								mt: 1,
+								mt: 17,
 								mb: 3,
 								padding: '10px 24px 10px 16px',
 							}}
 							disabled={!isDirty || !isValid}
 						>
-							Сохранить изменения
+							<Typography
+								fontFamily="Roboto"
+								fontSize="14px"
+								fontWeight="500"
+								lineHeight="20px"
+								letterSpacing="0.1px"
+							>
+								Сохранить изменения
+							</Typography>
 						</Button>
 					)}
 				</Box>

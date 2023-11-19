@@ -1,12 +1,13 @@
 import React from 'react';
 import RestCardProps from '../../models/propsInterfaces/RestCardProps';
 import './RestCard.css';
-import starIcon from '../../images/star-icon.svg';
-import plusIcon from '../../images/plus-icon.svg';
-import calenderIcon from '../../images/calender-icon.svg';
+import StarIcon from '@mui/icons-material/Star';
+import StarHalfIcon from '@mui/icons-material/StarHalf';
+import StarBorderIcon from '@mui/icons-material/StarBorder';
 import messageIcon from '../../images/message-icon.svg';
 import { useNavigate } from 'react-router';
 import { calculateBlackRubles } from '../../utils/calculateBlackRubles';
+import { Box, Button } from '@mui/material';
 
 const RestCard: React.FC<RestCardProps> = ({
 	img,
@@ -22,23 +23,9 @@ const RestCard: React.FC<RestCardProps> = ({
 
 	const handleLikeBtnClick = () => {};
 
-	const handeReviewsClick = () => {};
-
 	const handleBookBtnClick = () => {
 		navigate(`/booking/${id}`, { replace: true });
 	};
-
-	const bookButton: JSX.Element = (
-		<button
-			onClick={handleBookBtnClick}
-			className={`card__button ${
-				search ? 'card__button_type_search' : 'card__button_type_recomended'
-			}`}
-		>
-			<img src={search ? calenderIcon : plusIcon} alt="плюсик" />
-			<p>Бронировать</p>
-		</button>
-	);
 
 	const handleCardClick = () => {
 		navigate(`/establishment/${id}`);
@@ -56,12 +43,34 @@ const RestCard: React.FC<RestCardProps> = ({
 		</span>
 	));
 
+	const RatingStars = ({ rating }: { rating: number }) => {
+		const stars = [];
+		const filledStars = Math.floor(rating);
+		const halfStar = rating % 1 !== 0;
+
+		const starSx = { maxHeight: '19px', maxWidth: '19px', color: '#49454F' };
+
+		for (let i = 0; i < filledStars; i++) {
+			stars.push(<StarIcon sx={starSx} key={i} />);
+		}
+
+		if (halfStar) {
+			stars.push(<StarHalfIcon sx={starSx} key="half" />);
+		}
+
+		for (let i = stars.length; i < 5; i++) {
+			stars.push(<StarBorderIcon sx={starSx} key={i} />);
+		}
+
+		return (
+			<Box display="flex" flexDirection="row">
+				{stars}
+			</Box>
+		);
+	};
+
 	return (
-		<div
-			className={`card ${
-				search ? 'card_type_search' : 'card_type_recomendation'
-			} `}
-		>
+		<div className="card">
 			<button onClick={handleLikeBtnClick} className="card__like-btn" />
 			<img
 				onClick={handleCardClick}
@@ -76,19 +85,28 @@ const RestCard: React.FC<RestCardProps> = ({
 				</div>
 				<div className="card__additional-info">
 					<div className="card__rating-container">
-						<img src={starIcon} alt="иконка рейтинга" />
+						<RatingStars rating={rating} />
 						<p className="card__rating">{rating}</p>
 					</div>
-					<div className={`${search && 'card__average-bill_search'}`}>
-						{rubles}
-					</div>
-					<div onClick={handeReviewsClick} className="card__reviews-contaner">
+					<div onClick={handleCardClick} className="card__reviews-contaner">
 						<img src={messageIcon} alt="плюсик" />
 						<p className="card__reviews">{reviews}</p>
 					</div>
-					{search && bookButton}
+					<Box>{rubles}</Box>
 				</div>
-				{!search && bookButton}
+				<Button
+					sx={{
+						textTransform: 'none',
+						color: '#05887B',
+						borderBlockColor: '#05887B',
+						borderRadius: '8px',
+						padding: '10px 24px',
+					}}
+					onClick={handleBookBtnClick}
+					variant="outlined"
+				>
+					Забронировать
+				</Button>
 			</div>
 		</div>
 	);

@@ -4,13 +4,7 @@ import Recomended from '../Recomended/Recomended';
 import SearchResults from '../SearchResults/SearchResults';
 import AddRestaurant from '../AddRestaurant/AddRestaurant';
 import { useEffect, useState } from 'react';
-import {
-	Routes,
-	Route,
-	useNavigate,
-	Navigate,
-	useLocation,
-} from 'react-router-dom';
+import { Routes, Route, useNavigate, useLocation } from 'react-router-dom';
 import RestaurantPage from '../RestaurantPage/RestaurantPage';
 import BookingPage from '../BookingPage/BookingPage';
 import {
@@ -24,11 +18,15 @@ import {
 	ERROR_400,
 	ERROR_401,
 	ERROR_409,
-	EMAIL_ALREADY_REGISTERED_MESSAGE,
+	DUPLICATE_EMAIL_PHONE_MESSAGE,
 	INCORRECT_ADD_USER_DATA,
 	REG_ERROR_MESSAGE,
 	AUTH_ERROR_MESSAGE,
 	INVALID_AUTH_DATA_ERROR_MESSAGE,
+	UPDATE_USER_INFO_MESSAGE,
+	UPDATE_USER_INFO_ERROR_MESSAGE,
+	EMAIL_ALREADY_REGISTERED_MESSAGE,
+	API_URL,
 	UserData,
 } from '../../utils/constants';
 import { Restaurant } from '../../utils/constants';
@@ -43,19 +41,24 @@ import BusinessLanding from '../BusinessLanding/BusinessLanding';
 import ProtectedClientRouteElement from '../ProptectedClientRoute/ProtectedClientRoute';
 import SendProblem from '../SendProblem/SendProblem';
 import Help from '../Help/Help';
+import ResetPassword from '../ResetPassword/ResetPassword';
 import ProptectedBusinessRouteElement from '../ProptectedBusinessRoute/ProptectedBusinessRoute';
 import { mainApi } from '../../utils/mainApi';
 import RestaurantReviews from '../RestaurantReviews/RestaurantReviews';
+import EditRestaurant from '../EditRestaurant/EditRestaurant';
 
 function App() {
 	const [currentUser, setCurrentUser] = useState<UserData>();
 	const [currentRole, setCurrentRole] = useState('');
 	const [authErrorMessage, setAuthErrorMessage] = useState('');
 	const [regErrorMessage, setRegErrorMessage] = useState('');
-	const [isSuccessUpdateUser, setIsSuccessUpdateUser] = useState(false);
 	const [isSuccessRegister, setIsSuccessRegister] = useState(false);
 	const [isLoggedIn, setIsLoggedIn] = useState(false);
 	const [allEstablishments, setAllEstablishments] = useState<Restaurant[]>([]);
+	const [updateUserInfo, setUpdateUserInfo] = useState({
+		message: '',
+		isSuccess: true,
+	});
 	const [searchEstablishments, setSearchEstablishments] = useState<
 		Restaurant[]
 	>([]);
@@ -119,6 +122,10 @@ function App() {
 			});
 	}, []);
 
+	const resetMessages = () => {
+		setUpdateUserInfo({ message: '', isSuccess: true });
+	};
+
 	// Логин
 	const handleLogin = (data: ILoginFormData, rememberMe: boolean) => {
 		usersApi
@@ -180,6 +187,9 @@ function App() {
 				} else {
 					setRegErrorMessage(REG_ERROR_MESSAGE);
 				}
+			})
+			.finally(() => {
+				setTimeout(() => setIsSuccessRegister(false), 3000);
 			});
 	};
 
@@ -189,22 +199,35 @@ function App() {
 			.updateUserInfo(userInfo)
 			.then((user) => {
 				setCurrentUser(user);
-				setIsSuccessUpdateUser(true);
+				setUpdateUserInfo({
+					message: UPDATE_USER_INFO_MESSAGE,
+					isSuccess: true,
+				});
 			})
 			.catch((error) => {
 				if (error === ERROR_409) {
-					setIsSuccessUpdateUser(false);
+					setUpdateUserInfo({
+						message: DUPLICATE_EMAIL_PHONE_MESSAGE,
+						isSuccess: false,
+					});
 				} else {
-					setIsSuccessUpdateUser(false);
+					setUpdateUserInfo({
+						message: UPDATE_USER_INFO_ERROR_MESSAGE,
+						isSuccess: false,
+					});
 				}
 				console.log(`${ERROR}: ${error}`);
 			});
 	};
 
 	function handleSearchEstablishments() {
+		const city = localStorage.getItem('city');
+		if (!query) return;
+		if (!city) return;
+
 		setIsSearching(true);
 		mainApi
-			.getEstablishmentsBySearchQuery(query, 50)
+			.getEstablishmentsBySearchQuery(query, 50, city)
 			.then((data) => {
 				setSearchEstablishments(data.results);
 			})
@@ -236,7 +259,7 @@ function App() {
 						path="/"
 						element={
 							<>
-								<Header handleRestart={handleRestart} />
+								<Header />
 								<SearchResults
 									searchEstablishments={searchEstablishments}
 									setAllEstablishments={setSearchEstablishments}
@@ -250,14 +273,8 @@ function App() {
 										<Recomended
 											establishments={allEstablishments}
 											nearest={false}
-											link="Все"
+											link=""
 											title="Рекомендации"
-										/>
-										<Recomended
-											establishments={allEstablishments}
-											nearest
-											link="На карте"
-											title="Ближайшие"
 										/>
 									</>
 								)}
@@ -317,26 +334,15 @@ function App() {
 									element={
 										<Profile
 											onUpdateUserInfo={handleUpdateUserInfo}
-											isSuccessUpdateUser={isSuccessUpdateUser}
-											setIsSuccessUpdateUser={setIsSuccessUpdateUser}
+											requestStatus={updateUserInfo}
+											resetRequestMessage={resetMessages}
 										/>
 									}
 								/>
 							}
 						/>
 					)}
-					{currentUser && currentRole && (
-						<Route
-							path="/business-profile"
-							element={
-								<ProptectedBusinessRouteElement
-									role={currentRole}
-									isLoggedIn={isLoggedIn}
-									element={<BusinessProfile />}
-								/>
-							}
-						/>
-					)}
+
 					{currentRole &&
 						allEstablishments.map((item: Restaurant) => (
 							<Route
@@ -371,9 +377,45 @@ function App() {
 						}
 					/>
 					<Route path="/business" element={<BusinessLanding />} />
-					<Route path="/add-restaurant" element={<AddRestaurant />} />
+					{currentUser && currentRole && (
+						<Route
+							path="/business-profile"
+							element={
+								<ProptectedBusinessRouteElement
+									role={currentRole}
+									isLoggedIn={isLoggedIn}
+									element={<BusinessProfile />}
+								/>
+							}
+						/>
+					)}
+					{currentUser && currentRole && (
+						<Route
+							path="/business-profile/add-restaurant"
+							element={
+								<ProptectedBusinessRouteElement
+									role={currentRole}
+									isLoggedIn={isLoggedIn}
+									element={<AddRestaurant />}
+								/>
+							}
+						/>
+					)}
+					{currentUser && currentRole && (
+						<Route
+							path="/business-profile/edit-restaurant/:id"
+							element={
+								<ProptectedBusinessRouteElement
+									role={currentRole}
+									isLoggedIn={isLoggedIn}
+									element={<EditRestaurant />}
+								/>
+							}
+						/>
+					)}
 					<Route path="/support" element={<SendProblem />} />
 					<Route path="/help" element={<Help />} />
+					<Route path="/resetpass" element={<ResetPassword />} />
 					<Route path="*" element={<NotFoundPage />} />
 				</Routes>
 			</CurrentUserContext.Provider>

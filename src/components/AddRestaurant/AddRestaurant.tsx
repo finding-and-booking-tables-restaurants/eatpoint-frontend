@@ -1,10 +1,13 @@
 import './AddRestaurant.css';
 import { useState, ChangeEvent } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { SubmitHandler, useForm } from 'react-hook-form';
 import {
 	availableKitchen,
 	availableType,
 	availableService,
+	maxWidthBoxConfig,
+	minWidthBoxConfig,
 } from '../../utils/constants';
 import FilterMenuCheckBox from '../FilterMenu/FilterMenuCheckBox/FilterMenuCheckBox';
 import Header from '../Header/Header';
@@ -12,9 +15,21 @@ import Footer from '../Footer/Footer';
 import SelectWorkTime from './SelectWorkTime/SelectWorkTime';
 import { RestaurantData } from '../../types/addRestaurantTypes';
 import { mainApi } from '../../utils/mainApi';
+import InputsZone from './InputsZone/InputsZone';
+import { InputsZoneData } from '../../types/InputsZoneData';
+import { Box } from '@mui/material';
 
 function AddRestaurant() {
 	const navigate = useNavigate();
+	const {
+		watch,
+		register,
+		setValue,
+		handleSubmit,
+		formState: { errors, isValid },
+	} = useForm<RestaurantData>({
+		mode: 'onChange',
+	});
 	const [formData, setFormData] = useState<RestaurantData>({
 		name: '',
 		types: [],
@@ -29,22 +44,37 @@ function AddRestaurant() {
 		telephone: '',
 		description: '',
 		worked: [
-			{ day: 'понедельник', start: '00:00', end: '00:00' },
-			{ day: 'вторник', start: '00:00', end: '00:00' },
-			{ day: 'среда', start: '00:00', end: '00:00' },
-			{ day: 'четверг', start: '00:00', end: '00:00' },
-			{ day: 'пятница', start: '00:00', end: '00:00' },
-			{ day: 'суббота', start: '00:00', end: '00:00' },
-			{ day: 'воскресенье', start: '00:00', end: '00:00' },
+			{ day: 'понедельник', start: '00:00', end: '00:00', day_off: false },
+			{ day: 'вторник', start: '00:00', end: '00:00', day_off: false },
+			{ day: 'среда', start: '00:00', end: '00:00', day_off: false },
+			{ day: 'четверг', start: '00:00', end: '00:00', day_off: false },
+			{ day: 'пятница', start: '00:00', end: '00:00', day_off: false },
+			{ day: 'суббота', start: '00:00', end: '00:00', day_off: false },
+			{ day: 'воскресенье', start: '00:00', end: '00:00', day_off: false },
 		],
+		images: [],
+		socials: [],
 	});
-
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	const [selectedCheckboxes, setSelectedCheckboxes] = useState<{
 		[key: string]: boolean;
 	}>({});
 	const [selectedCheckFilters, setSelectedCheckFilters] = useState<
 		string | null
 	>(null);
+	const [inputsZone, setInputsZone] = useState<InputsZoneData[]>([
+		{ zone: '', seats: 0 },
+	]);
+
+	const addInputsZoneComponent = () => {
+		setInputsZone([...inputsZone, { zone: '', seats: 0 }]);
+	};
+
+	const removeInputsZoneComponent = (index: number) => {
+		const newComponents = [...inputsZone];
+		newComponents.splice(index, 1);
+		setInputsZone(newComponents);
+	};
 
 	const handleCheckboxChange = (event: ChangeEvent<HTMLInputElement>) => {
 		const { name, checked } = event.target;
@@ -87,15 +117,10 @@ function AddRestaurant() {
 		}));
 	};
 
-	const handleAddZone = (value: string) => {
+	const handleAddZone = (value: string, index: number) => {
 		setFormData((prevData) => {
-			const updatedZones = prevData.zones.map((zone) => {
-				if (zone.seats === 0) {
-					return { ...zone, zone: value };
-				}
-				return zone;
-			});
-
+			const updatedZones = [...prevData.zones];
+			updatedZones[index] = { ...updatedZones[index], zone: value };
 			return {
 				...prevData,
 				zones: updatedZones,
@@ -103,14 +128,10 @@ function AddRestaurant() {
 		});
 	};
 
-	const handleAddSeats = (value: number) => {
+	const handleAddSeats = (value: number, index: number) => {
 		setFormData((prevData) => {
-			const updatedZones = prevData.zones.map((zone, index) => {
-				if (index === 0) {
-					return { ...zone, seats: value };
-				}
-				return zone;
-			});
+			const updatedZones = [...prevData.zones];
+			updatedZones[index] = { ...updatedZones[index], seats: value };
 
 			return {
 				...prevData,
@@ -146,16 +167,24 @@ function AddRestaurant() {
 				// console.log('Base64-строка изображения:', base64String);
 			};
 			reader.readAsDataURL(file);
+		} else {
+			setFormData({ ...formData, poster: undefined });
 		}
 	}
 
-	const handleTimeChange = (start: string, end: string) => {
+	const handleTimeChange = (day: string, start: string, end: string) => {
 		setFormData((prevData) => {
-			const updatedWorked = prevData.worked.map((workedDay) => ({
-				...workedDay,
-				start,
-				end,
-			}));
+			const updatedWorked = prevData.worked.map((workedDay) => {
+				if (workedDay.day === day) {
+					return {
+						...workedDay,
+						start,
+						end,
+					};
+				} else {
+					return workedDay;
+				}
+			});
 
 			return {
 				...prevData,
@@ -164,7 +193,57 @@ function AddRestaurant() {
 		});
 	};
 
-	function handleSubmit(evt: React.FormEvent) {
+	const handleDayOffChange = (day: string, dayOffValue: boolean) => {
+		setFormData((prevData) => {
+			const updatedWorked = prevData.worked.map((workedDay) => {
+				if (workedDay.day === day) {
+					return {
+						...workedDay,
+						day_off: dayOffValue,
+					};
+				} else {
+					return workedDay;
+				}
+			});
+
+			return {
+				...prevData,
+				worked: updatedWorked,
+			};
+		});
+	};
+
+	// const handleAddRestaurantSubmit: SubmitHandler<RestaurantData> = async (
+	// 	data
+	// ) => {
+	// 	try {
+	// 		const formDataSend = {
+	// 			name: data.name,
+	// 			types: data.types,
+	// 			cities: data.cities,
+	// 			address: data.address,
+	// 			kitchens: data.kitchens,
+	// 			services: data.services,
+	// 			zones: data.zones,
+	// 			average_check: data.average_check,
+	// 			poster: data.poster,
+	// 			email: data.email,
+	// 			telephone: data.telephone,
+	// 			description: data.description,
+	// 			worked: data.worked,
+	// 			images: data.images,
+	// 			socials: [],
+	// 		};
+
+	// 		await mainApi.createMyEstablishment(formDataSend);
+	// 		navigate('/business-profile');
+	// 	} catch (err) {
+	// 		console.error(err);
+	// 		alert('Что-то пошло не так');
+	// 	}
+	// };
+
+	function handleAddRestaurantSubmit(evt: React.FormEvent) {
 		evt.preventDefault();
 
 		const formDataSend = {
@@ -181,10 +260,12 @@ function AddRestaurant() {
 			telephone: formData.telephone,
 			description: formData.description,
 			worked: formData.worked,
+			images: formData.images,
+			socials: [],
 		};
-
+		console.log(formDataSend);
 		mainApi
-			.createEstablishment(formDataSend)
+			.createMyEstablishment(formDataSend)
 			.then(() => {
 				navigate('/business-profile');
 			})
@@ -197,62 +278,116 @@ function AddRestaurant() {
 	return (
 		<>
 			<Header />
-			<section className="add-restaurant">
+			<Box
+				component={'section'}
+				p={'16px 16px 0 16px'}
+				minWidth={maxWidthBoxConfig}
+				maxWidth={minWidthBoxConfig}
+				m={'auto'}
+			>
 				<div className="add-restaurant__box">
 					<Link to="/business-profile" className="add-restautant__backBtn" />
 					<h2 className="add-restaurant__title">Новое заведение</h2>
 				</div>
-				<form className="add-restaurant__form" onSubmit={handleSubmit}>
-					<input
-						className="add-restaurant__input"
-						placeholder="Название"
-						type="text"
-						maxLength={30}
-						name="name"
-						value={formData.name}
-						onChange={handleInputChange}
-						required
-					/>
-					<input
-						className="add-restaurant__input"
-						placeholder="Город"
-						type="text"
-						maxLength={30}
-						name="cities"
-						value={formData.cities}
-						onChange={handleInputChange}
-						required
-					/>
-					<input
-						className="add-restaurant__input"
-						placeholder="Адрес"
-						type="text"
-						maxLength={30}
-						name="address"
-						value={formData.address}
-						onChange={handleInputChange}
-						required
-					/>
-					<input
-						className="add-restaurant__input"
-						placeholder="Телефон (+7 *** ***-**-**)"
-						type="text"
-						name="telephone"
-						minLength={11}
-						maxLength={12}
-						value={formData.telephone}
-						onChange={handleInputChange}
-						required
-					/>
-					<input
-						className="add-restaurant__input"
-						placeholder="Email заведения"
-						type="email"
-						name="email"
-						value={formData.email}
-						onChange={handleInputChange}
-						required
-					/>
+				<form
+					className="add-restaurant__form"
+					onSubmit={handleAddRestaurantSubmit}
+				>
+					<div className="add-restaurant__box-relative">
+						<input
+							className="add-restaurant__input"
+							placeholder="Название"
+							type="text"
+							maxLength={30}
+							name="name"
+							id="add-restaurant-name"
+							value={formData.name}
+							onChange={handleInputChange}
+							required
+						/>
+						<label
+							className="add-restaurant__label-input"
+							htmlFor="add-restaurant-name"
+						>
+							Название
+						</label>
+					</div>
+					<div className="add-restaurant__box-relative">
+						<input
+							className="add-restaurant__input"
+							placeholder="Город"
+							type="text"
+							maxLength={30}
+							name="cities"
+							id="add-restaurant-city"
+							value={formData.cities}
+							onChange={handleInputChange}
+							required
+						/>
+						<label
+							className="add-restaurant__label-input"
+							htmlFor="add-restaurant-city"
+						>
+							Город
+						</label>
+					</div>
+					<div className="add-restaurant__box-relative">
+						<input
+							className="add-restaurant__input"
+							placeholder="Адрес"
+							type="text"
+							maxLength={30}
+							name="address"
+							id="add-restaurant-address"
+							value={formData.address}
+							onChange={handleInputChange}
+							required
+						/>
+						<label
+							className="add-restaurant__label-input"
+							htmlFor="add-restaurant-address"
+						>
+							Адрес
+						</label>
+					</div>
+					<div className="add-restaurant__box-relative">
+						<input
+							className="add-restaurant__input"
+							placeholder="Телефон (+7 *** ***-**-**)"
+							type="text"
+							name="telephone"
+							id="add-restaurant-telephone"
+							minLength={11}
+							maxLength={12}
+							value={formData.telephone}
+							onChange={handleInputChange}
+							required
+						/>
+						<label
+							className="add-restaurant__label-input"
+							htmlFor="add-restaurant-telephone"
+						>
+							Моб. телефон в виде +7(...)... .. ..
+						</label>
+					</div>
+					<div className="add-restaurant__box-relative">
+						<input
+							className="add-restaurant__input"
+							placeholder="Email заведения"
+							type="email"
+							name="email"
+							id="add-restaurant-email"
+							value={formData.email}
+							onChange={handleInputChange}
+							required
+						/>
+						<label
+							className="add-restaurant__label-input"
+							htmlFor="add-restaurant-email"
+						>
+							Email заведения
+						</label>
+					</div>
 					<h3 className="add-restaurant__category">Тип заведения</h3>
 					<ul className="add-restaurant__list">
 						{availableType.map((item, i) => (
@@ -294,35 +429,59 @@ function AddRestaurant() {
 						Можно добавить любые типы столов и их доступное количество мест,
 						например, «на терассе — 16».
 					</p>
-					<div className="add-restaurant__flex-box">
-						<input
-							className="add-restaurant__input-place"
-							placeholder="Основной зал"
-							type="text"
-							name="zones"
-							maxLength={30}
-							onChange={(evt) => handleAddZone(evt.target.value)}
-							required
-						></input>
-						<input
-							className="add-restaurant__input-place_num"
-							placeholder="Мест"
-							maxLength={4}
-							type="text"
-							name="seats"
-							onChange={(e) => handleAddSeats(parseInt(e.target.value))}
-							required
+					{inputsZone.map((_, index) => (
+						<InputsZone
+							key={index}
+							index={index}
+							onRemove={removeInputsZoneComponent}
+							onAddZone={handleAddZone}
+							onAddSeats={handleAddSeats}
+							formData={formData.zones}
 						/>
-					</div>
-					{/* <button className="add-restaurant__moreBtn">Еще</button> */}
+					))}
+					<button
+						type="button"
+						className="add-restaurant__moreBtn"
+						onClick={addInputsZoneComponent}
+					>
+						Добавить еще
+					</button>
 					<h3 className="add-restaurant__category">Режим работы (от, до)</h3>
-					<SelectWorkTime text={'Пн'} onTimeChange={handleTimeChange} />
-					<SelectWorkTime text={'Вт'} onTimeChange={handleTimeChange} />
-					<SelectWorkTime text={'Ср'} onTimeChange={handleTimeChange} />
-					<SelectWorkTime text={'Чт'} onTimeChange={handleTimeChange} />
-					<SelectWorkTime text={'Пт'} onTimeChange={handleTimeChange} />
-					<SelectWorkTime text={'Сб'} onTimeChange={handleTimeChange} />
-					<SelectWorkTime text={'Вс'} onTimeChange={handleTimeChange} />
+					<SelectWorkTime
+						text={'Пн'}
+						onTimeChange={handleTimeChange}
+						onDayOffChange={handleDayOffChange}
+					/>
+					<SelectWorkTime
+						text={'Вт'}
+						onTimeChange={handleTimeChange}
+						onDayOffChange={handleDayOffChange}
+					/>
+					<SelectWorkTime
+						text={'Ср'}
+						onTimeChange={handleTimeChange}
+						onDayOffChange={handleDayOffChange}
+					/>
+					<SelectWorkTime
+						text={'Чт'}
+						onTimeChange={handleTimeChange}
+						onDayOffChange={handleDayOffChange}
+					/>
+					<SelectWorkTime
+						text={'Пт'}
+						onTimeChange={handleTimeChange}
+						onDayOffChange={handleDayOffChange}
+					/>
+					<SelectWorkTime
+						text={'Сб'}
+						onTimeChange={handleTimeChange}
+						onDayOffChange={handleDayOffChange}
+					/>
+					<SelectWorkTime
+						text={'Вс'}
+						onTimeChange={handleTimeChange}
+						onDayOffChange={handleDayOffChange}
+					/>
 					<h3 className="add-restaurant__category">Средний чек</h3>
 					<ul className="add-restaurant__radio-list">
 						<FilterMenuCheckBox
@@ -364,18 +523,29 @@ function AddRestaurant() {
 						))}
 					</ul>
 					<h3 className="add-restaurant__category_padding-bot">Описание</h3>
-					<textarea
-						className="add-restaurant__text-area"
-						name="description"
-						maxLength={500}
-						onChange={handleInputChange}
-						required
-					></textarea>
-					<h3 className="add-restaurant__category_padding-bot">Фотография</h3>
+					<div className="add-restaurant__box-relative">
+						<label
+							className="add-restaurant__label-text-area"
+							htmlFor="add-restaurant-description"
+						>
+							Описание заведения (не обязательно)
+						</label>
+						<textarea
+							className="add-restaurant__text-area"
+							name="description"
+							id="add-restaurant-description"
+							maxLength={500}
+							onChange={handleInputChange}
+						></textarea>
+					</div>
+					<h3 className="add-restaurant__category_padding-bot">Обложка</h3>
 					<div className="add-restaurant__flex-box-file">
-						<p className="add-restaurant__file-paragraph">
-							Добавьте фото размером до 5 МБ
-						</p>
+						{/* <TEST
+							label="загрузить фото"
+							onChange={(file) => {
+								setRecipeFile(file);
+							}}
+						></TEST> */}
 						<div className="input__wrapper">
 							<input
 								className="input__file"
@@ -391,11 +561,25 @@ function AddRestaurant() {
 							</label>
 						</div>
 					</div>
+					{formData.poster ? (
+						<img
+							src={
+								typeof formData.poster === 'string'
+									? formData.poster
+									: undefined
+							}
+							alt="avatar"
+							className="add-restaurant__poster"
+						/>
+					) : null}
 					<button className="add-restaurant__submit-btn" type="submit">
 						Добавить заведение
 					</button>
 				</form>
-			</section>
+				<Link to="/business-profile" className="add-restaurant__back-btn">
+					Назад
+				</Link>
+			</Box>
 			<Footer />
 		</>
 	);

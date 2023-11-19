@@ -1,16 +1,27 @@
 .search-form {
+	margin: 16px 0 32px 0;
 	display: flex;
 	flex-direction: column;
 	gap: 16px;
-	padding: 30px 4.45vw;
-	background-color: #991a55;
+	padding: 16px;
+	border-radius: 8px;
 	align-content: center;
 	flex-wrap: wrap;
+	background-color: #fff;
 }
 
 .search-form_booking {
-	background-color: white;
+	background-color: #fff;
 	padding: 24px 0;
+	margin: 0;
+	border-radius: 0;
+}
+
+.search-form_rest-page {
+	background-color: #991a55;
+	padding: 24px 0;
+	margin: 0;
+	border-radius: 0;
 }
 
 .search-form__btn {

@@ -1,8 +1,4 @@
 import './FilterMenu.css';
-import SearchForm from '../SearchForm/SearchForm';
-import DatePickerValue from '../DatePickerValue/DatePickerValue';
-import TimePickerValue from '../TimePickerValue/TimePickerValue';
-import NumberOfPerson from '../NumberOfPerson/NumberOfPerson';
 import FilterMenuProps from '../../models/propsInterfaces/FilterMenuProps';
 import {
 	availableKitchen,
@@ -35,13 +31,6 @@ function FilterMenu({
 					onClick={handleCloseBtn}
 				></button>
 				<h2 className="filter-menu__title">Фильтры</h2>
-				<SearchForm onSubmit={(event) => console.log(event)}>
-					<div className="search-results__flex-box">
-						<DatePickerValue />
-						<TimePickerValue />
-					</div>
-					<NumberOfPerson />
-				</SearchForm>
 				<h3 className="filter-menu__category">Кухня</h3>
 				<ul className="filter-menu__list">
 					{availableKitchen.map((filter, i) => (
