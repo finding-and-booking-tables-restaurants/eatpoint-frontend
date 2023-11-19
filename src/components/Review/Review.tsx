@@ -27,7 +27,6 @@ const Review: React.FC<ReviewProps> = ({ name, date, text, rating }) => {
 			{location.pathname.includes('restaurant-reviews') && (
 				<Button
 					// onClick={openAddReviewModal}
-					startIcon={<ModeEditOutlineOutlinedIcon />}
 					variant="outlined"
 					sx={{
 						mt: '11px',
@@ -36,6 +35,7 @@ const Review: React.FC<ReviewProps> = ({ name, date, text, rating }) => {
 						border: '1px solid #006C60',
 						borderRadius: '100px',
 						textTransform: 'none',
+						maxWidth: '167px',
 					}}
 				>
 					Ответить на отзыв

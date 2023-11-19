@@ -7,6 +7,8 @@ import RestaurantItem from './RestaurantItem/RestaurantItem';
 import CurrentUserContext from '../../contexts/CurrentUserContext';
 import { mainApi } from '../../utils/mainApi';
 import { Establishment } from '../../types/getMyRestaurantTypes';
+import { Box } from '@mui/material';
+import { maxWidthBoxConfig, minWidthBoxConfig } from '../../utils/constants';
 
 function BusinessProfile() {
 	const userData = useContext(CurrentUserContext).currentUser;
@@ -27,7 +29,13 @@ function BusinessProfile() {
 	return (
 		<>
 			<Header />
-			<section className="business-profile">
+			<Box
+				component={'section'}
+				p={'16px 16px 0 16px'}
+				minWidth={maxWidthBoxConfig}
+				maxWidth={minWidthBoxConfig}
+				m={'auto auto 45px auto'}
+			>
 				<div className="business-profile__box-profile">
 					<div className="business-profile__box-info">
 						<p className="business-profile__user-name">
@@ -69,7 +77,7 @@ function BusinessProfile() {
 						/>
 					))}
 				</ul>
-			</section>
+			</Box>
 			<Footer />
 		</>
 	);

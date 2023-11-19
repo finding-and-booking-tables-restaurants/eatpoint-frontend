@@ -578,3 +578,16 @@ export const helpInfoLinks = [
 		],
 	},
 ];
+
+export const maxWidthBoxConfig = {
+	xs: '320px',
+	sm: '550px',
+	md: '725px',
+	lg: '1068px',
+};
+export const minWidthBoxConfig = {
+	xs: '320px',
+	sm: '668px',
+	md: '880px',
+	lg: 'auto',
+};
