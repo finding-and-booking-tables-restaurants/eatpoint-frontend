@@ -320,7 +320,7 @@ function AddRestaurant() {
 			<Header />
 			<Box
 				component={'section'}
-				p={'16px 16px 0 16px'}
+				// p={'16px 16px 0 16px'}
 				minWidth={maxWidthBoxConfig}
 				maxWidth={minWidthBoxConfig}
 				m={'auto'}
