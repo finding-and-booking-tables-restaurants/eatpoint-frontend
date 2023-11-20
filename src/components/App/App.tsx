@@ -46,6 +46,7 @@ import ProptectedBusinessRouteElement from '../ProptectedBusinessRoute/Proptecte
 import { mainApi } from '../../utils/mainApi';
 import RestaurantReviews from '../RestaurantReviews/RestaurantReviews';
 import EditRestaurant from '../EditRestaurant/EditRestaurant';
+import RestaurantReservationPage from '../RestaurantReservationPage/RestaurantReservationPage';
 
 function App() {
 	const [currentUser, setCurrentUser] = useState<UserData>();
@@ -419,6 +420,19 @@ function App() {
 									isLoggedIn={isLoggedIn}
 									element={<EditRestaurant />}
 								/>
+							}
+						/>
+					)}
+					{currentUser && currentRole && (
+						<Route
+							path="/business-profile/reservation-restaurant/:id"
+							element={
+								<ProptectedBusinessRouteElement
+								role={currentRole}
+								isLoggedIn={isLoggedIn}
+								element={<RestaurantReservationPage />}
+							/>
+								
 							}
 						/>
 					)}
