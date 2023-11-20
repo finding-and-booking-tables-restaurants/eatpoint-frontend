@@ -1,6 +1,6 @@
 import { useState, useEffect, ChangeEvent } from 'react';
 import { Link, useParams, useNavigate } from 'react-router-dom';
-
+import { SubmitHandler, useForm } from 'react-hook-form';
 import Header from '../Header/Header';
 import Footer from '../Footer/Footer';
 import FilterMenuCheckBox from '../FilterMenu/FilterMenuCheckBox/FilterMenuCheckBox';
@@ -18,6 +18,7 @@ import { daysOfWeek } from '../../utils/constants';
 import InputsZone from '../AddRestaurant/InputsZone/InputsZone';
 import { InputsZoneData } from '../../types/InputsZoneData';
 import { Box } from '@mui/material';
+import Preloader from '../Preloader/Preloader';
 
 interface ImageFile {
 	file: File;
@@ -25,16 +26,26 @@ interface ImageFile {
 }
 
 function EditRestaurant() {
-	const { id } = useParams();
+	const params = useParams();
+	const restaurantId = params.id;
 	const navigate = useNavigate();
 
+	const {
+		register,
+		handleSubmit,
+		setValue,
+		formState: { errors, isValid },
+	} = useForm<RestaurantData>({
+		mode: 'onChange',
+	});
+
 	useEffect(() => {
-		mainApi.getMyEstablishmentById(id).then((res) => {
+		mainApi.getMyEstablishmentById(restaurantId).then((res) => {
 			setFormData(res);
 			setSelectedCheckFilters(res.average_check);
 			setInputsZone(res.zones);
 		});
-	}, [id]);
+	}, [restaurantId]);
 
 	const [formData, setFormData] = useState<RestaurantData>({
 		name: '',
@@ -53,6 +64,23 @@ function EditRestaurant() {
 		images: [],
 	});
 
+	useEffect(() => {
+		setValue('name', formData.name);
+		setValue('address', formData.address);
+		setValue('telephone', formData.telephone);
+		setValue('email', formData.email);
+		setValue('description', formData.description);
+		setValue('cities', formData.cities);
+	}, [
+		formData.address,
+		formData.cities,
+		formData.description,
+		formData.email,
+		formData.name,
+		formData.telephone,
+		setValue,
+	]);
+
 	console.log(formData);
 
 	const [loading, setLoading] = useState(true);
@@ -63,20 +91,16 @@ function EditRestaurant() {
 	const [selectedCheckboxes, setSelectedCheckboxes] = useState<{
 		[key: string]: boolean;
 	}>({});
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
+	const [posterChanged, setPosterChanged] = useState(false);
 
 	const [inputsZone, setInputsZone] = useState<InputsZoneData[]>([]);
 	const [selectedImageFile, setSelectedImageFiles] = useState<ImageFile[]>([]);
-
-	const handleInputChange = (
-		event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-	) => {
-		const { name, value } = event.target;
-
-		setFormData((prevData) => ({
-			...prevData,
-			[name]: value,
-		}));
-	};
+	const haveTypes = formData.types.length === 0;
+	const haveKitchen = formData.kitchens.length === 0;
+	const haveServises = formData.services.length === 0;
+	const haveAverageCheck = formData.average_check === '';
+	const havePoster = !formData.poster;
 
 	const addInputsZoneComponent = () => {
 		setInputsZone([...inputsZone, { zone: '', seats: 0 }]);
@@ -185,11 +209,12 @@ function EditRestaurant() {
 					...formData,
 					poster: base64String,
 				});
-				// console.log('Base64-строка изображения:', base64String);
+				setPosterChanged(true);
 			};
 			reader.readAsDataURL(file);
 		} else {
 			setFormData({ ...formData, poster: undefined });
+			setPosterChanged(false);
 		}
 	}
 
@@ -228,58 +253,98 @@ function EditRestaurant() {
 		});
 	};
 
-	async function handleSubmit(evt: React.FormEvent) {
-		evt.preventDefault();
+	async function handleDeleteImageFromServer(
+		restaurantId: string | undefined,
+		imageId: number | undefined,
+		index: number
+	) {
+		try {
+			const response = await mainApi.deleteImagesEstablishment(
+				restaurantId,
+				imageId
+			);
+			console.log(response, 'Успешно');
+			setFormData((prevFormData: any) => {
+				const updatedImages = [...prevFormData.images];
+				updatedImages.splice(index, 1);
+				return {
+					...prevFormData,
+					images: updatedImages,
+				};
+			});
+		} catch (error) {
+			console.error('In catch Delete Image', error);
+		}
+	}
 
-		const formDataSend = {
-			name: formData.name,
+	const handleEditRestaurantSubmit: SubmitHandler<RestaurantData> = async (
+		data
+	) => {
+		let formDataSend = {
+			name: data.name,
 			types: formData.types,
-			cities: formData.cities,
-			address: formData.address,
+			cities: data.cities,
+			address: data.address,
 			kitchens: formData.kitchens,
 			services: formData.services,
 			zones: formData.zones,
 			average_check: formData.average_check,
-			poster: formData.poster,
-			email: formData.email,
+			// poster: formData.poster,
+			poster: undefined,
+			email: data.email,
 			telephone: formData.telephone,
-			description: formData.description,
+			description: data.description,
 			worked: formData.worked,
 		};
 
+		if (posterChanged) {
+			formDataSend = {
+				...formDataSend,
+				poster: formData.poster,
+			};
+		}
+
 		mainApi
-			.editMyEstablishment(formDataSend, id)
+			.editMyEstablishment(formDataSend, restaurantId)
 			.then((res) => {
 				setFormData(res);
+			})
+			.then((res) => {
+				const filesToSend = selectedImageFile.map(
+					(imageFile) => imageFile.file
+				);
+				if (filesToSend.length > 0) {
+					mainApi
+						.createImagesEstablishment(restaurantId, filesToSend)
+						.then((res) => {})
+						.catch((err) => {
+							console.log('catch error', err);
+						});
+				}
 				navigate('/business-profile');
 			})
 			.catch((err) => {
 				console.log(err);
 			});
-	}
+	};
 
 	useEffect(() => {
-		mainApi.getMyEstablishmentById(id).then((res) => {
+		mainApi.getMyEstablishmentById(restaurantId).then((res) => {
 			setFormData(res);
 			setLoading(false);
 		});
-	}, [id]);
+	}, [restaurantId]);
 
 	if (loading) {
-		return <p>Loading...</p>;
+		return <Preloader />;
 	}
-
-	// console.log(formData.images
-	// 		return item.name;
-	// 	})
-	// );
 
 	return (
 		<>
 			<Header />
 			<Box
 				component={'section'}
-				p={'16px 16px 0 16px'}
+				// p={'16px 16px 0 16px'}
 				minWidth={maxWidthBoxConfig}
 				maxWidth={minWidthBoxConfig}
 				m={'auto auto 45px auto'}
@@ -288,58 +353,226 @@ function EditRestaurant() {
 					<Link to="/business-profile" className="add-restautant__backBtn" />
 					<h2 className="add-restaurant__title">Редактировать заведение</h2>
 				</div>
-				<form className="add-restaurant__form" onSubmit={handleSubmit}>
-					<input
-						className="add-restaurant__input"
-						placeholder="Название"
-						type="text"
-						maxLength={30}
-						name="name"
-						value={formData.name || ''}
-						onChange={handleInputChange}
-						required
-					/>
-					<input
-						className="add-restaurant__input"
-						placeholder="Город"
-						type="text"
-						maxLength={30}
-						name="cities"
-						value={formData.cities || ''}
-						onChange={handleInputChange}
-						required
-					/>
-					<input
-						className="add-restaurant__input"
-						placeholder="Адрес"
-						type="text"
-						maxLength={30}
-						name="address"
-						value={formData.address || ''}
-						onChange={handleInputChange}
-						required
-					/>
-					<input
-						className="add-restaurant__input"
-						placeholder="Телефон (+7 *** ***-**-**)"
-						type="text"
-						name="telephone"
-						minLength={11}
-						maxLength={12}
-						value={formData.telephone || ''}
-						onChange={handleInputChange}
-						required
-					/>
-					<input
-						className="add-restaurant__input"
-						placeholder="Email заведения"
-						type="email"
-						name="email"
-						value={formData.email || ''}
-						onChange={handleInputChange}
-						required
-					/>
+				<form
+					className="add-restaurant__form"
+					onSubmit={handleSubmit(handleEditRestaurantSubmit)}
+				>
+					<div className="add-restaurant__box-relative">
+						<input
+							className={`add-restaurant__input ${
+								errors.name ? 'add-restaurant__input_error' : ''
+							}`}
+							placeholder="Название"
+							type="text"
+							minLength={2}
+							maxLength={30}
+							id="add-restaurant-name"
+							{...register('name', {
+								required: 'Поле обязательно для заполнения',
+								minLength: {
+									value: 2,
+									message: 'Введите не менее 2 символов',
+								},
+								maxLength: {
+									value: 30,
+									message: 'Введите менее 30 символов',
+								},
+								pattern: {
+									value: /^[a-zA-Z\u0430-\u044f\u0410-\u042fёЁ\s]*$/,
+									message: 'Введите корректное имя',
+								},
+							})}
+						/>
+						<span
+							className={`add-restaurant__error ${
+								errors.name ? 'add-restaurant__error_active' : ''
+							}`}
+						>
+							{errors?.name?.message}
+						</span>
+						<label
+							className={`add-restaurant__label-input ${
+								errors.name ? 'add-restaurant__label-input_error' : ''
+							}`}
+							htmlFor="add-restaurant-name"
+						>
+							Название
+						</label>
+					</div>
+					<div className="add-restaurant__box-relative">
+						<input
+							className={`add-restaurant__input ${
+								errors.cities ? 'add-restaurant__input_error' : ''
+							}`}
+							placeholder="Город"
+							type="text"
+							maxLength={30}
+							// name="cities"
+							id="add-restaurant-city"
+							// value={formData.cities}
+							// onChange={handleInputChange}
+							required
+							{...register('cities', {
+								required: 'Поле обязательно для заполнения',
+								minLength: {
+									value: 2,
+									message: 'Введите не менее 2 символов',
+								},
+								maxLength: {
+									value: 20,
+									message: 'Введите менее 20 символов',
+								},
+								pattern: {
+									value: /^[a-zA-Z\u0430-\u044f\u0410-\u042fёЁ\s]*$/,
+									message: 'Введите корректное имя',
+								},
+							})}
+						/>
+						<span
+							className={`add-restaurant__error ${
+								errors.cities ? 'add-restaurant__error_active' : ''
+							}`}
+						>
+							{errors?.cities?.message}
+						</span>
+						<label
+							className={`add-restaurant__label-input ${
+								errors.cities ? 'add-restaurant__label-input_error' : ''
+							}`}
+							htmlFor="add-restaurant-city"
+						>
+							Город
+						</label>
+					</div>
+					<div className="add-restaurant__box-relative">
+						<input
+							className={`add-restaurant__input ${
+								errors.address ? 'add-restaurant__input_error' : ''
+							}`}
+							placeholder="Адрес"
+							type="text"
+							minLength={5}
+							maxLength={30}
+							id="add-restaurant-address"
+							required
+							{...register('address', {
+								required: 'Поле обязательно для заполнения',
+								minLength: {
+									value: 5,
+									message: 'Введите не менее 5 символов',
+								},
+								maxLength: {
+									value: 30,
+									message: 'Введите менее 30 символов',
+								},
+							})}
+						/>
+						<span
+							className={`add-restaurant__error ${
+								errors.address ? 'add-restaurant__error_active' : ''
+							}`}
+						>
+							{errors?.address?.message}
+						</span>
+						<label
+							className={`add-restaurant__label-input ${
+								errors.address ? 'add-restaurant__label-input_error' : ''
+							}`}
+							htmlFor="add-restaurant-address"
+						>
+							Адрес
+						</label>
+					</div>
+					<div className="add-restaurant__box-relative">
+						<input
+							className={`add-restaurant__input ${
+								errors.telephone ? 'add-restaurant__input_error' : ''
+							}`}
+							placeholder="Телефон (+7 *** ***-**-**)"
+							type="text"
+							id="add-restaurant-telephone"
+							minLength={10}
+							maxLength={12}
+							required
+							{...register('telephone', {
+								required: 'Поле обязательно для заполнения',
+								pattern: {
+									value: /^\+(?:[0-9] ?){6,14}[0-9]$/,
+									message: 'Введите корректный номер телефона',
+								},
+								minLength: {
+									value: 10,
+									message: 'Минимальная длина - 10 символов',
+								},
+								maxLength: {
+									value: 12,
+									message: 'Максимальная длина - 12 символов',
+								},
+							})}
+						/>
+						<span
+							className={`add-restaurant__error ${
+								errors.telephone ? 'add-restaurant__error_active' : ''
+							}`}
+						>
+							{errors?.telephone?.message}
+						</span>
+						<label
+							className={`add-restaurant__label-input ${
+								errors.telephone ? 'add-restaurant__label-input_error' : ''
+							}`}
+							htmlFor="add-restaurant-telephone"
+						>
+							Моб. телефон в виде +7(...)... .. ..
+						</label>
+					</div>
+					<div className="add-restaurant__box-relative">
+						<input
+							className={`add-restaurant__input ${
+								errors.email ? 'add-restaurant__input_error' : ''
+							}`}
+							placeholder="Email заведения"
+							id="add-restaurant-email"
+							required
+							{...register('email', {
+								required: 'Поле обязательно для заполнения',
+								pattern: {
+									value:
+										/^(?!.*(__|-{2}))[A-Z0-9._%+-]+\S@[A-Z0-9.-]+\.[A-Z]{2,4}$/i,
+									message: 'Электронная почта введена не корректно',
+								},
+								minLength: {
+									value: 5,
+									message: 'Введите не менее 5 символов',
+								},
+								maxLength: {
+									value: 50,
+									message: 'Введите менее 50 символов',
+								},
+							})}
+						/>
+						<span
+							className={`add-restaurant__error ${
+								errors.email ? 'add-restaurant__error_active' : ''
+							}`}
+						>
+							{errors?.email?.message}
+						</span>
+						<label
+							className={`add-restaurant__label-input ${
+								errors.email ? 'add-restaurant__label-input_error' : ''
+							}`}
+							htmlFor="add-restaurant-email"
+						>
+							Email заведения
+						</label>
+					</div>
 					<h3 className="add-restaurant__category">Тип заведения</h3>
+					{haveTypes && (
+						<span className="add-restaurant__item_error">
+							Выберите хотя бы одно значение
+						</span>
+					)}
 					<ul className="add-restaurant__list">
 						{availableType.map((item, i) => (
 							<li className="add-restaurant__item" key={i}>
@@ -358,6 +591,11 @@ function EditRestaurant() {
 						))}
 					</ul>
 					<h3 className="add-restaurant__category">Кухня</h3>
+					{haveKitchen && (
+						<span className="add-restaurant__item_error">
+							Выберите хотя бы одно значение
+						</span>
+					)}
 					<ul className="add-restaurant__list">
 						{availableKitchen.map((item, i) => (
 							<li className="add-restaurant__item" key={i}>
@@ -416,6 +654,11 @@ function EditRestaurant() {
 						})}
 					</div>
 					<h3 className="add-restaurant__category">Средний чек</h3>
+					{haveAverageCheck && (
+						<span className="add-restaurant__item_error">
+							Выберите хотя бы одно значение
+						</span>
+					)}
 					<ul className="add-restaurant__radio-list">
 						<FilterMenuCheckBox
 							text={'до 1000'}
@@ -439,6 +682,11 @@ function EditRestaurant() {
 						/>
 					</ul>
 					<h3 className="add-restaurant__category">Услуги</h3>
+					{haveServises && (
+						<span className="add-restaurant__item_error">
+							Выберите хотя бы одно значение
+						</span>
+					)}
 					<ul className="add-restaurant__list">
 						{availableService.map((item, i) => (
 							<li className="add-restaurant__item" key={i}>
@@ -457,13 +705,42 @@ function EditRestaurant() {
 						))}
 					</ul>
 					<h3 className="add-restaurant__category_padding-bot">Описание</h3>
-					<textarea
-						className="add-restaurant__text-area"
-						name="description"
-						maxLength={500}
-						value={formData.description || ''}
-						onChange={handleInputChange}
-					></textarea>
+					<div className="add-restaurant__box-relative">
+						<label
+							className={`add-restaurant__label-text-area ${
+								errors.description
+									? 'add-restaurant__label-text-area_error'
+									: ''
+							}`}
+							htmlFor="add-restaurant-description"
+						>
+							Описание заведения (не обязательно)
+						</label>
+						<textarea
+							className={`add-restaurant__text-area ${
+								errors.description ? 'add-restaurant__text-area_error' : ''
+							}`}
+							id="add-restaurant-description"
+							maxLength={400}
+							{...register('description', {
+								maxLength: {
+									value: 400,
+									message: 'Введите менее 400 символов',
+								},
+								pattern: {
+									value: /^[a-zA-Zа-яА-ЯёЁ\s!?"()\d]*$/,
+									message: 'Вы ввели недопустимые символы',
+								},
+							})}
+						/>
+						<span
+							className={`add-restaurant__error ${
+								errors.description ? 'add-restaurant__error_active' : ''
+							}`}
+						>
+							{errors?.description?.message}
+						</span>
+					</div>
 					<h3 className="add-restaurant__category_padding-bot">Фотография</h3>
 					<div className="add-restaurant__flex-box-file">
 						{formData.poster ? (
@@ -504,7 +781,13 @@ function EditRestaurant() {
 										<button
 											type="button"
 											className="input-file__delete-image"
-											// onClick={() => handleDeleteImageFile(index)}
+											onClick={() =>
+												handleDeleteImageFromServer(
+													restaurantId,
+													file.id,
+													index
+												)
+											}
 										></button>
 									</div>
 							  ))
@@ -540,7 +823,27 @@ function EditRestaurant() {
 							</label>
 						</div>
 					</div>
-					<button className="add-restaurant__submit-btn" type="submit">
+					<button
+						disabled={
+							!isValid ||
+							haveTypes ||
+							haveKitchen ||
+							haveServises ||
+							haveAverageCheck ||
+							havePoster
+						}
+						className={`add-restaurant__submit-btn ${
+							!isValid ||
+							haveTypes ||
+							haveKitchen ||
+							haveServises ||
+							haveAverageCheck ||
+							havePoster
+								? 'add-restaurant__submit-btn_disabled'
+								: ''
+						}`}
+						type="submit"
+					>
 						Сохранить
 					</button>
 				</form>

@@ -55,7 +55,6 @@ function AddRestaurant() {
 			{ day: 'суббота', start: '00:00', end: '00:00', day_off: false },
 			{ day: 'воскресенье', start: '00:00', end: '00:00', day_off: false },
 		],
-		// images: [],
 		socials: [],
 	});
 	// eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -68,8 +67,13 @@ function AddRestaurant() {
 	const [inputsZone, setInputsZone] = useState<InputsZoneData[]>([
 		{ zone: '', seats: 0 },
 	]);
-
+	const [serverNameError, setServerNameError] = useState('');
 	const [selectedImageFile, setSelectedImageFiles] = useState<ImageFile[]>([]);
+	const haveTypes = formData.types.length === 0;
+	const haveKitchen = formData.kitchens.length === 0;
+	const haveServises = formData.services.length === 0;
+	const haveAverageCheck = formData.average_check === '';
+	const havePoster = !formData.poster;
 
 	const addInputsZoneComponent = () => {
 		setInputsZone([...inputsZone, { zone: '', seats: 0 }]);
@@ -154,16 +158,16 @@ function AddRestaurant() {
 		});
 	};
 
-	const handleInputChange = (
-		event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-	) => {
-		const { name, value } = event.target;
+	// const handleInputChange = (
+	// 	event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+	// ) => {
+	// 	const { name, value } = event.target;
 
-		setFormData((prevData) => ({
-			...prevData,
-			[name]: value,
-		}));
-	};
+	// 	setFormData((prevData) => ({
+	// 		...prevData,
+	// 		[name]: value,
+	// 	}));
+	// };
 
 	function handlePosterFileInputChange(event: ChangeEvent<HTMLInputElement>) {
 		event.preventDefault();
@@ -179,7 +183,6 @@ function AddRestaurant() {
 					...formData,
 					poster: base64String,
 				});
-				// console.log('Base64-строка изображения:', base64String);
 			};
 			reader.readAsDataURL(file);
 		} else {
@@ -270,7 +273,7 @@ function AddRestaurant() {
 			const formDataSend = {
 				name: data.name,
 				types: formData.types,
-				cities: formData.cities,
+				cities: data.cities,
 				address: data.address,
 				kitchens: formData.kitchens,
 				services: formData.services,
@@ -293,25 +296,27 @@ function AddRestaurant() {
 						(imageFile) => imageFile.file
 					);
 
-					console.log(filesToSend);
 					if (filesToSend.length > 0) {
 						await mainApi
 							.createImagesEstablishment(restaurantId, filesToSend)
-							.then((res) => {
-								navigate('/business-profile');
-							})
+							.then((res) => {})
 							.catch((err) => {
-								console.log('idiot you', err);
+								console.log('catch error', err);
 							});
 					}
+					navigate('/business-profile');
 				})
 				.catch((err) => {
 					console.error(err);
-					alert('Что-то пошло не так');
+					setServerNameError(
+						'Такое имя заведения, имя телефона или эмейл уже существует'
+					);
+					// alert('Что-то пошло не так');
 				});
 		} catch (err) {
 			console.error(err);
-			alert('Что-то пошло не так');
+
+			// alert('Что-то пошло не так');
 		}
 	};
 
@@ -342,10 +347,7 @@ function AddRestaurant() {
 							type="text"
 							minLength={2}
 							maxLength={30}
-							// name="name"
 							id="add-restaurant-name"
-							// value={formData.name}
-							// onChange={handleInputChange}
 							required
 							{...register('name', {
 								required: 'Поле обязательно для заполнения',
@@ -381,18 +383,44 @@ function AddRestaurant() {
 					</div>
 					<div className="add-restaurant__box-relative">
 						<input
-							className="add-restaurant__input"
+							className={`add-restaurant__input ${
+								errors.cities ? 'add-restaurant__input_error' : ''
+							}`}
 							placeholder="Город"
 							type="text"
 							maxLength={30}
-							name="cities"
+							// name="cities"
 							id="add-restaurant-city"
-							value={formData.cities}
-							onChange={handleInputChange}
+							// value={formData.cities}
+							// onChange={handleInputChange}
 							required
+							{...register('cities', {
+								required: 'Поле обязательно для заполнения',
+								minLength: {
+									value: 2,
+									message: 'Введите не менее 2 символов',
+								},
+								maxLength: {
+									value: 20,
+									message: 'Введите менее 20 символов',
+								},
+								pattern: {
+									value: /^[a-zA-Z\u0430-\u044f\u0410-\u042fёЁ\s]*$/,
+									message: 'Введите корректное имя',
+								},
+							})}
 						/>
+						<span
+							className={`add-restaurant__error ${
+								errors.cities ? 'add-restaurant__error_active' : ''
+							}`}
+						>
+							{errors?.cities?.message}
+						</span>
 						<label
-							className="add-restaurant__label-input"
+							className={`add-restaurant__label-input ${
+								errors.cities ? 'add-restaurant__label-input_error' : ''
+							}`}
 							htmlFor="add-restaurant-city"
 						>
 							Город
@@ -407,10 +435,7 @@ function AddRestaurant() {
 							type="text"
 							minLength={5}
 							maxLength={30}
-							// name="address"
 							id="add-restaurant-address"
-							// value={formData.address}
-							// onChange={handleInputChange}
 							required
 							{...register('address', {
 								required: 'Поле обязательно для заполнения',
@@ -447,12 +472,9 @@ function AddRestaurant() {
 							}`}
 							placeholder="Телефон (+7 *** ***-**-**)"
 							type="text"
-							// name="telephone"
 							id="add-restaurant-telephone"
-							minLength={10}
+							minLength={11}
 							maxLength={12}
-							// value={formData.telephone}
-							// onChange={handleInputChange}
 							required
 							{...register('telephone', {
 								required: 'Поле обязательно для заполнения',
@@ -461,8 +483,8 @@ function AddRestaurant() {
 									message: 'Введите корректный номер телефона',
 								},
 								minLength: {
-									value: 10,
-									message: 'Минимальная длина - 10 символов',
+									value: 11,
+									message: 'Минимальная длина - 11 символов',
 								},
 								maxLength: {
 									value: 12,
@@ -492,11 +514,7 @@ function AddRestaurant() {
 								errors.email ? 'add-restaurant__input_error' : ''
 							}`}
 							placeholder="Email заведения"
-							// type="email"
-							// name="email"
 							id="add-restaurant-email"
-							// value={formData.email}
-							// onChange={handleInputChange}
 							required
 							{...register('email', {
 								required: 'Поле обязательно для заполнения',
@@ -532,7 +550,7 @@ function AddRestaurant() {
 						</label>
 					</div>
 					<h3 className="add-restaurant__category">Тип заведения</h3>
-					{formData.types.length === 0 && (
+					{haveTypes && (
 						<span className="add-restaurant__item_error">
 							Выберите хотя бы одно значение
 						</span>
@@ -554,7 +572,7 @@ function AddRestaurant() {
 						))}
 					</ul>
 					<h3 className="add-restaurant__category">Кухня</h3>
-					{formData.kitchens.length === 0 && (
+					{haveKitchen && (
 						<span className="add-restaurant__item_error">
 							Выберите хотя бы одно значение
 						</span>
@@ -636,7 +654,7 @@ function AddRestaurant() {
 						onDayOffChange={handleDayOffChange}
 					/>
 					<h3 className="add-restaurant__category">Средний чек</h3>
-					{formData.average_check === '' && (
+					{haveAverageCheck && (
 						<span className="add-restaurant__item_error">
 							Выберите хотя бы одно значение
 						</span>
@@ -664,7 +682,7 @@ function AddRestaurant() {
 						/>
 					</ul>
 					<h3 className="add-restaurant__category">Услуги</h3>
-					{formData.services.length === 0 && (
+					{haveServises && (
 						<span className="add-restaurant__item_error">
 							Выберите хотя бы одно значение
 						</span>
@@ -701,10 +719,8 @@ function AddRestaurant() {
 							className={`add-restaurant__text-area ${
 								errors.description ? 'add-restaurant__text-area_error' : ''
 							}`}
-							// name="description"
 							id="add-restaurant-description"
 							maxLength={400}
-							// onChange={handleInputChange}
 							{...register('description', {
 								maxLength: {
 									value: 400,
@@ -725,6 +741,11 @@ function AddRestaurant() {
 						</span>
 					</div>
 					<h3 className="add-restaurant__category_padding-bot">Обложка</h3>
+					{havePoster && (
+						<span className="add-restaurant__item_error">
+							Обложка обязательна для заведения
+						</span>
+					)}
 					<div className="add-restaurant__flex-box-file">
 						{formData.poster ? (
 							<img
@@ -784,10 +805,25 @@ function AddRestaurant() {
 							</label>
 						</div>
 					</div>
+					<span className="add-restaurant__item_error">{serverNameError}</span>
 					<button
-						disabled={!isValid}
+						disabled={
+							!isValid ||
+							haveTypes ||
+							haveKitchen ||
+							haveServises ||
+							haveAverageCheck ||
+							havePoster
+						}
 						className={`add-restaurant__submit-btn ${
-							!isValid ? 'add-restaurant__submit-btn_disabled' : ''
+							!isValid ||
+							haveTypes ||
+							haveKitchen ||
+							haveServises ||
+							haveAverageCheck ||
+							havePoster
+								? 'add-restaurant__submit-btn_disabled'
+								: ''
 						}`}
 						type="submit"
 					>

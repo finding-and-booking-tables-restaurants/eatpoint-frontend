@@ -66,7 +66,10 @@ class MainApi {
 		});
 	}
 
-	createImagesEstablishment(establishmentId: number, images: File[]) {
+	createImagesEstablishment(
+		establishmentId: number | string | undefined,
+		images: File[]
+	) {
 		const formData = new FormData();
 
 		for (let i = 0; i < images.length; i++) {
@@ -96,6 +99,28 @@ class MainApi {
 	deleteMyEstablishment(id: number | undefined) {
 		return fetch(
 			`https://eatpoint.sytes.net/api/v1/business/establishments/${id}/`,
+			{
+				method: 'DELETE',
+				headers: {
+					authorization: 'Bearer ' + localStorage.getItem('access-token'),
+					'Content-Type': 'application/json',
+				},
+			}
+		).then((response) => {
+			if (!response.ok) {
+				return Promise.reject(`Error: ${response.status}`);
+			} else {
+				return;
+			}
+		});
+	}
+
+	deleteImagesEstablishment(
+		restaurantId: number | string | undefined,
+		imageId: number | undefined
+	) {
+		return fetch(
+			`https://eatpoint.sytes.net/api/v1/images/${restaurantId}/${imageId}/`,
 			{
 				method: 'DELETE',
 				headers: {
