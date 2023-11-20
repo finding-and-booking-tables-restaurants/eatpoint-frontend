@@ -102,7 +102,7 @@ function App() {
 
 		if (queryHeader) {
 			handleSearchEstablishments();
-			queryParams.delete('q')
+			queryParams.delete('q');
 			navigate('/', { replace: true });
 		}
 	}, [location.pathname, navigate, queryHeader]);

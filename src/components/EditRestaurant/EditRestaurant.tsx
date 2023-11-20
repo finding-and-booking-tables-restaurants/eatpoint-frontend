@@ -19,6 +19,11 @@ import InputsZone from '../AddRestaurant/InputsZone/InputsZone';
 import { InputsZoneData } from '../../types/InputsZoneData';
 import { Box } from '@mui/material';
 
+interface ImageFile {
+	file: File;
+	preview: string;
+}
+
 function EditRestaurant() {
 	const { id } = useParams();
 	const navigate = useNavigate();
@@ -26,7 +31,6 @@ function EditRestaurant() {
 	useEffect(() => {
 		mainApi.getMyEstablishmentById(id).then((res) => {
 			setFormData(res);
-			// setRecipeFile(res.poster);
 			setSelectedCheckFilters(res.average_check);
 			setInputsZone(res.zones);
 		});
@@ -46,8 +50,11 @@ function EditRestaurant() {
 		telephone: '',
 		description: '',
 		worked: [],
+		images: [],
 	});
+
 	console.log(formData);
+
 	const [loading, setLoading] = useState(true);
 	const [selectedCheckFilters, setSelectedCheckFilters] = useState<string>(
 		formData.average_check || ''
@@ -58,9 +65,7 @@ function EditRestaurant() {
 	}>({});
 
 	const [inputsZone, setInputsZone] = useState<InputsZoneData[]>([]);
-	// const [recipeFile, setRecipeFile] = useState<
-	// 	string | File | null | undefined
-	// >(formData.poster);
+	const [selectedImageFile, setSelectedImageFiles] = useState<ImageFile[]>([]);
 
 	const handleInputChange = (
 		event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -82,8 +87,6 @@ function EditRestaurant() {
 		newComponents.splice(index, 1);
 		setInputsZone(newComponents);
 	};
-
-	console.log(inputsZone);
 
 	const handleCheckboxChange = (event: ChangeEvent<HTMLInputElement>) => {
 		const { name, checked } = event.target;
@@ -169,37 +172,7 @@ function EditRestaurant() {
 		});
 	};
 
-	// const imageUrl = formData.poster;
-	// useEffect(() => {
-	// 	const fetchAndConvertToBase64 = async () => {
-	// 		try {
-	// 			const response = await fetch(imageUrl);
-	// 			if (response.ok) {
-	// 				const blob = await response.blob();
-	// 				const reader = new FileReader();
-
-	// 				reader.onload = () => {
-	// 					if (typeof reader.result === 'string') {
-	// 						setRecipeFile(reader.result);
-	// 					} else {
-	// 						console.log('Error: reader.result is not a string');
-	// 					}
-	// 				};
-
-	// 				reader.readAsDataURL(blob);
-	// 			} else {
-	// 				console.log('Error: Failed to fetch image');
-	// 			}
-	// 		} catch (error) {
-	// 			console.error('Error:', error);
-	// 		}
-	// 	};
-
-	// 	fetchAndConvertToBase64();
-	// }, []);
-	// console.log(recipeFile);
-
-	function handleFileInputChange(event: ChangeEvent<HTMLInputElement>) {
+	function handlePosterFileInputChange(event: ChangeEvent<HTMLInputElement>) {
 		const file = event.target.files?.[0];
 
 		if (file) {
@@ -219,6 +192,41 @@ function EditRestaurant() {
 			setFormData({ ...formData, poster: undefined });
 		}
 	}
+
+	const handleImagesFileInputChange = (
+		event: ChangeEvent<HTMLInputElement>
+	) => {
+		const files = event.target.files;
+		let newFiles: ImageFile[] = [];
+
+		if (files) {
+			for (let i = 0; i < files.length; i++) {
+				const file = files[i];
+				const reader = new FileReader();
+
+				reader.onloadend = () => {
+					newFiles.push({
+						file: file,
+						preview: reader.result as string,
+					});
+
+					if (newFiles.length === files.length) {
+						setSelectedImageFiles((prevFiles) => [...prevFiles, ...newFiles]);
+					}
+				};
+
+				reader.readAsDataURL(file);
+			}
+		}
+	};
+
+	const handleDeleteImageFile = (index: number) => {
+		setSelectedImageFiles((prevFiles) => {
+			const newFiles = [...prevFiles];
+			newFiles.splice(index, 1);
+			return newFiles;
+		});
+	};
 
 	async function handleSubmit(evt: React.FormEvent) {
 		evt.preventDefault();
@@ -260,6 +268,11 @@ function EditRestaurant() {
 	if (loading) {
 		return <p>Loading...</p>;
 	}
+
+	// console.log(formData.images
+	// 		return item.name;
+	// 	})
+	// );
 
 	return (
 		<>
@@ -379,33 +392,7 @@ function EditRestaurant() {
 							formData={formData.zones}
 						/>
 					))}
-					{/* {formData.zones.map((zone: any, index: number) => (
-						<div key={index} className="add-restaurant__flex-box">
-							<input
-								className="add-restaurant__input-place"
-								placeholder="Основной зал"
-								type="text"
-								name={`zones[${index}].zone`}
-								maxLength={30}
-								value={formData?.zones[index].zone || ''}
-								onChange={(evt) => handleAddZone(evt.target.value, index)}
-								required
-							/>
-							<input
-								className="add-restaurant__input-place_num"
-								placeholder="Мест"
-								type="number"
-								max={99}
-								maxLength={3}
-								name={`zones[${index}].seats`}
-								value={formData?.zones[index].seats || ''}
-								onChange={(e) =>
-									handleAddSeats(parseInt(e.target.value), index)
-								}
-								required
-							/>
-						</div>
-					))} */}
+
 					<button
 						className="add-restaurant__moreBtn"
 						type="button"
@@ -476,14 +463,68 @@ function EditRestaurant() {
 						maxLength={500}
 						value={formData.description || ''}
 						onChange={handleInputChange}
-						required
 					></textarea>
 					<h3 className="add-restaurant__category_padding-bot">Фотография</h3>
 					<div className="add-restaurant__flex-box-file">
-						<p className="add-restaurant__file-paragraph">
-							Добавьте фото для аватара размером до 5 МБ
-						</p>
-
+						{formData.poster ? (
+							<img
+								className="add-restaurant__poster"
+								src={
+									typeof formData.poster === 'string'
+										? formData.poster
+										: undefined
+								}
+								alt="Poster"
+							/>
+						) : null}
+						<div className="input__wrapper">
+							<input
+								className="input__file"
+								name="filePoster"
+								type="file"
+								accept="image/*"
+								id="filePoster"
+								onChange={handlePosterFileInputChange}
+							/>
+							<label htmlFor="filePoster" className="input__file-button">
+								<span className="input__file-button-text">Добавить фото</span>
+							</label>
+						</div>
+					</div>
+					<h3 className="add-restaurant__category_padding-bot">Фотографии</h3>
+					<div className="add-restaurant__box-images">
+						{formData.images
+							? formData?.images.map((file, index: number) => (
+									<div className="input-file__background" key={index}>
+										<img
+											src={file.image}
+											alt={`Preview ${index}`}
+											className="input-file__image"
+										/>
+										<button
+											type="button"
+											className="input-file__delete-image"
+											// onClick={() => handleDeleteImageFile(index)}
+										></button>
+									</div>
+							  ))
+							: null}
+						{selectedImageFile.map((file, index) => (
+							<div className="input-file__background" key={index}>
+								<img
+									src={file.preview}
+									alt={`Preview ${index}`}
+									className="input-file__image"
+								/>
+								<button
+									type="button"
+									className="input-file__delete-image"
+									onClick={() => handleDeleteImageFile(index)}
+								></button>
+							</div>
+						))}
+					</div>
+					<div className="add-restaurant__flex-box-file">
 						<div className="input__wrapper">
 							<input
 								className="input__file"
@@ -491,24 +532,14 @@ function EditRestaurant() {
 								type="file"
 								accept="image/*"
 								id="input__file"
-								onChange={handleFileInputChange}
+								multiple
+								onChange={handleImagesFileInputChange}
 							/>
 							<label htmlFor="input__file" className="input__file-button">
 								<span className="input__file-button-text">Добавить фото</span>
 							</label>
 						</div>
 					</div>
-					{formData.poster ? (
-						<img
-							src={
-								typeof formData.poster === 'string'
-									? formData.poster
-									: undefined
-							}
-							alt="avatar"
-							className="add-restaurant__poster"
-						/>
-					) : null}
 					<button className="add-restaurant__submit-btn" type="submit">
 						Сохранить
 					</button>

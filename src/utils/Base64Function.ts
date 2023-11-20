@@ -27,3 +27,24 @@ async function imageUrlToBase64(url: any): Promise<string | undefined | File> {
 }
 
 export default imageUrlToBase64;
+
+// function handleFileInputChange(event: ChangeEvent<HTMLInputElement>) {
+// 	const file = event.target.files?.[0];
+
+// 	if (file) {
+// 		const reader = new FileReader();
+
+// 		reader.onload = function (e: ProgressEvent<FileReader>) {
+// 			const base64String = e.target?.result as string;
+
+// 			setFormData({
+// 				...formData,
+// 				poster: base64String,
+// 			});
+// 			// console.log('Base64-строка изображения:', base64String);
+// 		};
+// 		reader.readAsDataURL(file);
+// 	} else {
+// 		setFormData({ ...formData, poster: undefined });
+// 	}
+// }

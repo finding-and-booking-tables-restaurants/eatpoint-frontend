@@ -1,6 +1,7 @@
 import { API_URL } from './constants';
 import { RestaurantData } from '../types/addRestaurantTypes';
 import { ReservationFormValues } from '../types/ReservationFormValues';
+// import { ImageFile } from '../types/addRestaurantTypes';
 
 class MainApi {
 	private _baseUrl: string;
@@ -59,33 +60,27 @@ class MainApi {
 			method: 'POST',
 			headers: {
 				authorization: 'Bearer ' + localStorage.getItem('access-token'),
+				'Content-Type': 'application/json',
 			},
 			body: JSON.stringify(data),
 		});
 	}
 
-	// form-data
-	// createMyEstablishment(data: RestaurantData, files: FileList) {
-	// 	const formData = new FormData();
+	createImagesEstablishment(establishmentId: number, images: File[]) {
+		const formData = new FormData();
 
-	// 	Object.keys(data).forEach((key) => {
-	// 		if (Object.prototype.hasOwnProperty.call(data, key)) {
-	// 			formData.append(key, (data as any)[key]);
-	// 		}
-	// 	});
+		for (let i = 0; i < images.length; i++) {
+			formData.append(`image`, images[i]);
+		}
 
-	// 	for (let i = 0; i < files.length; i++) {
-	// 		formData.append('files', files[i]);
-	// 	}
-
-	// 	return this._sendFetchRequest(`/api/v1/business/establishments/`, {
-	// 		method: 'POST',
-	// 		headers: {
-	// 			authorization: 'Bearer ' + localStorage.getItem('access-token'),
-	// 		},
-	// 		body: formData,
-	// 	});
-	// }
+		return this._sendFetchRequest(`/api/v1/images/${establishmentId}/`, {
+			method: 'POST',
+			headers: {
+				authorization: 'Bearer ' + localStorage.getItem('access-token'),
+			},
+			body: formData,
+		});
+	}
 
 	editMyEstablishment(data: RestaurantData, id: string | undefined) {
 		return this._sendFetchRequest(`/api/v1/business/establishments/${id}/`, {
@@ -95,6 +90,25 @@ class MainApi {
 				'Content-Type': 'application/json',
 			},
 			body: JSON.stringify(data),
+		});
+	}
+
+	deleteMyEstablishment(id: number | undefined) {
+		return fetch(
+			`https://eatpoint.sytes.net/api/v1/business/establishments/${id}/`,
+			{
+				method: 'DELETE',
+				headers: {
+					authorization: 'Bearer ' + localStorage.getItem('access-token'),
+					'Content-Type': 'application/json',
+				},
+			}
+		).then((response) => {
+			if (!response.ok) {
+				return Promise.reject(`Error: ${response.status}`);
+			} else {
+				return;
+			}
 		});
 	}
 
