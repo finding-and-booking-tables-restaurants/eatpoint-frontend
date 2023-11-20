@@ -1,7 +1,7 @@
 export interface Zone {
 	zone?: string;
 	seats?: number;
-	available_seats?: number;
+	// available_seats?: number;
 }
 
 interface RestaurantData {
@@ -14,7 +14,7 @@ interface RestaurantData {
 	zones: Zone[];
 	average_check: string;
 	// poster: File | string | null | undefined;
-	poster: any;
+	poster?: any;
 	email: string;
 	telephone: string;
 	description: string;
