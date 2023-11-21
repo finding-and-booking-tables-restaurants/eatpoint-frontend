@@ -185,6 +185,45 @@ class MainApi {
 			},
 		});
 	}
+
+	getAllBusinessReservation() {
+		return this._sendFetchRequest(`/api/v1/business/reservations/`, {
+			headers: {
+				authorization: 'Bearer ' + localStorage.getItem('access-token'),
+				'Content-Type': 'application/json',
+			},
+		});
+	}
+
+	getBusinessReservationById(id: string | undefined) {
+		return this._sendFetchRequest(`/api/v1/business/reservations/${id}/`, {
+			headers: {
+				authorization: 'Bearer ' + localStorage.getItem('access-token'),
+				'Content-Type': 'application/json',
+			},
+		});
+	}
+
+	confirmReservation(id: string) {
+		return this._sendFetchRequest(`/api/v1/business/reservations/${id}/`, {
+			method: 'PATCH',
+			headers: {
+				authorization: 'Bearer ' + localStorage.getItem('access-token'),
+				'Content-Type': 'application/json',
+			},
+			body: JSON.stringify({ status: true }),
+		});
+	}
+
+	cancelReservation(id: string) {
+		return this._sendFetchRequest(`/api/v1/business/reservations/${id}/`, {
+			method: 'DELETE',
+			headers: {
+				authorization: 'Bearer ' + localStorage.getItem('access-token'),
+				'Content-Type': 'application/json',
+			},
+		});
+	}
 }
 
 export const mainApi = new MainApi({

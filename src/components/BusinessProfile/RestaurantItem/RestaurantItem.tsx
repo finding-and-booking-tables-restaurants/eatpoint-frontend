@@ -79,7 +79,12 @@ function RestaurantItem({
 					</button>
 				</div>
 				<div className="restaurant__box-optionBtn">
-					<button className="restaurant__optionBtn restaurant__optionBtn_allReservation">
+					<button
+						onClick={() =>
+							navigate(`/business-profile/reservation-restaurant/${id}`)
+						}
+						className="restaurant__optionBtn restaurant__optionBtn_allReservation"
+					>
 						Все брони
 					</button>
 					<button className="restaurant__optionBtn restaurant__optionBtn_analytics">
