@@ -22,7 +22,7 @@
 
 .restaurant-page__more-photo-btn {
 	position: absolute;
-	top: 222px;
+	bottom: 16px;
 	right: 16px;
 }
 
@@ -182,6 +182,10 @@
 	align-self: flex-start;
 	padding: 0;
 	color: #49454f;
+	position: absolute;
+	bottom: 20px;
+	right: 20px;
+	top: 0;
 }
 
 .restaurant-page__description-more-btn:hover {

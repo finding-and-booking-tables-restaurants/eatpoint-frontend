@@ -30,7 +30,6 @@ import AccessTimeOutlinedIcon from '@mui/icons-material/AccessTimeOutlined';
 import { useContext, useEffect, useState } from 'react';
 import RatingAndReviews from '../RatingAndReviews/RatingAndReviews';
 import BookingForm from '../BookingForm/BookingForm';
-import TodayIcon from '@mui/icons-material/Today';
 import { useNavigate } from 'react-router';
 import Header from '../Header/Header';
 import Footer from '../Footer/Footer';
@@ -169,6 +168,7 @@ export default function RestaurantPage({ id }: { id: number }) {
 						position: 'relative',
 						color: '#fff',
 						margin: '15px',
+						width: '70vw',
 					},
 				}}
 			>

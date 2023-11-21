@@ -68,6 +68,7 @@ function BusinessProfile() {
 				p={'16px 16px 0 16px'}
 				minWidth={maxWidthBoxConfig}
 				maxWidth={minWidthBoxConfig}
+				minHeight={'calc(100vh - 210px)'}
 				m={'auto auto 45px auto'}
 			>
 				<div className="business-profile__box-profile">
@@ -96,21 +97,23 @@ function BusinessProfile() {
 				</Link>
 				<h2 className="business-profile__list-title">Мои рестораны</h2>
 				<ul className="business-profile__list">
-					{myEstablishments.map((establishment, index) => (
-						<RestaurantItem
-							key={establishment.id}
-							id={establishment.id}
-							name={establishment.name}
-							cities={establishment.cities}
-							address={establishment.address}
-							poster={establishment.poster}
-							avarage_check={establishment.average_check}
-							rating={establishment.rating}
-							review_count={establishment.review_count}
-							establishment={establishment}
-							handleOpenDeleteModal={handleOpenDeleteModal}
-						/>
-					))}
+					{myEstablishments.length
+						? myEstablishments.map((establishment, index) => (
+								<RestaurantItem
+									key={establishment.id}
+									id={establishment.id}
+									name={establishment.name}
+									cities={establishment.cities}
+									address={establishment.address}
+									poster={establishment.poster}
+									avarage_check={establishment.average_check}
+									rating={establishment.rating}
+									review_count={establishment.review_count}
+									establishment={establishment}
+									handleOpenDeleteModal={handleOpenDeleteModal}
+								/>
+						  ))
+						: 'У вас пока нет ресторанов'}
 				</ul>
 				<DeleteCardConfirm
 					isDeleteModalOpen={isDeleteModalOpen}

@@ -17,7 +17,7 @@ import { mainApi } from '../../utils/mainApi';
 import { daysOfWeek } from '../../utils/constants';
 import InputsZone from '../AddRestaurant/InputsZone/InputsZone';
 import { InputsZoneData } from '../../types/InputsZoneData';
-import { Box } from '@mui/material';
+import { Box, Button } from '@mui/material';
 import Preloader from '../Preloader/Preloader';
 
 interface ImageFile {
@@ -96,11 +96,11 @@ function EditRestaurant() {
 
 	const [inputsZone, setInputsZone] = useState<InputsZoneData[]>([]);
 	const [selectedImageFile, setSelectedImageFiles] = useState<ImageFile[]>([]);
-	const haveTypes = formData.types.length === 0;
-	const haveKitchen = formData.kitchens.length === 0;
-	const haveServises = formData.services.length === 0;
-	const haveAverageCheck = formData.average_check === '';
-	const havePoster = !formData.poster;
+	const haveTypes = formData.types.length !== 0;
+	const haveKitchen = formData.kitchens.length !== 0;
+	const haveServises = formData.services.length !== 0;
+	const haveAverageCheck = formData.average_check !== '';
+	const havePoster = formData.poster;
 
 	const addInputsZoneComponent = () => {
 		setInputsZone([...inputsZone, { zone: '', seats: 0 }]);
@@ -338,6 +338,13 @@ function EditRestaurant() {
 	if (loading) {
 		return <Preloader />;
 	}
+
+	// console.log('isValid ', isValid);
+	// console.log('haveTypes ', haveTypes);
+	// console.log('haveKitchen ', haveKitchen);
+	// console.log('haveServises ', haveServises);
+	// console.log('haveAverageCheck ', haveAverageCheck);
+	// console.log('havePoster ', havePoster);
 
 	return (
 		<>
@@ -727,10 +734,10 @@ function EditRestaurant() {
 									value: 400,
 									message: 'Введите менее 400 символов',
 								},
-								pattern: {
-									value: /^[a-zA-Zа-яА-ЯёЁ\s!?"()\d]*$/,
-									message: 'Вы ввели недопустимые символы',
-								},
+								// pattern: {
+								// 	value: /^[a-zA-Zа-яА-ЯёЁ\s!,.?"()\—«»d]*$/,
+								// 	message: 'Вы ввели недопустимые символы',
+								// },
 							})}
 						/>
 						<span
@@ -823,7 +830,30 @@ function EditRestaurant() {
 							</label>
 						</div>
 					</div>
-					<button
+					<Button
+						type="submit"
+						variant="contained"
+						sx={{
+							textTransform: 'none',
+							backgroundColor: '#05887b',
+							color: 'white',
+							borderRadius: '8px',
+							maxWidth: '328px',
+							minHeight: '40px',
+							mb: '10px',
+						}}
+						disabled={
+							!isValid ||
+							!haveTypes ||
+							!haveKitchen ||
+							!haveServises ||
+							!haveAverageCheck ||
+							!havePoster
+						}
+					>
+						Сохранить
+					</Button>
+					{/* <button
 						disabled={
 							!isValid ||
 							haveTypes ||
@@ -845,7 +875,7 @@ function EditRestaurant() {
 						type="submit"
 					>
 						Сохранить
-					</button>
+					</button> */}
 				</form>
 				<Link to="/business-profile" className="add-restaurant__back-btn">
 					Назад

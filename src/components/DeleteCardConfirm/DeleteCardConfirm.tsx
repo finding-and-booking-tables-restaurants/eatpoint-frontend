@@ -25,7 +25,7 @@ function DeleteCardConfirm({
 					Удалить ресторан {selectedEstablishment?.name}?
 				</p>
 				<p className="delete-card-confirm__description">
-					Ресторан, все события и все брони, относящиеся к нему удаляться
+					Ресторан, все события и все брони, относящиеся к нему удалятся
 					безвозвратно.
 				</p>
 				<div className="delete-card-confirm__box-btns">

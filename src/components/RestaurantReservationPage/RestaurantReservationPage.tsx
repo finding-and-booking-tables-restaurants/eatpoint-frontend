@@ -90,6 +90,7 @@ function RestaurantReservationPage() {
 				maxWidth={maxWidthBoxConfig}
 				minWidth={minWidthBoxConfig}
 				m="auto"
+				minHeight={'calc(100vh - 156px)'}
 				className="restaurant__reserve"
 			>
 				<div className="restaurant__reserve-page">
@@ -129,55 +130,64 @@ function RestaurantReservationPage() {
 				</div>
 				<p className="restaurant__rweservation-heading">Бронирования</p>
 				<ul className="restaurant__reservations">
-					{myReservations.map((item: any, index: number) => (
-						<li className="restaurant__reservation" key={index}>
-							<p className="restaurant__reservation-date">
-								{item.date_reservation} • {item.start_time_reservation}
-							</p>
-							<p className="restaurant__reservation-guests">
-								{item.number_guests} человека •{' '}
-							</p>
-							<p className="restaurant__reservation-name">{item.first_name}</p>
-							<p className="restaurant__reservation-contact">
-								{item.telephone}
-							</p>
-							<p className="restaurant__reservation-contact">{item.email}</p>
-							<p className="restaurant__reservation-name">Комментарий</p>
-							<p className="restaurant__reservation-contact">{item.comment}</p>
-							<Box display="inline-flex" gap="8px" mt="auto" pt="10px">
-								<Button
-									onClick={() => handleCancelReservation(item.id)}
-									variant="outlined"
-									sx={{
-										color: '#006C60',
-										borderColor: '#006C60',
-										textTransform: 'none',
-										borderRadius: '8px',
-										minWidth: '139px',
-									}}
-									disabled={isLoading}
-								>
-									Отменить
-								</Button>
-								<Button
-									onClick={() => {
-										handleConfirmReservation(item.id);
-									}}
-									variant="contained"
-									sx={{
-										color: 'white',
-										backgroundColor: '#006C60',
-										textTransform: 'none',
-										borderRadius: '8px',
-										minWidth: '139px',
-									}}
-									disabled={item.status || isLoading}
-								>
-									{!item.status ? 'Подтвердить' : 'Подтверждено'}
-								</Button>
-							</Box>
-						</li>
-					))}
+					{myReservations.length
+						? myReservations.map((item: any, index: number) => (
+								<li className="restaurant__reservation" key={index}>
+									<p className="restaurant__reservation-date">
+										{item.date_reservation} • {item.start_time_reservation}
+									</p>
+									<p className="restaurant__reservation-guests">
+										{item.number_guests} человека •{' '}
+									</p>
+									<p className="restaurant__reservation-name">
+										{item.first_name}
+									</p>
+									<p className="restaurant__reservation-contact">
+										{item.telephone}
+									</p>
+									<p className="restaurant__reservation-contact">
+										{item.email}
+									</p>
+									<p className="restaurant__reservation-name">Комментарий</p>
+									<p className="restaurant__reservation-contact">
+										{item.comment}
+									</p>
+									<Box display="inline-flex" gap="8px" mt="auto" pt="10px">
+										<Button
+											onClick={() => handleCancelReservation(item.id)}
+											variant="outlined"
+											sx={{
+												color: '#006C60',
+												borderColor: '#006C60',
+												textTransform: 'none',
+												borderRadius: '8px',
+												minWidth: '139px',
+											}}
+											disabled={isLoading}
+										>
+											Отменить
+										</Button>
+										<Button
+											onClick={() => {
+												handleConfirmReservation(item.id);
+											}}
+											variant="contained"
+											sx={{
+												color: 'white',
+												backgroundColor: '#006C60',
+												textTransform: 'none',
+												borderRadius: '8px',
+												minWidth: '139px',
+											}}
+											disabled={item.status || isLoading}
+										>
+											{!item.status ? 'Подтвердить' : 'Подтверждено'}
+										</Button>
+									</Box>
+								</li>
+						  ))
+						: 'У вас пока нет бронирований'}
+					{}
 				</ul>
 			</Box>
 			<Footer />

@@ -18,6 +18,7 @@ interface UserBookingProps {
 	bookingId: number;
 	establishmentId: number;
 	handleDeleteBooking: (id: number) => void;
+	status: boolean;
 }
 
 const UserBooking: FC<UserBookingProps> = ({
@@ -31,6 +32,7 @@ const UserBooking: FC<UserBookingProps> = ({
 	bookingId,
 	establishmentId,
 	handleDeleteBooking,
+	status,
 }) => {
 	const navigate = useNavigate();
 
@@ -75,7 +77,9 @@ const UserBooking: FC<UserBookingProps> = ({
 				>
 					<img src={notifIcon} className="user-booking__message-icon" />
 					<p className="user-booking__message-text">
-						Ожидайте подтверждение от ресторана
+						{status
+							? 'Ваше бронировнаие подтверждено'
+							: 'Ожидайте подтверждение от ресторана'}
 					</p>
 				</div>
 				<Button

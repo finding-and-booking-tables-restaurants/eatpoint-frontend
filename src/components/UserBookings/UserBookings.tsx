@@ -109,6 +109,7 @@ const UserBookings = () => {
 									bookingId={booking.id}
 									establishmentId={booking.establishment.id}
 									handleDeleteBooking={handleDeleteBooking}
+									status={booking.status}
 								/>
 							))}
 					</Box>
