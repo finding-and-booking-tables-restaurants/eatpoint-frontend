@@ -10,7 +10,9 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import CurrentUserContext from '../../contexts/CurrentUserContext';
 import { handlePageReload } from '../../utils/pageReloader';
 import { getCityNameByLocation } from '../../utils/getCityByLocation';
-import { Box, Link } from '@mui/material';
+import { Button, InputAdornment, Link, TextField } from '@mui/material';
+import SearchIcon from '@mui/icons-material/Search';
+import { Box } from '@mui/material';
 import { maxWidthBoxConfig, minWidthBoxConfig } from '../../utils/constants';
 
 const Header = () => {
@@ -35,11 +37,15 @@ const Header = () => {
 	const [anchorElCity, setAnchorElCity] = React.useState<null | HTMLElement>(
 		null
 	);
+	const [isSearchingRestorants, setIsSearchingRestorants] =
+		React.useState(false);
 
 	const handleNavClick = (event: React.MouseEvent<HTMLButtonElement>) => {
 		setAnchorElNav(event.currentTarget);
 	};
-	const handleSearchClick = () => {};
+	const handleSearchClick = () => {
+		setIsSearchingRestorants(!isSearchingRestorants);
+	};
 
 	const openCityMenu = Boolean(anchorElCity);
 	const openNav = Boolean(anchorElNav);
@@ -68,99 +74,175 @@ const Header = () => {
 		localStorage.setItem('city', 'Москва');
 	}, [savedCity]);
 
-	return (
-		<Box
-			component="header"
-			display="flex"
-			m="0 auto"
-			gap="11px"
-			alignItems="center"
-			justifyContent="space-between"
-			minWidth={maxWidthBoxConfig}
-			maxWidth={minWidthBoxConfig}
-			p="14px 0"
-		>
-			<Link href="/">
-				<img className="header__logo" src={logo} alt="лого" />
-			</Link>
-			<div onClick={handleLocationClick} className="header__location-btn">
-				<img src={place} alt="" />
-				<p className="header__location">{city}</p>
-			</div>
-			{openCityMenu && (
-				<SearchCity onClose={() => setAnchorElCity(null)} setSity={setCity} />
-			)}
+	const [inputValue, setInputValue] = useState('');
+	const history = useNavigate();
 
-			<button onClick={handleSearchClick} className="header__srch-btn"></button>
-			<button onClick={handleNavClick} className="header__nav-btn"></button>
-			{!isLoggedIn ? (
-				<Menu
-					id="basic-menu"
-					anchorEl={anchorElNav}
-					open={openNav}
-					onClose={handleNavClose}
-					MenuListProps={{
-						'aria-labelledby': 'basic-button',
-					}}
-				>
-					<MenuItem id="/signin" onClick={handleNavClose}>
-						<KeyboardArrowRightIcon /> Вход
-					</MenuItem>
-					<MenuItem
-						id={`${
-							chechLocation('/business') || chechLocation('/business-signup')
-								? '/business-signup'
-								: '/user-signup'
-						}`}
-						onClick={handleNavClose}
+	const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+		setInputValue(e.target.value);
+	};
+	const redirectToSearchPage = () => {
+		if (inputValue) {
+			history(`/?q=${inputValue}`);
+		}
+	};
+
+	return (
+		<>
+			<Box
+				component="header"
+				display="flex"
+				m="0 auto"
+				gap="11px"
+				alignItems="center"
+				justifyContent="space-between"
+				minWidth={maxWidthBoxConfig}
+				maxWidth={minWidthBoxConfig}
+				p="14px 0"
+			>
+				<Link href="/">
+					<img className="header__logo" src={logo} alt="лого" />
+				</Link>
+				<div onClick={handleLocationClick} className="header__location-btn">
+					<img src={place} alt="" />
+					<p className="header__location">{city}</p>
+				</div>
+				{openCityMenu && (
+					<SearchCity onClose={() => setAnchorElCity(null)} setSity={setCity} />
+				)}
+
+				{location.pathname !== '/' && (
+					<button
+						onClick={handleSearchClick}
+						className="header__srch-btn"
+					></button>
+				)}
+				<button onClick={handleNavClick} className="header__nav-btn"></button>
+				{!isLoggedIn ? (
+					<Menu
+						id="basic-menu"
+						anchorEl={anchorElNav}
+						open={openNav}
+						onClose={handleNavClose}
+						MenuListProps={{
+							'aria-labelledby': 'basic-button',
+						}}
 					>
-						<KeyboardArrowRightIcon /> Регистрация
-					</MenuItem>
-					{!chechLocation('/business') && (
-						<MenuItem id="/business" onClick={handleNavClose}>
-							<KeyboardArrowRightIcon /> Для ресторанов
+						<MenuItem id="/signin" onClick={handleNavClose}>
+							<KeyboardArrowRightIcon /> Вход
 						</MenuItem>
-					)}
-				</Menu>
-			) : role === 'client' ? (
-				<Menu
-					id="basic-menu"
-					anchorEl={anchorElNav}
-					open={openNav}
-					onClose={handleNavClose}
-					MenuListProps={{
-						'aria-labelledby': 'basic-button',
-					}}
-				>
-					<MenuItem id="/user-profile" onClick={handleNavClose}>
-						<KeyboardArrowRightIcon /> Профиль
-					</MenuItem>
-					<MenuItem id="/user-bookings" onClick={handleNavClose}>
-						<KeyboardArrowRightIcon /> Мои брони
-					</MenuItem>
-					<MenuItem id="signout" onClick={handleLogOut}>
-						<KeyboardArrowRightIcon /> Выход
-					</MenuItem>
-				</Menu>
-			) : (
-				<Menu
-					id="basic-menu"
-					anchorEl={anchorElNav}
-					open={openNav}
-					onClose={handleNavClose}
-					MenuListProps={{
-						'aria-labelledby': 'basic-button',
-					}}
-				>
-					<MenuItem id="/business-profile" onClick={handleNavClose}>
-						<KeyboardArrowRightIcon /> Личный кабинет
-					</MenuItem>
-					<MenuItem id="signout" onClick={handleLogOut}>
-						<KeyboardArrowRightIcon /> Выход
-					</MenuItem>
-				</Menu>
-			)}
-		</Box>
+						<MenuItem
+							id={`${
+								chechLocation('/business') || chechLocation('/business-signup')
+									? '/business-signup'
+									: '/user-signup'
+							}`}
+							onClick={handleNavClose}
+						>
+							<KeyboardArrowRightIcon /> Регистрация
+						</MenuItem>
+						{!chechLocation('/business') && (
+							<MenuItem id="/business" onClick={handleNavClose}>
+								<KeyboardArrowRightIcon /> Для ресторанов
+							</MenuItem>
+						)}
+					</Menu>
+				) : role === 'client' ? (
+					<Menu
+						id="basic-menu"
+						anchorEl={anchorElNav}
+						open={openNav}
+						onClose={handleNavClose}
+						MenuListProps={{
+							'aria-labelledby': 'basic-button',
+						}}
+					>
+						<MenuItem id="/user-profile" onClick={handleNavClose}>
+							<KeyboardArrowRightIcon /> Профиль
+						</MenuItem>
+						<MenuItem id="/user-bookings" onClick={handleNavClose}>
+							<KeyboardArrowRightIcon /> Мои брони
+						</MenuItem>
+						<MenuItem id="signout" onClick={handleLogOut}>
+							<KeyboardArrowRightIcon /> Выход
+						</MenuItem>
+					</Menu>
+				) : (
+					<Menu
+						id="basic-menu"
+						anchorEl={anchorElNav}
+						open={openNav}
+						onClose={handleNavClose}
+						MenuListProps={{
+							'aria-labelledby': 'basic-button',
+						}}
+					>
+						<MenuItem id="/business-profile" onClick={handleNavClose}>
+							<KeyboardArrowRightIcon /> Личный кабинет
+						</MenuItem>
+						<MenuItem id="signout" onClick={handleLogOut}>
+							<KeyboardArrowRightIcon /> Выход
+						</MenuItem>
+					</Menu>
+				)}
+			</Box>
+			<>
+				{isSearchingRestorants && (
+					<div className="header__search-input">
+						<TextField
+							label="Поиск"
+							placeholder="Адрес, кухня, название"
+							type="text"
+							onKeyUp={(e) => {
+								if (e.key === 'Enter' && inputValue) redirectToSearchPage();
+							}}
+							sx={{
+								maxWidth: {
+									xs: '100%',
+									sm: '450px',
+									md: '665px',
+									lg: '665px',
+								},
+								minWidth: {
+									xs: '100%',
+									sm: '450px',
+									md: '665px',
+									lg: '665px',
+								},
+								backgroundColor: 'white',
+								borderRadius: '8px',
+								'& .MuiInputBase-root': {
+									borderRadius: '8px',
+								},
+							}}
+							autoComplete="off"
+							value={inputValue}
+							onChange={handleInputChange}
+							InputProps={{
+								startAdornment: (
+									<InputAdornment position="start">
+										<SearchIcon />
+									</InputAdornment>
+								),
+							}}
+						/>
+						<Button
+							onClick={redirectToSearchPage}
+							variant="contained"
+							type="submit"
+							sx={{
+								backgroundColor: '#05887B',
+								textTransform: 'none',
+								borderRadius: '8px',
+								minHeight: '40px',
+								minWidth: { xs: '100%', sm: '225px', md: '355px' },
+							}}
+						>
+							Искать заведение
+						</Button>
+					</div>
+				)}
+			</>
+		</>
 	);
 };
 

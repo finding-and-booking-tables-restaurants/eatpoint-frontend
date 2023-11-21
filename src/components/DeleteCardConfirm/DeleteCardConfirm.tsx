@@ -1,36 +1,50 @@
+import { Establishment } from '../../types/getMyRestaurantTypes';
 import './DeleteCardConfirm.css';
-import React from 'react';
 
 interface DeleteCardConfirmProps {
-	isOpen: boolean;
-	isClose: (_: boolean) => void;
-	title: string;
+	handleCloseDeleteModal?: () => void;
+	isDeleteModalOpen?: boolean | undefined;
+	deleteEstablishment?: (id: number | undefined | null) => void;
+	selectedEstablishment?: Establishment | null;
 }
 
-function DeleteCardConfirm({ isOpen, isClose, title }: DeleteCardConfirmProps) {
-	function handleCloseBtn() {
-		isClose(false);
-	}
+function DeleteCardConfirm({
+	handleCloseDeleteModal,
+	isDeleteModalOpen,
+	deleteEstablishment,
+	selectedEstablishment,
+}: DeleteCardConfirmProps) {
 	return (
 		<div
 			className={`delete-card-confirm ${
-				isOpen ? 'delete-card-confirm_active' : ''
+				isDeleteModalOpen ? 'delete-card-confirm_active' : ''
 			}`}
 		>
 			<div className="delete-card-confirm__container">
-				<h3 className="delete-card-confirm__title">{title}</h3>
+				<p className="delete-card-confirm__title">
+					Удалить ресторан {selectedEstablishment?.name}?
+				</p>
 				<p className="delete-card-confirm__description">
-					Ресторан, все события и все брони, относящиеся к нему удаляться
+					Ресторан, все события и все брони, относящиеся к нему удалятся
 					безвозвратно.
 				</p>
 				<div className="delete-card-confirm__box-btns">
 					<button
 						className="delete-card-confirm__cancel"
-						onClick={handleCloseBtn}
+						onClick={handleCloseDeleteModal}
 					>
 						Отменить
 					</button>
-					<button className="delete-card-confirm__delete">Удалить</button>
+					<button
+						className="delete-card-confirm__delete"
+						type="submit"
+						onClick={() =>
+							deleteEstablishment &&
+							deleteEstablishment(selectedEstablishment?.id)
+						}
+					>
+						Удалить
+					</button>
 				</div>
 			</div>
 		</div>

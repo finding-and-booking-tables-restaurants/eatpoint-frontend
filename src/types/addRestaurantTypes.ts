@@ -1,7 +1,7 @@
 export interface Zone {
 	zone?: string;
 	seats?: number;
-	available_seats?: number;
+	// available_seats?: number;
 }
 
 interface RestaurantData {
@@ -14,7 +14,7 @@ interface RestaurantData {
 	zones: Zone[];
 	average_check: string;
 	// poster: File | string | null | undefined;
-	poster: any;
+	poster?: any;
 	email: string;
 	telephone: string;
 	description: string;
@@ -25,7 +25,12 @@ interface RestaurantData {
 		day_off?: boolean;
 	}[];
 	socials?: { name: string }[];
-	images?: { name: string; image: string }[];
+	// images?: { name: string; image: string }[];
+	images?: {
+		id?: number;
+		image?: string;
+		name?: string;
+	}[];
 }
 
 export type { RestaurantData };
@@ -34,4 +39,9 @@ export interface Zone {
 	zone?: string;
 	seats?: number;
 	available_seats?: number;
+}
+
+export interface ImageFile {
+	file: File;
+	preview: string;
 }

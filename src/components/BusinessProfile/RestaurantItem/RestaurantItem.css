@@ -15,6 +15,7 @@
 .restaurant__box-info {
 	display: flex;
 	justify-content: space-between;
+	gap: 10px;
 }
 
 .restaurant__image {
@@ -36,7 +37,7 @@
 
 .restaurant__place {
 	color: #49454f;
-	font-family: Roboto;
+	font-family: 'Roboto';
 	font-size: 14px;
 	font-style: normal;
 	font-weight: 400;
@@ -45,7 +46,7 @@
 	overflow: hidden;
 	text-overflow: ellipsis;
 	white-space: nowrap;
-	/* width: 90%; */
+	max-width: 90%;
 }
 
 .restaurant__editBtn {
@@ -78,8 +79,8 @@
 }
 
 .restaurant__reviews-num {
-	color: #05887b;
-	font-family: Roboto;
+	color: #49454f;
+	font-family: 'Roboto';
 	font-size: 14px;
 	font-style: normal;
 	font-weight: 500;
@@ -88,7 +89,7 @@
 }
 
 .restaurant__rating-num {
-	font-family: Roboto;
+	font-family: 'Roboto';
 	font-size: 14px;
 	font-weight: 500;
 	line-height: 20px;
@@ -126,7 +127,7 @@
 	background-color: initial;
 	cursor: pointer;
 	color: #006c60;
-	font-family: Roboto;
+	font-family: 'Roboto';
 	font-size: 14px;
 	font-weight: 500;
 	line-height: 20px;

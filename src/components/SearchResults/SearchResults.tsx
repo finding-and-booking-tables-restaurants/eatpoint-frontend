@@ -11,6 +11,7 @@ import { formatRating } from '../../utils/formatRating';
 import { Box, Button, Typography } from '@mui/material';
 import TuneIcon from '@mui/icons-material/Tune';
 import ClearIcon from '@mui/icons-material/Clear';
+import { useLocation } from 'react-router-dom';
 
 interface SearchResultsProps {
 	searchEstablishments: Restaurant[];
@@ -47,9 +48,17 @@ function SearchResults({
 		(selectedCheckFilters ? 1 : 0) +
 		selectedServiceFilters.length;
 
+	const location = useLocation();
+	const [searchValue, setSearchValue] = useState('');
+
 	useEffect(() => {
 		setMainArr(searchEstablishments);
-	}, [searchEstablishments]);
+
+		const queryParams = new URLSearchParams(location.search);
+		const queryHeader = queryParams.get('q');
+
+		setSearchValue(queryHeader || '');
+	}, [searchEstablishments, location.search]);
 
 	const handleResetFilters = () => {
 		setMainArr(searchEstablishments);
@@ -105,7 +114,7 @@ function SearchResults({
 		setAreFiltersSelected(anyFiltersSelected);
 
 		// Фильтрация по кухне
-		const kitchenFilteredRestaurants = mainArr.filter((restaurant) => {
+		const kitchenFilteredRestaurants = mainArr?.filter((restaurant) => {
 			if (selectedKitchenFilters.length === 0) {
 				return true;
 			}
@@ -115,7 +124,7 @@ function SearchResults({
 			);
 		});
 		// Фильтрация по типу ресторана
-		const typeFilteredRestaurants = mainArr.filter((restaurant) => {
+		const typeFilteredRestaurants = mainArr?.filter((restaurant) => {
 			if (selectedTypeFilters.length === 0) {
 				return true;
 			}
@@ -125,7 +134,7 @@ function SearchResults({
 		});
 
 		// Фильтрация по среднему чеку
-		const averageCheckFilteredRestaurants = mainArr.filter((restaurant) => {
+		const averageCheckFilteredRestaurants = mainArr?.filter((restaurant) => {
 			if (selectedCheckFilters === null) {
 				return true;
 			}
@@ -133,7 +142,7 @@ function SearchResults({
 		});
 
 		// Фильтрация по доп сервисам
-		const serviceFilteredRestaurants = mainArr.filter((restaurant) => {
+		const serviceFilteredRestaurants = mainArr?.filter((restaurant) => {
 			if (selectedServiceFilters.length === 0) {
 				return true;
 			}
@@ -144,7 +153,7 @@ function SearchResults({
 
 		if (anyFiltersSelected) {
 			// Объединение результатов фильтрации
-			const combinedFilteredRestaurants = typeFilteredRestaurants.filter(
+			const combinedFilteredRestaurants = typeFilteredRestaurants?.filter(
 				(restaurant) =>
 					kitchenFilteredRestaurants.includes(restaurant) &&
 					averageCheckFilteredRestaurants.includes(restaurant) &&
@@ -181,6 +190,8 @@ function SearchResults({
 			window.removeEventListener('resize', handleResize);
 		};
 	}, []);
+
+	// console.log(query)
 
 	return (
 		<Box component={'section'} className="search-results">
@@ -224,7 +235,7 @@ function SearchResults({
 					)}
 					<SearchForm isSearching={isSearching} onSubmit={onSubmit}>
 						<SearchInput
-							query={query}
+							query={query || searchValue}
 							setQuery={setQuery}
 							isSearching={isSearching}
 						/>
@@ -313,7 +324,7 @@ function SearchResults({
 						Результаты поиска
 					</h2>
 					<p className="search-results__find-items">
-						Найдено {mainArr.length} заведений
+						Найдено {mainArr?.length} заведений
 					</p>
 
 					<Box
@@ -322,7 +333,7 @@ function SearchResults({
 						p="24px 0"
 						gap={{ xs: '16px', sm: '32px', md: '24px' }}
 					>
-						{mainArr.map((restaurant: Restaurant, index: number) => (
+						{mainArr?.map((restaurant: Restaurant, index: number) => (
 							<RestCard
 								key={index}
 								name={restaurant.name}

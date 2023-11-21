@@ -1,10 +1,11 @@
 import './RestaurantItem.css';
-import { useState } from 'react';
 import RatingIcon from '../../../images/star-icon.svg';
 import ReviewsIcon from '../../../images/message-icon.svg';
 import { Link, useNavigate } from 'react-router-dom';
 import { Establishment } from '../../../types/getMyRestaurantTypes';
-import DeleteCardConfirm from '../../DeleteCardConfirm/DeleteCardConfirm';
+import { Button } from '@mui/material';
+import StarIcon from '@mui/icons-material/Star';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 interface RestaurantItemProps {
 	id?: number;
@@ -16,7 +17,7 @@ interface RestaurantItemProps {
 	rating: number | undefined;
 	review_count: number | undefined;
 	establishment: Establishment;
-	handleOpenDeleteModal?: () => void;
+	handleOpenDeleteModal?: (establishment: Establishment) => void;
 }
 
 function RestaurantItem({
@@ -29,13 +30,8 @@ function RestaurantItem({
 	rating,
 	review_count,
 	establishment,
+	handleOpenDeleteModal,
 }: RestaurantItemProps) {
-	const [isDeleteModalOpen, setDeleteModalOpen] = useState(false);
-
-	const handleOpenDeleteModal = () => {
-		setDeleteModalOpen(true);
-	};
-
 	const navigate = useNavigate();
 
 	return (
@@ -59,21 +55,30 @@ function RestaurantItem({
 				</div>
 				<div className="restaurant__box-addition-info">
 					<div className="restaurant__flex-box">
-						<img src={RatingIcon} alt="Иконка рейтинга"></img>
+						<StarIcon sx={{ color: 'black' }} />
 						<span className="restaurant__rating-num">{rating || 0}</span>
 					</div>
 					<div className="restaurant__flex-box">
 						<img src={ReviewsIcon} alt="Иконка отзывов"></img>
-						<span className="restaurant__reviews-num">{review_count || 0}</span>
+						<p style={{ fontSize: '14px', color: '#49454f' }}>
+							{review_count || 0}
+						</p>
 					</div>
 					<p>{`${avarage_check}`} ₽</p>
-					<button
+					{/* <button
 						className="restaurant__delete-btn"
-						onClick={handleOpenDeleteModal}
-					></button>
-					{/* {isDeleteModalOpen && (
-						<DeleteCardConfirm onClose={() => setDeleteModalOpen(false)} />
-					)} */}
+						onClick={() =>
+							handleOpenDeleteModal && handleOpenDeleteModal(establishment)
+						}
+					></button> */}
+					<Button
+						onClick={() =>
+							handleOpenDeleteModal && handleOpenDeleteModal(establishment)
+						}
+						sx={{ p: 0, minWidth: 0 }}
+					>
+						<DeleteIcon sx={{ color: 'black' }} />
+					</Button>
 				</div>
 				<div className="restaurant__box-optionBtn">
 					<button className="restaurant__optionBtn restaurant__optionBtn_reservation">
@@ -87,7 +92,12 @@ function RestaurantItem({
 					</button>
 				</div>
 				<div className="restaurant__box-optionBtn">
-					<button className="restaurant__optionBtn restaurant__optionBtn_allReservation">
+					<button
+						onClick={() =>
+							navigate(`/business-profile/reservation-restaurant/${id}`)
+						}
+						className="restaurant__optionBtn restaurant__optionBtn_allReservation"
+					>
 						Все брони
 					</button>
 					<button className="restaurant__optionBtn restaurant__optionBtn_analytics">
@@ -95,11 +105,6 @@ function RestaurantItem({
 					</button>
 				</div>
 			</div>
-			<DeleteCardConfirm
-				isOpen={isDeleteModalOpen}
-				isClose={setDeleteModalOpen}
-				title={name}
-			/>
 		</li>
 	);
 }

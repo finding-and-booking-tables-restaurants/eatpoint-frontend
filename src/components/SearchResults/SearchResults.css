@@ -27,7 +27,7 @@
 	display: flex;
 	flex-direction: column;
 	align-content: center;
-	background: url('../../images/SearchForm__bg.png') no-repeat top;
+	background: url('../../images/search_form_bg_768.png') no-repeat center center;
 	background-size: cover;
 	/* background-size: 360px 300px; */
 	/* z-index: 0; */

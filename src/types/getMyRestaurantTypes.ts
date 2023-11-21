@@ -34,7 +34,7 @@ interface Zone {
 }
 
 interface Establishment {
-	id?: number;
+	id?: number | undefined;
 	name: string;
 	cities: string;
 	address: string;
