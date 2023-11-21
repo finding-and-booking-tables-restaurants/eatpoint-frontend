@@ -428,11 +428,10 @@ function App() {
 							path="/business-profile/reservation-restaurant/:id"
 							element={
 								<ProptectedBusinessRouteElement
-								role={currentRole}
-								isLoggedIn={isLoggedIn}
-								element={<RestaurantReservationPage />}
-							/>
-								
+									role={currentRole}
+									isLoggedIn={isLoggedIn}
+									element={<RestaurantReservationPage />}
+								/>
 							}
 						/>
 					)}
