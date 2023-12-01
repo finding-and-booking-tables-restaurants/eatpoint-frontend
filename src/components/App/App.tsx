@@ -200,7 +200,10 @@ function App() {
 				}
 			})
 			.finally(() => {
-				setTimeout(() => setIsSuccessRegister(false), 3000);
+				setTimeout(() => {
+					setRegErrorMessage('');
+					setIsSuccessRegister(false);
+				}, 3000);
 			});
 	};
 

@@ -30,7 +30,6 @@ const RegisterFormUser: React.FC<IRegisterFormUserProps> = ({
 	const navigate = useNavigate();
 	const [isAgreement, setIsAgreement] = useState(false);
 	const [emailValue, setEmailValue] = useState('');
-
 	const {
 		watch,
 		register,
@@ -42,6 +41,8 @@ const RegisterFormUser: React.FC<IRegisterFormUserProps> = ({
 	});
 
 	const password = watch('password', '');
+	const nonUniqueData =
+		requestErrorMessage === 'Эта почта или номер телефона уже используются';
 
 	const handleRegistration: SubmitHandler<IRegisterFormData> = async (
 		formData,
@@ -183,7 +184,7 @@ const RegisterFormUser: React.FC<IRegisterFormUserProps> = ({
 							variant="outlined"
 							name="telephone"
 							type="tel"
-							error={!!errors.telephone}
+							error={!!errors.telephone || nonUniqueData}
 							helperText={errors.telephone?.message || ''}
 							fullWidth
 						/>
@@ -210,7 +211,7 @@ const RegisterFormUser: React.FC<IRegisterFormUserProps> = ({
 							name="email"
 							variant="outlined"
 							onBlur={handleBlur}
-							error={!!errors.email}
+							error={!!errors.email || nonUniqueData}
 							helperText={errors.email?.message || ''}
 							sx={{
 								marginTop: 2,
