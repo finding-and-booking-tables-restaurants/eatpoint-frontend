@@ -1,22 +1,28 @@
-import { useEffect, useState } from 'react';
+import { FC, useEffect, useMemo, useState } from 'react';
 import dayjs, { Dayjs } from 'dayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import 'dayjs/locale/ru';
-import { createTheme } from '@mui/material/styles';
-import { ThemeProvider } from '@emotion/react';
 import {
 	DateValidationError,
 	PickerChangeHandlerContext,
 } from '@mui/x-date-pickers';
-import TodayIcon from '@mui/icons-material/Today';
+import { TextField } from '@mui/material';
 
-export default function DatePickerValue() {
-	const selectedDate = localStorage.getItem('selected-date');
-	const [value, setValue] = useState<Dayjs | null>(
-		selectedDate ? dayjs(selectedDate) : dayjs()
-	);
+interface DatePickerValueProps {
+	availableDates: { date: string }[];
+	currentDate: (date: string) => void;
+}
+
+const DatePickerValue: FC<DatePickerValueProps> = ({
+	availableDates,
+	currentDate,
+}) => {
+	const formatedSelectedDate =
+		localStorage.getItem('selected-date-formated') || '';
+
+	const [value, setValue] = useState<Dayjs | null>(dayjs());
 
 	const handleDateChange = (
 		value: dayjs.Dayjs | null,
@@ -31,24 +37,46 @@ export default function DatePickerValue() {
 		setValue(value);
 	};
 
+	const isDateAvailable = (date: string) => {
+		if (!date) return false;
+		return availableDates.some((availableDate) => availableDate.date === date);
+	};
+
+	const shouldDisableDate = (day: Dayjs): boolean => {
+		const dateStr = day.format('YYYY-MM-DD');
+		return !isDateAvailable(dateStr);
+	};
+
+	const handleInitDateSelect = () => {
+		if (availableDates.length) {
+			if (isDateAvailable(formatedSelectedDate)) {
+				setValue(dayjs(formatedSelectedDate));
+				return;
+			}
+			const firstAvailableDate = availableDates[0]?.date || '';
+			localStorage.setItem('selected-date', firstAvailableDate);
+			setValue(dayjs(firstAvailableDate));
+			localStorage.setItem('selected-date-formated', firstAvailableDate);
+		}
+	};
+
 	useEffect(() => {
-		if (selectedDate) return;
-		localStorage.setItem('selected-date', String(dayjs()));
-		localStorage.setItem(
-			'selected-date-formated',
-			String(dayjs().format('YYYY-MM-DD'))
-		);
-	}, []);
+		handleInitDateSelect();
+	}, [availableDates.length]);
+
+	useEffect(() => {
+		currentDate(String(value?.format('YYYY-MM-DD')));
+	}, [value]);
 
 	return (
 		<LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="ru">
 			<DatePicker
 				value={value}
 				onChange={handleDateChange}
+				disablePast
+				onError={() => handleInitDateSelect()}
+				shouldDisableDate={shouldDisableDate}
 				slotProps={{
-					// Targets the `IconButton` component.
-
-					// Targets the `InputAdornment` component.
 					inputAdornment: {
 						position: 'start',
 					},
@@ -78,4 +106,6 @@ export default function DatePickerValue() {
 			/>
 		</LocalizationProvider>
 	);
-}
+};
+
+export default DatePickerValue;

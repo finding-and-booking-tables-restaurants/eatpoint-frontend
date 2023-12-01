@@ -12,15 +12,22 @@ const UserBookings = () => {
 	const navigate = useNavigate();
 	const [userBookings, setUserBookings] = useState<any[]>([]);
 	const [isBokingsChanged, setIsBookingsChanged] = useState(false);
+	const [bookingIsDeleting, setBookingIsDeleting] = useState(0);
 
 	const handleDeleteBooking = (id: number) => {
-		setIsBookingsChanged(true);
-		usersApi
-			.deleteBooking(String(id))
-			.catch((err) => console.log(err))
-			.finally(() => {
-				setIsBookingsChanged(false);
-			});
+		setBookingIsDeleting(id);
+		setTimeout(() => {
+			setIsBookingsChanged(true);
+			usersApi
+				.deleteBooking(String(id))
+				.catch((err) => console.log(err))
+				.finally(() => {
+					setIsBookingsChanged(false);
+					setTimeout(() => {
+						setBookingIsDeleting(0);
+					}, 500);
+				});
+		}, 2000);
 	};
 
 	useEffect(() => {
@@ -110,6 +117,7 @@ const UserBookings = () => {
 									establishmentId={booking.establishment.id}
 									handleDeleteBooking={handleDeleteBooking}
 									status={booking.status}
+									bookingIsDeleting={bookingIsDeleting}
 								/>
 							))}
 					</Box>

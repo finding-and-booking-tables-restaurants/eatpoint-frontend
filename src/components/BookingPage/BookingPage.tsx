@@ -19,6 +19,7 @@ import {
 	ERROR_400,
 	ERROR_403,
 	NOT_CONFIRMED_NUMBER_MESSAGE,
+	timesForTimePicker,
 } from '../../utils/constants';
 import { useNavigate } from 'react-router-dom';
 import SuccessBooking from '../SuccessBooking/SuccessBooking';
@@ -45,6 +46,8 @@ const BookingPage: FC<BookingPageProps> = ({ id, userData }) => {
 	const {
 		register,
 		handleSubmit,
+		getValues,
+		setValue,
 		formState: { errors, isDirty, isValid },
 	} = useForm<BookingFormValues>({
 		mode: 'onChange',
@@ -56,6 +59,7 @@ const BookingPage: FC<BookingPageProps> = ({ id, userData }) => {
 		useState<Restaurant>(initRestaurant);
 	const [isAgreement, setIsAgreement] = useState(false);
 	const [bookingId, setBookingId] = useState('');
+	const [availableDates, setAvailableDates] = useState<{ date: string }[]>([]);
 	const [dataToSend, setDataToSend] = useState({
 		comment: '',
 		date_reservation: '',
@@ -70,18 +74,41 @@ const BookingPage: FC<BookingPageProps> = ({ id, userData }) => {
 		zone: '',
 	});
 
+	const [currnetZone, setCurrentZone] = useState(0);
+
+	const [availableTimes, setAvailableTimes] = useState(timesForTimePicker);
+	const [currentDate, setCurrentDate] = useState('');
+
 	useEffect(() => {
 		const fetchData = async () => {
 			try {
 				const data = await fetchRestaurantData(id);
 				setcurrentRestaurant(data);
+				const firstZone = data.zones[0].id;
+				if (!currnetZone) {
+					setCurrentZone(firstZone);
+					setValue('zone', firstZone);
+				}
+
+				const dates = await mainApi.getAvailableBookingDates(
+					currnetZone || firstZone
+				);
+				const firstAvailableDate = dates[0].date;
+
+				const times = await mainApi.getAvailableBookingTimes(
+					currentDate || firstAvailableDate,
+					id
+				);
+
+				setAvailableDates(dates);
+				setAvailableTimes(times.map((el: { time: string }) => el.time));
 			} catch (error) {
 				console.error('Error fetching data:', error);
 			}
 		};
 
 		fetchData();
-	}, [id, setcurrentRestaurant]);
+	}, [id, setcurrentRestaurant, currnetZone]);
 
 	const handleBooking = (data: BookingFormValues) => {
 		if (!data) return;
@@ -119,13 +146,15 @@ const BookingPage: FC<BookingPageProps> = ({ id, userData }) => {
 		navigate(`/establishment/${id}`, { replace: true });
 	};
 
-	// .booking-page {
-	// margin: auto;
-	// max-width: 92%;
-	// display: flex;
-	// flex-direction: column;
-	// align-content: center;
-	// flex-wrap: wrap;
+	useEffect(() => {
+		if (!currentDate) return;
+		mainApi
+			.getAvailableBookingTimes(currentDate, id)
+			.then((times) =>
+				setAvailableTimes(times.map((el: { time: string }) => el.time))
+			)
+			.catch((err) => console.log(err));
+	}, [currentDate]);
 
 	return (
 		<ThemeProvider theme={selectTheme}>
@@ -176,7 +205,12 @@ const BookingPage: FC<BookingPageProps> = ({ id, userData }) => {
 								/>
 							</div>
 						</>
-						<BookingForm onSubmit={handleSubmit(handleBooking)}>
+						<BookingForm
+							currentDate={setCurrentDate}
+							availableDates={availableDates}
+							availableTimes={availableTimes}
+							onSubmit={handleSubmit(handleBooking)}
+						>
 							<Box
 								display="flex"
 								flexWrap={'wrap'}
@@ -185,6 +219,7 @@ const BookingPage: FC<BookingPageProps> = ({ id, userData }) => {
 								justifyContent={'center'}
 							>
 								<TextField
+									key={String(currnetZone)}
 									{...register('zone', {
 										required: 'Поле обязательно для заполнения',
 									})}
@@ -193,12 +228,18 @@ const BookingPage: FC<BookingPageProps> = ({ id, userData }) => {
 									name="zone"
 									label="Зона"
 									required
+									defaultValue={currnetZone}
+									onChange={(event) => {
+										const value = event.target.value;
+										setCurrentZone(Number(value));
+										setValue('zone', value);
+									}}
 									sx={{
 										minWidth: 328,
 									}}
 								>
-									{currentRestaurant?.zones.map((option) => (
-										<MenuItem key={option.id} value={option.id}>
+									{currentRestaurant?.zones.map((option, index: number) => (
+										<MenuItem key={index} value={option.id}>
 											{option.zone}
 										</MenuItem>
 									))}
@@ -213,6 +254,7 @@ const BookingPage: FC<BookingPageProps> = ({ id, userData }) => {
 										defaultValue={userData ? userData[option.id] : ''}
 										sx={{
 											minWidth: 328,
+											maxWidth: '100%',
 											display: `${
 												isLoggedIn && option.id === 'email' && 'none'
 											}`,

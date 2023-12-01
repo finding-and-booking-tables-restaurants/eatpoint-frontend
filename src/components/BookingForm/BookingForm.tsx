@@ -12,9 +12,18 @@ import { useLocation } from 'react-router-dom';
 interface BookingFormProps {
 	children?: ReactNode;
 	onSubmit: (event: React.FormEvent<HTMLFormElement>) => void;
+	availableDates: { date: string }[];
+	availableTimes: string[];
+	currentDate: (date: string) => void;
 }
 
-const BookingForm: FC<BookingFormProps> = ({ children, onSubmit }) => {
+const BookingForm: FC<BookingFormProps> = ({
+	children,
+	onSubmit,
+	availableDates,
+	availableTimes,
+	currentDate,
+}) => {
 	const location = useLocation();
 	const chechLocation = (path: string) => {
 		return location.pathname.includes(path) ? true : false;
@@ -44,7 +53,6 @@ const BookingForm: FC<BookingFormProps> = ({ children, onSubmit }) => {
 					sm: `${chechLocation('/booking') ? '32px' : '16px'}`,
 				}}
 				justifyContent="center"
-				// width={'100%'}
 			>
 				<Box
 					sx={{
@@ -52,8 +60,11 @@ const BookingForm: FC<BookingFormProps> = ({ children, onSubmit }) => {
 						gap: { xs: '8px' },
 					}}
 				>
-					<TimePickerValue />
-					<DatePickerValue />
+					<TimePickerValue availableTimes={availableTimes} />
+					<DatePickerValue
+						currentDate={currentDate}
+						availableDates={availableDates}
+					/>
 				</Box>
 				<NumberOfPerson />
 			</Box>
