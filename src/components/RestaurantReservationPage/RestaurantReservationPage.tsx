@@ -4,37 +4,27 @@ import RatingIcon from '../../images/star-icon.svg';
 import ReviewsIcon from '../../images/message-icon.svg';
 import Footer from '../Footer/Footer';
 import Header from '../Header/Header';
-import { Establishment } from '../../types/getMyRestaurantTypes';
 import { useEffect, useState } from 'react';
 import { mainApi } from '../../utils/mainApi';
-import { RestaurantData } from '../../types/addRestaurantTypes';
 import { Box, Button } from '@mui/material';
 import { maxWidthBoxConfig, minWidthBoxConfig } from '../../utils/constants';
-
-// interface RestaurantReservationPageProps {
-// 	id?: number;
-// 	name: string;
-// 	cities: string;
-// 	address: string;
-// 	poster: string;
-// 	avarage_check: string;
-// 	rating: number | undefined;
-// 	review_count: number | undefined;
-// 	establishment: Establishment;
-// 	handleOpenDeleteModal?: () => void;
-// }
+import CheckIcon from '@mui/icons-material/Check';
+import { Establishment } from '../../types/getMyRestaurantTypes';
 
 function RestaurantReservationPage() {
 	const [myEstablishments, setMyEstablishments] = useState<any>({});
-	const [myReservations, setMyreservations] = useState<any>([]);
+	const [myReservations, setMyreservations] = useState<Establishment[]>([]);
+	const [reservations, setReservations] = useState<Establishment[]>([]);
 	const [updatedReservation, setUpdatedReservation] = useState('');
 	const [isLoading, setIsLoading] = useState(false);
+	const [activeButton, setActiveButton] = useState('unconfirmed');
 
 	const { id } = useParams();
+	const history = useNavigate();
 
 	useEffect(() => {
 		mainApi.getAllMyEstablishments().then((res) => {
-			const restaurant = res.results.find((el: any) => el.id === Number(id));
+			const restaurant = res.results.find((el: Establishment) => el.id === Number(id));
 			setMyEstablishments(restaurant);
 		});
 		mainApi.getAllBusinessReservation().then((res) => {
@@ -53,6 +43,9 @@ function RestaurantReservationPage() {
 				}
 			});
 			setMyreservations(sortedReservations);
+			setReservations(
+				sortedReservations.filter((item: any) => item.status === false)
+			);
 		});
 	}, [id, updatedReservation]);
 
@@ -66,6 +59,9 @@ function RestaurantReservationPage() {
 			})
 			.catch((err) => console.log(err))
 			.finally(() => setIsLoading(false));
+		setReservations(
+			myReservations.filter((item: any) => item.status === false)
+		);
 	};
 
 	const handleCancelReservation = (id: string) => {
@@ -81,6 +77,36 @@ function RestaurantReservationPage() {
 				setIsLoading(false);
 				setUpdatedReservation(id);
 			});
+		setReservations(myReservations.filter((item: any) => item.status === true));
+	};
+	console.log(myReservations);
+
+	const showUnconfirmed = () => {
+		setActiveButton('unconfirmed');
+		setReservations(
+			myReservations.filter((item: any) => item.status === false)
+		);
+	};
+
+	const showConfirmed = () => {
+		setActiveButton('confirmed');
+		setReservations(myReservations.filter((item: any) => item.status === true));
+	};
+
+	const buttonUnconfirmed = [
+		'restaurant__reservation-button restaurant__reservation-button-one',
+		activeButton === 'unconfirmed' ? 'active-button' : '',
+	].join(' ');
+	const buttonConfirmed = [
+		'restaurant__reservation-button restaurant__reservation-button-two',
+		activeButton === 'confirmed' ? 'active-button' : '',
+	].join(' ');
+
+	const redirectToReviewPage = (id: string) => {
+		history(`/restaurant-reviews/${id}`);
+	};
+	const redirectToEditRestaurantPage = (id: string) => {
+		history(`/business-profile/edit-restaurant/${id}`);
 	};
 
 	return (
@@ -100,11 +126,6 @@ function RestaurantReservationPage() {
 								{myEstablishments.name}
 							</p>
 						</div>
-						{/* <Link
-						to={`edit-restaurant/${id}`}
-						state={myEstablishments.establishment}
-						className="restaurant__editBtn"
-					/> */}
 					</div>
 					<div className="restaurant__box-addition-info_reservation">
 						<div className="restaurant__flex-box">
@@ -122,16 +143,82 @@ function RestaurantReservationPage() {
 						<p>{`${myEstablishments.average_check}`} ₽</p>
 
 						<button
-							className="restaurant__delete-btn"
-							// onClick={handleOpenDeleteModal}
+							className="restaurant__edit-btn"
+							onClick={() => redirectToEditRestaurantPage(id!)}
 						></button>
 					</div>
 					<p className="restaurant__place">{`${myEstablishments.cities}, ${myEstablishments.address}`}</p>
 				</div>
-				<p className="restaurant__rweservation-heading">Бронирования</p>
+				<Box display="inline-flex" gap="8px" mt="auto" pt="16px">
+					<Button
+						onClick={() => redirectToReviewPage(id!)}
+						variant="outlined"
+						sx={{
+							color: '#006C60',
+							borderColor: '#006C60',
+							textTransform: 'none',
+							borderRadius: '8px',
+							minWidth: '160px',
+						}}
+					>
+						Отзывы
+					</Button>
+					<Button
+						onClick={() => redirectToReviewPage(id!)}
+						variant="outlined"
+						sx={{
+							color: '#006C60',
+							borderColor: '#006C60',
+							textTransform: 'none',
+							borderRadius: '8px',
+							minWidth: '160px',
+						}}
+					>
+						События
+					</Button>
+				</Box>
+				<p className="restaurant__reservation-heading">Бронирования</p>
+				<div className="restaurant__reservation-buttons-reserve">
+					<button
+						id="unconfirmed"
+						onClick={showUnconfirmed}
+						className={buttonUnconfirmed}
+					>
+						{activeButton === 'unconfirmed' && (
+							<CheckIcon
+								sx={{
+									marginRight: '8px',
+									width: '18px',
+									height: '18px',
+								}}
+							/>
+						)}
+						<p className="restaurant__reservation-button-text">
+							Неподтвержденные
+						</p>
+					</button>
+					<button
+						id="confirmed"
+						onClick={showConfirmed}
+						className={buttonConfirmed}
+					>
+						{activeButton === 'confirmed' && (
+							<CheckIcon
+								sx={{
+									marginRight: '8px',
+									width: '18px',
+									height: '18px',
+								}}
+							/>
+						)}
+						<p className="restaurant__reservation-button-text">
+							Подтвержденные
+						</p>
+					</button>
+				</div>
 				<ul className="restaurant__reservations">
-					{myReservations.length
-						? myReservations.map((item: any, index: number) => (
+					{reservations.length
+						? reservations.map((item: any, index: number) => (
 								<li className="restaurant__reservation" key={index}>
 									<p className="restaurant__reservation-date">
 										{item.date_reservation} • {item.start_time_reservation}

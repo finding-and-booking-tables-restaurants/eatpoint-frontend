@@ -55,6 +55,7 @@ interface Establishment {
 	services: Service[];
 	socials?: [];
 	zones: Zone[];
+	status?: string;
 }
 
 export type { Establishment, Zone, Service, Kitchen, Type };
