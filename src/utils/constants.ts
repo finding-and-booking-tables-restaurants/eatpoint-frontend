@@ -383,7 +383,7 @@ const ERROR_409 = 'Error: 409';
 const ERROR_403 = 'Error: 403';
 
 const EMAIL_ALREADY_REGISTERED_MESSAGE =
-	'Пользователь с таким email или телефоном уже существует.';
+	'Эта почта или номер телефона уже используются';
 const INCORRECT_ADD_USER_DATA = 'Переданы некорректные данные при регистрации';
 const REG_ERROR_MESSAGE = 'При регистрации пользователя произошла ошибка.';
 const INVALID_AUTH_DATA_ERROR_MESSAGE = 'Эл. почта или пароль не верны';
