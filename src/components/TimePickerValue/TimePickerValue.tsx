@@ -5,12 +5,10 @@ import { MenuItem } from '@mui/material';
 import Clocks from '@mui/icons-material/AccessTime';
 import DoneIcon from '@mui/icons-material/Done';
 
-function MyTimePicker() {
-	const selectedTime = localStorage.getItem('selected-time');
+function MyTimePicker({ availableTimes }: { availableTimes: string[] }) {
+	const selectedTime = localStorage.getItem('selected-time') || '';
 
-	const [time, setTime] = useState<string>(
-		selectedTime ? selectedTime : times[23]
-	);
+	const [time, setTime] = useState<string>('');
 
 	const handleTimeChange = (event: ChangeEvent<HTMLInputElement>) => {
 		const pickedTime = event.target.value;
@@ -18,10 +16,24 @@ function MyTimePicker() {
 		setTime(pickedTime);
 	};
 
+	const isSelectedTimeAvailable = (time: string) => {
+		if (!time) return false;
+		return availableTimes.some((t) => t === time);
+	};
+
+	// console.log('available', isSelectedTimeAvailable(selectedTime));
+
 	useEffect(() => {
-		if (selectedTime) return;
-		localStorage.setItem('selected-time', times[23]);
-	}, []);
+		if (availableTimes.length) {
+			if (isSelectedTimeAvailable(selectedTime)) {
+				setTime(selectedTime);
+				return;
+			}
+			const firstTimeAvailable = availableTimes[0];
+			localStorage.setItem('selected-time', firstTimeAvailable || times[23]);
+			setTime(firstTimeAvailable || times[23]);
+		}
+	}, [availableTimes.length]);
 
 	return (
 		<TextField
@@ -55,7 +67,7 @@ function MyTimePicker() {
 				},
 			}}
 		>
-			{times.map((time, idx) => (
+			{availableTimes.map((time, idx) => (
 				<MenuItem sx={{ paddingLeft: '50px' }} key={idx} value={time}>
 					{time}
 				</MenuItem>

@@ -19,6 +19,7 @@ interface UserBookingProps {
 	establishmentId: number;
 	handleDeleteBooking: (id: number) => void;
 	status: boolean;
+	bookingIsDeleting: number;
 }
 
 const UserBooking: FC<UserBookingProps> = ({
@@ -33,6 +34,7 @@ const UserBooking: FC<UserBookingProps> = ({
 	establishmentId,
 	handleDeleteBooking,
 	status,
+	bookingIsDeleting,
 }) => {
 	const navigate = useNavigate();
 
@@ -50,7 +52,6 @@ const UserBooking: FC<UserBookingProps> = ({
 				/>
 				<div className="user-booking__date-container">
 					<p className="user-booking__rest-name">{name}</p>
-					<p className="user-booking__booking-date">{date}</p>
 				</div>
 				<button className="user-booking__share-btn" />
 			</div>
@@ -95,8 +96,11 @@ const UserBooking: FC<UserBookingProps> = ({
 					}}
 					variant="outlined"
 					startIcon={<CloseIcon />}
+					disabled={bookingIsDeleting === bookingId}
 				>
-					Отменить бронирование
+					{bookingIsDeleting === bookingId
+						? 'Бронирование отменено'
+						: 'Отменить бронирование'}
 				</Button>
 			</div>
 		</div>

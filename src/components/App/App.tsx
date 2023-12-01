@@ -47,6 +47,7 @@ import { mainApi } from '../../utils/mainApi';
 import RestaurantReviews from '../RestaurantReviews/RestaurantReviews';
 import EditRestaurant from '../EditRestaurant/EditRestaurant';
 import RestaurantReservationPage from '../RestaurantReservationPage/RestaurantReservationPage';
+import Preloader from '../Preloader/Preloader';
 
 function App() {
 	const [currentUser, setCurrentUser] = useState<UserData>();
@@ -292,26 +293,34 @@ function App() {
 							</>
 						}
 					/>
-					{allEstablishments.map((item: Restaurant) => (
-						<Route
-							key={item.id}
-							path={`/establishment/${item.id}`}
-							element={<RestaurantPage id={item.id} />}
-						/>
-					))}
-					{allEstablishments.map((item: Restaurant) => (
-						<Route
-							key={item.id}
-							path={`/booking/${item.id}`}
-							element={
-								<>
-									<Header />
-									<BookingPage userData={currentUser} id={item.id} />
-									<Footer />
-								</>
-							}
-						/>
-					))}
+					{allEstablishments.length ? (
+						allEstablishments.map((item: Restaurant) => (
+							<Route
+								key={item.id}
+								path={`/establishment/${item.id}`}
+								element={<RestaurantPage id={item.id} />}
+							/>
+						))
+					) : (
+						<Route path="/establishment/:id" element={<Preloader />} />
+					)}
+					{allEstablishments.length ? (
+						allEstablishments.map((item: Restaurant) => (
+							<Route
+								key={item.id}
+								path={`/booking/${item.id}`}
+								element={
+									<>
+										<Header />
+										<BookingPage userData={currentUser} id={item.id} />
+										<Footer />
+									</>
+								}
+							/>
+						))
+					) : (
+						<Route path="/booking/:id" element={<Preloader />} />
+					)}
 
 					<Route
 						path="/user-signup"
