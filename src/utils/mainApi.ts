@@ -224,6 +224,24 @@ class MainApi {
 			},
 		});
 	}
+
+	getAvailableBookingDates(zoneId: number) {
+		return this._sendFetchRequest(`/api/v1/availability/date/${zoneId}/`, {
+			headers: {
+				'Content-Type': 'application/json',
+			},
+		});
+	}
+	getAvailableBookingTimes(date: string, establishmentId: number) {
+		return this._sendFetchRequest(
+			`/api/v1/availability/time/${date}/${establishmentId}/`,
+			{
+				headers: {
+					'Content-Type': 'application/json',
+				},
+			}
+		);
+	}
 }
 
 export const mainApi = new MainApi({

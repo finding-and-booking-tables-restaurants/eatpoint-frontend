@@ -6,6 +6,7 @@ import {
 	getDayAbbreviation,
 	fetchRestaurantData,
 	initRestaurant,
+	timesForTimePicker,
 } from '../../utils/constants';
 import {
 	Checkbox,
@@ -17,6 +18,7 @@ import {
 	Backdrop,
 	Box,
 	Typography,
+	TextField,
 } from '@mui/material';
 import ModeEditOutlineOutlinedIcon from '@mui/icons-material/ModeEditOutlineOutlined';
 import CloseIcon from '@mui/icons-material/Close';
@@ -54,6 +56,9 @@ export default function RestaurantPage({ id }: { id: number }) {
 		ReviewType[]
 	>([]);
 	const [currentImageIndex, setCurrentImageIndex] = useState(0);
+	const [availableDates, setAvailableDates] = useState([]);
+	const [availableTimes, setAvailableTimes] = useState([]);
+	const [currentDate, setCurrentDate] = useState('');
 
 	const isLoggedIn = useContext(CurrentUserContext).isLoggedIn;
 	const role = useContext(CurrentUserContext).currentRole;
@@ -61,9 +66,21 @@ export default function RestaurantPage({ id }: { id: number }) {
 	const updatePageData = () => {
 		mainApi
 			.getEstablissmentData(id)
-			.then((data) => {
-				setcurrentRestaurant(data);
-				console.log(currentRestaurant.images);
+			.then((restaurantData) => {
+				setcurrentRestaurant(restaurantData);
+				mainApi
+					.getAvailableBookingDates(restaurantData.zones[0].id)
+					.then((dates) => {
+						if (!dates) return;
+						setAvailableDates(dates);
+						mainApi
+							.getAvailableBookingTimes(currentDate || dates[0].date, id)
+							.then((times) =>
+								setAvailableTimes(times.map((el: { time: string }) => el.time))
+							)
+							.catch((err) => console.log(err));
+					})
+					.catch((err) => console.log(err));
 			})
 			.catch((err) => console.log(err));
 		mainApi
@@ -81,6 +98,16 @@ export default function RestaurantPage({ id }: { id: number }) {
 	useEffect(() => {
 		updatePageData();
 	}, [!isModalOpen]);
+
+	useEffect(() => {
+		if (!currentDate) return;
+		mainApi
+			.getAvailableBookingTimes(currentDate, id)
+			.then((times) =>
+				setAvailableTimes(times.map((el: { time: string }) => el.time))
+			)
+			.catch((err) => console.log(err));
+	}, [currentDate]);
 
 	const toggleDescription = () => {
 		setShowFullDescription(!showFullDescription);
@@ -147,6 +174,8 @@ export default function RestaurantPage({ id }: { id: number }) {
 			);
 		}
 	});
+
+	console.log(currentDate);
 
 	return (
 		<>
@@ -383,42 +412,55 @@ export default function RestaurantPage({ id }: { id: number }) {
 						maxWidth: { xs: '100%', sm: 'calc(92% - 32px)' },
 						m: 'auto',
 					}}
-					p="16px 16px 24px 16px"
+					p="16px 16px 16px 16px"
 				>
-					<Typography
-						variant="h2"
-						fontFamily="Ubuntu"
-						fontSize="30px"
-						fontWeight="400"
-						lineHeight="36px"
-						color="#fff"
-						mb="16px"
-						sx={{
-							textAlign: 'center',
-						}}
-					>
-						Забронировать стол
-					</Typography>
-					<BookingForm
-						onSubmit={handleBookBtnClick}
-						children={
-							<Button
-								variant="contained"
-								type="submit"
+					{availableDates.length && availableTimes.length ? (
+						<>
+							<Typography
+								variant="h2"
+								fontFamily="Ubuntu"
+								fontSize="30px"
+								fontWeight="400"
+								lineHeight="36px"
+								color="#fff"
+								mb="16px"
 								sx={{
-									backgroundColor: '#05887B',
-									textTransform: 'none',
-									borderRadius: '8px',
-									minHeight: '40px',
-									maxWidth: '328px',
-									minWidth: '328px',
-									alignSelf: 'center',
+									textAlign: 'center',
 								}}
 							>
-								Забронировать
-							</Button>
-						}
-					/>
+								Забронировать стол
+							</Typography>
+							<BookingForm
+								currentDate={setCurrentDate}
+								availableDates={availableDates}
+								availableTimes={availableTimes}
+								onSubmit={handleBookBtnClick}
+								children={
+									<Button
+										variant="contained"
+										type="submit"
+										sx={{
+											backgroundColor: '#05887B',
+											textTransform: 'none',
+											borderRadius: '8px',
+											minHeight: '40px',
+											maxWidth: '328px',
+											minWidth: '328px',
+											alignSelf: 'center',
+										}}
+									>
+										Забронировать
+									</Button>
+								}
+							/>
+						</>
+					) : (
+						<Typography
+							sx={{ m: 'auto', maxWidth: 'fit-content', color: 'white' }}
+						>
+							{'Пока нет свободных мест :('}
+						</Typography>
+					)}
 				</Box>
 				<Box
 					sx={{
