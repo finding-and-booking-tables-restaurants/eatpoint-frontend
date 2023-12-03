@@ -66,7 +66,7 @@ const UserBookings = () => {
 						justifyContent: 'start',
 						padding: '16px',
 						backgroundColor: { xs: '#d5ede4', md: 'transparent' },
-						minHeight: 'calc(100vh - 250px)',
+						minHeight: 'calc(100vh - 256px)',
 					}}
 				>
 					<p
