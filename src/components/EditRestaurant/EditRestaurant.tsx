@@ -25,9 +25,7 @@ interface ImageFile {
 	preview: string;
 }
 
-function EditRestaurant() {
-	const params = useParams();
-	const restaurantId = params.id;
+function EditRestaurant({ id }: { id: number }) {
 	const navigate = useNavigate();
 
 	const {
@@ -40,12 +38,12 @@ function EditRestaurant() {
 	});
 
 	useEffect(() => {
-		mainApi.getMyEstablishmentById(restaurantId).then((res) => {
+		mainApi.getMyEstablishmentById(id).then((res) => {
 			setFormData(res);
 			setSelectedCheckFilters(res.average_check);
 			setInputsZone(res.zones);
 		});
-	}, [restaurantId]);
+	}, []);
 
 	const [formData, setFormData] = useState<RestaurantData>({
 		name: '',
@@ -80,8 +78,6 @@ function EditRestaurant() {
 		formData.telephone,
 		setValue,
 	]);
-
-	console.log(formData);
 
 	const [loading, setLoading] = useState(true);
 	const [selectedCheckFilters, setSelectedCheckFilters] = useState<string>(
@@ -254,15 +250,12 @@ function EditRestaurant() {
 	};
 
 	async function handleDeleteImageFromServer(
-		restaurantId: string | undefined,
+		restaurantId: number,
 		imageId: number | undefined,
 		index: number
 	) {
 		try {
-			const response = await mainApi.deleteImagesEstablishment(
-				restaurantId,
-				imageId
-			);
+			const response = await mainApi.deleteImagesEstablishment(id, imageId);
 			console.log(response, 'Успешно');
 			setFormData((prevFormData: any) => {
 				const updatedImages = [...prevFormData.images];
@@ -305,7 +298,7 @@ function EditRestaurant() {
 		}
 
 		mainApi
-			.editMyEstablishment(formDataSend, restaurantId)
+			.editMyEstablishment(formDataSend, id)
 			.then((res) => {
 				setFormData(res);
 			})
@@ -315,7 +308,7 @@ function EditRestaurant() {
 				);
 				if (filesToSend.length > 0) {
 					mainApi
-						.createImagesEstablishment(restaurantId, filesToSend)
+						.createImagesEstablishment(id, filesToSend)
 						.then((res) => {})
 						.catch((err) => {
 							console.log('catch error', err);
@@ -329,11 +322,18 @@ function EditRestaurant() {
 	};
 
 	useEffect(() => {
-		mainApi.getMyEstablishmentById(restaurantId).then((res) => {
-			setFormData(res);
-			setLoading(false);
-		});
-	}, [restaurantId]);
+		mainApi
+			.getMyEstablishmentById(id)
+			.then((res) => {
+				setFormData(res);
+				setLoading(false);
+			})
+			.catch((err) => {
+				console.log(err);
+				navigate('/');
+				return;
+			});
+	}, []);
 
 	if (loading) {
 		return <Preloader />;
@@ -789,11 +789,7 @@ function EditRestaurant() {
 											type="button"
 											className="input-file__delete-image"
 											onClick={() =>
-												handleDeleteImageFromServer(
-													restaurantId,
-													file.id,
-													index
-												)
+												handleDeleteImageFromServer(id, file.id, index)
 											}
 										></button>
 									</div>

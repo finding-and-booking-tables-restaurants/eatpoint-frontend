@@ -82,7 +82,7 @@ const UserBookings = () => {
 					</p>
 					{!userBookings.length && (
 						<Button
-							onClick={() => navigate('/')}
+							// onClick={() => navigate('/')}
 							sx={{
 								background: '#05887B',
 								width: '328px',
