@@ -6,6 +6,7 @@ import placeIcon from '../../images/place-icon-black.svg';
 import notifIcon from '../../images/notification-icon.svg';
 import { pluralizePeople } from '../../utils/pluralizePeople';
 import { useNavigate } from 'react-router-dom';
+import DoneIcon from '@mui/icons-material/Done';
 
 interface UserBookingProps {
 	poster: string;
@@ -79,9 +80,10 @@ const UserBooking: FC<UserBookingProps> = ({
 					<img src={notifIcon} className="user-booking__message-icon" />
 					<p className="user-booking__message-text">
 						{status
-							? 'Ваше бронировнаие подтверждено'
+							? 'Бронировнаие подтверждено'
 							: 'Ожидайте подтверждение от ресторана'}
 					</p>
+					{status ? <DoneIcon color="success" /> : ''}
 				</div>
 				<Button
 					onClick={() => {

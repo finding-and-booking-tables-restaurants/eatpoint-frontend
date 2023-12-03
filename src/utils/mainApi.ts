@@ -85,7 +85,7 @@ class MainApi {
 		});
 	}
 
-	editMyEstablishment(data: RestaurantData, id: string | undefined) {
+	editMyEstablishment(data: RestaurantData, id: number) {
 		return this._sendFetchRequest(`/api/v1/business/establishments/${id}/`, {
 			method: 'PATCH',
 			headers: {
@@ -137,7 +137,7 @@ class MainApi {
 		});
 	}
 
-	getMyEstablishmentById(id: string | undefined) {
+	getMyEstablishmentById(id: number) {
 		return this._sendFetchRequest(`/api/v1/business/establishments/${id}/`, {
 			method: 'GET',
 			headers: {
