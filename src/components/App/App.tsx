@@ -66,6 +66,8 @@ function App() {
 	>([]);
 	const [query, setQuery] = useState('');
 
+	const [isDataLoading, setIsDataLoading] = useState(true);
+
 	const navigate = useNavigate();
 	const location = useLocation();
 
@@ -77,28 +79,39 @@ function App() {
 	useEffect(() => {
 		const accessToken = localStorage.getItem('access-token');
 		const refreshToken = localStorage.getItem('refresh-token');
-
+		if (!accessToken) {
+			setIsDataLoading(false);
+		}
 		if (accessToken) {
 			usersApi
 				.getUserInfo()
-				.then(() => {
+				.then((data) => {
 					setIsLoggedIn(true);
-					navigate(location.pathname);
+					setCurrentUser(data);
+					setCurrentRole(data.role);
 				})
-				.catch((err) => {
-					console.log(err);
+				.catch(() => {
 					if (refreshToken) {
-						usersApi
+						return usersApi
 							.refreshToken(refreshToken)
 							.then((res) => {
-								if (!res) return;
+								if (!res) return null;
 								localStorage.setItem('access-token', res.access);
+								return usersApi.getUserInfo().then((data) => {
+									setIsLoggedIn(true);
+									setCurrentUser(data);
+									setCurrentRole(data.role);
+								});
 							})
-							.then(() => {
-								setIsLoggedIn(true);
-							})
-							.catch((err) => console.log(err));
+							.catch((err) => {
+								console.log(err);
+								return null;
+							});
 					}
+					return null;
+				})
+				.finally(() => {
+					setIsDataLoading(false);
 				});
 		}
 
@@ -107,21 +120,7 @@ function App() {
 			queryParams.delete('q');
 			navigate('/', { replace: true });
 		}
-	}, [location.pathname, navigate, queryHeader]);
 
-	useEffect(() => {
-		if (isLoggedIn) {
-			usersApi
-				.getUserInfo()
-				.then((data) => {
-					setCurrentUser(data);
-					setCurrentRole(data.role);
-				})
-				.catch((err) => console.log(err));
-		}
-	}, [isLoggedIn]);
-
-	useEffect(() => {
 		mainApi
 			.getEstablishments(50)
 			.then((data) => {
@@ -131,7 +130,7 @@ function App() {
 			.catch((error) => {
 				console.error('Error fetching data:', error);
 			});
-	}, []);
+	}, [location.pathname, navigate, queryHeader]);
 
 	const resetMessages = () => {
 		setUpdateUserInfo({ message: '', isSuccess: true });
@@ -250,10 +249,6 @@ function App() {
 			});
 	}
 
-	const handleRestart = (value: boolean) => {
-		setIsSearching(!value);
-	};
-
 	const handleLogOut = () => {
 		localStorage.clear();
 		setIsLoggedIn(false);
@@ -269,6 +264,11 @@ function App() {
 				value={{ currentUser, isLoggedIn, currentRole, handleLogOut }}
 			>
 				<Routes>
+					{isDataLoading ? (
+						<Route path="*" element={<Preloader />} />
+					) : (
+						<Route path="*" element={<NotFoundPage />} />
+					)}
 					<Route
 						path="/"
 						element={
@@ -347,7 +347,9 @@ function App() {
 							/>
 						}
 					/>
-					{currentUser && currentRole && (
+					{isDataLoading ? (
+						<Route path="/user-profile" element={<Preloader />} />
+					) : (
 						<Route
 							path="/user-profile"
 							element={
@@ -365,7 +367,9 @@ function App() {
 						/>
 					)}
 
-					{currentRole &&
+					{isDataLoading ? (
+						<Route path="/restaurant-reviews/:id" element={<Preloader />} />
+					) : (
 						allEstablishments.map((item: Restaurant) => (
 							<Route
 								key={item.id}
@@ -378,17 +382,21 @@ function App() {
 									/>
 								}
 							/>
-						))}
-
-					<Route
-						path="/user-bookings"
-						element={
-							<ProtectedClientRouteElement
-								isLoggedIn={isLoggedIn}
-								element={<UserBookings />}
-							/>
-						}
-					/>
+						))
+					)}
+					{isDataLoading ? (
+						<Route path="/user-bookings" element={<Preloader />} />
+					) : (
+						<Route
+							path="/user-bookings"
+							element={
+								<ProtectedClientRouteElement
+									isLoggedIn={isLoggedIn}
+									element={<UserBookings />}
+								/>
+							}
+						/>
+					)}
 					<Route
 						path="/signin"
 						element={
@@ -399,7 +407,9 @@ function App() {
 						}
 					/>
 					<Route path="/business" element={<BusinessLanding />} />
-					{currentUser && currentRole && (
+					{isDataLoading ? (
+						<Route path="/business-profile" element={<Preloader />} />
+					) : (
 						<Route
 							path="/business-profile"
 							element={
@@ -411,7 +421,12 @@ function App() {
 							}
 						/>
 					)}
-					{currentUser && currentRole && (
+					{isDataLoading ? (
+						<Route
+							path="/business-profile/add-restaurant"
+							element={<Preloader />}
+						/>
+					) : (
 						<Route
 							path="/business-profile/add-restaurant"
 							element={
@@ -423,19 +438,32 @@ function App() {
 							}
 						/>
 					)}
-					{currentUser && currentRole && (
+					{isDataLoading ? (
 						<Route
 							path="/business-profile/edit-restaurant/:id"
-							element={
-								<ProptectedBusinessRouteElement
-									role={currentRole}
-									isLoggedIn={isLoggedIn}
-									element={<EditRestaurant />}
-								/>
-							}
+							element={<Preloader />}
 						/>
+					) : (
+						allEstablishments.map((item: Restaurant) => (
+							<Route
+								key={item.id}
+								path={`/business-profile/edit-restaurant/${item.id}`}
+								element={
+									<ProptectedBusinessRouteElement
+										role={currentRole}
+										isLoggedIn={isLoggedIn}
+										element={<EditRestaurant id={item.id} />}
+									/>
+								}
+							/>
+						))
 					)}
-					{currentUser && currentRole && (
+					{isDataLoading ? (
+						<Route
+							path="/business-profile/reservation-restaurant/:id"
+							element={<Preloader />}
+						/>
+					) : (
 						<Route
 							path="/business-profile/reservation-restaurant/:id"
 							element={
@@ -450,7 +478,6 @@ function App() {
 					<Route path="/support" element={<SendProblem />} />
 					<Route path="/help" element={<Help />} />
 					<Route path="/resetpass" element={<ResetPassword />} />
-					<Route path="*" element={<NotFoundPage />} />
 				</Routes>
 			</CurrentUserContext.Provider>
 		</div>
