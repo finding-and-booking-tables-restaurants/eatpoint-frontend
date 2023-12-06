@@ -115,11 +115,13 @@ function RestaurantReservationPage() {
 		<>
 			<Header />
 			<Box
-				maxWidth={maxWidthBoxConfig}
-				minWidth={minWidthBoxConfig}
+				// maxWidth={maxWidthBoxConfig}
+				// minWidth={minWidthBoxConfig}
 				m="auto"
 				minHeight={'calc(100vh - 156px)'}
 				className="restaurant__reserve"
+                mr={{xs: 2, sm: 5, md: 5, lg: 6}}
+                ml={{xs: 2, sm: 5, md: 5, lg: 6}}
 			>
 				<div className="restaurant__reserve-page">
 					<div className="restaurant__reserve-box-info">
@@ -151,7 +153,7 @@ function RestaurantReservationPage() {
 					</div>
 					<p className="restaurant__place">{`${myEstablishments.cities}, ${myEstablishments.address}`}</p>
 				</div>
-				<Box display="inline-flex" gap="8px" mt="auto" pt="16px">
+				<Box display="inline-flex" gap="8px" mt="auto" pt="16px" width="100%">
 					<Button
 						onClick={() => redirectToReviewPage(id!)}
 						variant="outlined"
@@ -160,7 +162,7 @@ function RestaurantReservationPage() {
 							borderColor: '#006C60',
 							textTransform: 'none',
 							borderRadius: '8px',
-							minWidth: '160px',
+							width: '50%',
 						}}
 					>
 						Отзывы
@@ -173,7 +175,7 @@ function RestaurantReservationPage() {
 							borderColor: '#006C60',
 							textTransform: 'none',
 							borderRadius: '8px',
-							minWidth: '160px',
+							width: '50%',
 						}}
 					>
 						События
