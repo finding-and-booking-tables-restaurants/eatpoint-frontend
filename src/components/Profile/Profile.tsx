@@ -214,8 +214,8 @@ const Profile: React.FC<IUserFormProps> = ({
 								required: 'Введите эл. почту',
 								pattern: {
 									value:
-										/^(?!.*[+%])[A-Z0-9._%+-]+\S@[A-Z0-9.-]+\.[A-Z]{2,4}$/i, // Обновленное регулярное выражение
-									message: 'Электронная почта введена не корректно',
+										/^[a-zA-Z0-9]+([.-]?[a-zA-Z0-9]+)*@[a-zA-Z0-9]+([.-]?[a-zA-Z0-9]+)*\.[a-zA-Z]{2,}$/i,
+									message: 'Адрес электронной почты введен некорректно',
 								},
 								minLength: {
 									value: 5,
@@ -242,7 +242,6 @@ const Profile: React.FC<IUserFormProps> = ({
 							}}
 							fullWidth
 						/>
-
 						{/* <Button
 							onClick={handleChangePassword}
 							variant="outlined"
