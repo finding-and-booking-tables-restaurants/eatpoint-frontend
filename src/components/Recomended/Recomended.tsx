@@ -28,7 +28,6 @@ const Recomended: React.FC<RecomendedProps> = ({
 }) => {
 	const [data, setData] = useState<Restaurant[]>([]);
 	const userCity = localStorage.getItem('city') || 'Москва';
-	console.log(userCity);
 
 	useEffect(() => {
 		async function fetchData() {
@@ -43,7 +42,6 @@ const Recomended: React.FC<RecomendedProps> = ({
 				);
 
 				const result = await response.json();
-				console.log(response);
 
 				setData(result.results);
 			} catch (error) {
@@ -68,6 +66,29 @@ const Recomended: React.FC<RecomendedProps> = ({
 
 		fetchData();
 	}, []);
+
+	const sortedEstablishments = establishments
+		.slice()
+		.sort((a: Restaurant, b: Restaurant) => b.rating - a.rating);
+
+	const completeDataArray = (
+		data: Restaurant[],
+		sortedEstablishments: Restaurant[]
+	): Restaurant[] => {
+		const remainingCount = 9 - data.length;
+
+		if (remainingCount > 0) {
+			const additionalRestaraunts = sortedEstablishments.slice(
+				0,
+				remainingCount
+			);
+			return [...data, ...additionalRestaraunts];
+		}
+
+		return data;
+	};
+
+	const updateDataArray = completeDataArray(data, sortedEstablishments);
 
 	return (
 		<Box
@@ -95,8 +116,8 @@ const Recomended: React.FC<RecomendedProps> = ({
 					gap: { xs: '16px', sm: '32px', md: '24px' },
 				}}
 			>
-				{data.length
-					? data.map((restaurant: Restaurant, index: number) => (
+				{updateDataArray.length
+					? updateDataArray.map((restaurant: Restaurant, index: number) => (
 							<RestCard
 								key={index}
 								img={restaurant.poster}
