@@ -24,7 +24,9 @@ function RestaurantReservationPage() {
 
 	useEffect(() => {
 		mainApi.getAllMyEstablishments().then((res) => {
-			const restaurant = res.results.find((el: Establishment) => el.id === Number(id));
+			const restaurant = res.results.find(
+				(el: Establishment) => el.id === Number(id)
+			);
 			setMyEstablishments(restaurant);
 		});
 		mainApi.getAllBusinessReservation().then((res) => {
