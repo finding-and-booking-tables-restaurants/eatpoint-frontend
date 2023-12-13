@@ -17,7 +17,7 @@ interface Coordinates {
 	longitude: number;
 }
 
-function getLocation(): Promise<Coordinates> {
+export async function getLocation(): Promise<Coordinates> {
 	return new Promise((resolve, reject) => {
 		if (navigator.geolocation) {
 			navigator.geolocation.getCurrentPosition(
