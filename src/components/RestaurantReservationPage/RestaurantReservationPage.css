@@ -1,5 +1,6 @@
 .restaurant__reserve-page {
 	width: 100%;
+	margin: 0 auto;
 }
 
 .restaurant__reserve-box-card {
@@ -50,14 +51,16 @@
 .restaurant__box-addition-info_reservation {
 	display: flex;
 	align-items: center;
-	justify-content: space-between;
-	gap: 15px;
+	/* justify-content: space-between; */
+	/* gap: 15px; */
 }
 
 .restaurant__flex-box {
 	display: flex;
 	align-items: center;
 	gap: 8px;
+	margin-right: 24px;
+
 }
 
 .restaurant__reviews-num {
@@ -80,12 +83,12 @@
 }
 
 .restaurant__edit-btn {
-	margin-left: 80px;
 	width: 24px;
 	height: 24px;
 	border: none;
 	background: url('../../images/business-profile__editProfileBtn.svg') no-repeat;
 	cursor: pointer;
+	margin-left: auto;
 }
 
 .restaurant__reservation-heading {
@@ -99,9 +102,11 @@
 }
 
 .restaurant__reservations {
+	/* margin: 0 auto; */
 	list-style: none;
 	padding: 0;
 	display: flex;
+	justify-content: center;
 	flex-direction: row;
 	flex-wrap: wrap;
 	column-gap: 16px;
