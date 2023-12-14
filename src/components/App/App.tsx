@@ -197,8 +197,6 @@ function App() {
 				} else {
 					setRegErrorMessage(REG_ERROR_MESSAGE);
 				}
-			})
-			.finally(() => {
 				setTimeout(() => {
 					setRegErrorMessage('');
 					setIsSuccessRegister(false);
