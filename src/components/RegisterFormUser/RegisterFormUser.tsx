@@ -20,6 +20,7 @@ import Header from '../Header/Header';
 import Footer from '../Footer/Footer';
 import './RegisterFormUser.css';
 import SuccessRegister from '../SuccessRegister/SuccessRegister';
+import { maxWidthBoxConfig, minWidthBoxConfig } from '../../utils/constants';
 
 const RegisterFormUser: React.FC<IRegisterFormUserProps> = ({
 	onRegistration,
@@ -57,7 +58,7 @@ const RegisterFormUser: React.FC<IRegisterFormUserProps> = ({
 			password: formData.password.trim(),
 			is_agreement: isAgreement,
 			role: role,
-			confirm_code_send_method: 'nothing',
+			confirm_code_send_method: 'email',
 		};
 		setEmailValue(formData.email.trim());
 		onRegistration(userData);
@@ -76,12 +77,15 @@ const RegisterFormUser: React.FC<IRegisterFormUserProps> = ({
 		navigate(-1);
 	};
 
+	const inputStyles = { maxWidth: { xs: '100%', md: '428px', lg: '522px' } };
+
 	return (
 		<>
 			<Header />
-			<Container
-				fixed
-				maxWidth="sm"
+			<Box
+				minWidth={maxWidthBoxConfig}
+				maxWidth={minWidthBoxConfig}
+				m="auto"
 				sx={{ mb: 5, minHeight: 'calc(100vh - 217px)' }}
 			>
 				<Typography
@@ -106,11 +110,15 @@ const RegisterFormUser: React.FC<IRegisterFormUserProps> = ({
 					<Box
 						component="form"
 						onSubmit={handleSubmit(handleRegistration)}
+						display={'flex'}
+						flexWrap={'wrap'}
+						columnGap={'24px'}
 						sx={{
 							'& > :not(style)': { m: 0, width: '100%', ml: 0, mb: 2 },
 						}}
 					>
 						<TextField
+							sx={inputStyles}
 							{...register('firstName', {
 								required: 'Введите имя',
 								minLength: {
@@ -154,6 +162,7 @@ const RegisterFormUser: React.FC<IRegisterFormUserProps> = ({
 									message: 'Фамилия введена не корректно',
 								},
 							})}
+							sx={inputStyles}
 							label="Фамилия"
 							placeholder="Введите фамилию"
 							name="lastName"
@@ -179,6 +188,7 @@ const RegisterFormUser: React.FC<IRegisterFormUserProps> = ({
 									message: 'Максимальная длина - 12 символов',
 								},
 							})}
+							sx={inputStyles}
 							label="Моб. телефон в виде +7(...)... .. .."
 							placeholder="Введите номер телефона"
 							variant="outlined"
@@ -213,9 +223,7 @@ const RegisterFormUser: React.FC<IRegisterFormUserProps> = ({
 							onBlur={handleBlur}
 							error={!!errors.email || nonUniqueData}
 							helperText={errors.email?.message || ''}
-							sx={{
-								marginTop: 2,
-							}}
+							sx={inputStyles}
 							fullWidth
 						/>
 						<TextField
@@ -244,6 +252,7 @@ const RegisterFormUser: React.FC<IRegisterFormUserProps> = ({
 							placeholder="Пароль"
 							error={!!errors.password}
 							helperText={errors.password?.message || ''}
+							sx={inputStyles}
 							fullWidth
 						/>
 						<TextField
@@ -260,6 +269,7 @@ const RegisterFormUser: React.FC<IRegisterFormUserProps> = ({
 							name="confirmPassword"
 							error={!!errors.confirmPassword}
 							helperText={errors.confirmPassword?.message || ''}
+							sx={inputStyles}
 							fullWidth
 						/>
 						{requestErrorMessage && (
@@ -294,7 +304,6 @@ const RegisterFormUser: React.FC<IRegisterFormUserProps> = ({
 							label={
 								<Typography
 									sx={{
-										maxWidth: '264px',
 										fontSize: '12px',
 										fontWeight: '400',
 										lineHeight: '16px',
@@ -313,7 +322,7 @@ const RegisterFormUser: React.FC<IRegisterFormUserProps> = ({
 									borderRadius: '6px',
 									borderColor: '#006C60',
 									height: '40px',
-									width: '156px',
+									minWidth: 'calc(50% - 8px)',
 								}}
 							>
 								<Typography
@@ -335,6 +344,7 @@ const RegisterFormUser: React.FC<IRegisterFormUserProps> = ({
 								sx={{
 									backgroundColor: '#05887B',
 									borderRadius: '6px',
+									minWidth: 'calc(50% - 8px)',
 								}}
 							>
 								<Typography
@@ -352,7 +362,7 @@ const RegisterFormUser: React.FC<IRegisterFormUserProps> = ({
 						</Stack>
 					</Box>
 				)}
-			</Container>
+			</Box>
 			<Footer />
 		</>
 	);

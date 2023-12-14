@@ -45,6 +45,9 @@ import LinkToYandexMap from '../LinkToYandexMap/LinkToYandexMap';
 import StarIcon from '@mui/icons-material/Star';
 import StarHalfIcon from '@mui/icons-material/StarHalf';
 import StarBorderIcon from '@mui/icons-material/StarBorder';
+import EventCard from '../Events/EventCard';
+import { Event } from '../../models/data/Event';
+import { formatDate, formatTime } from '../../utils/formatDateString';
 
 export default function RestaurantPage({ id }: { id: number }) {
 	const [isModalOpen, setIsModalOpen] = useState(false);
@@ -59,6 +62,7 @@ export default function RestaurantPage({ id }: { id: number }) {
 	const [availableDates, setAvailableDates] = useState([]);
 	const [availableTimes, setAvailableTimes] = useState([]);
 	const [currentDate, setCurrentDate] = useState('');
+	const [establismentEvents, setEstablishmentEvents] = useState([]);
 
 	const isLoggedIn = useContext(CurrentUserContext).isLoggedIn;
 	const role = useContext(CurrentUserContext).currentRole;
@@ -82,6 +86,10 @@ export default function RestaurantPage({ id }: { id: number }) {
 					})
 					.catch((err) => console.log(err));
 			})
+			.catch((err) => console.log(err));
+		mainApi
+			.getEstablismnetEvents(id)
+			.then((events) => setEstablishmentEvents(events))
 			.catch((err) => console.log(err));
 		mainApi
 			.getEstablishmentsReviews(id)
@@ -174,8 +182,6 @@ export default function RestaurantPage({ id }: { id: number }) {
 			);
 		}
 	});
-
-	console.log(currentDate);
 
 	return (
 		<>
@@ -462,6 +468,31 @@ export default function RestaurantPage({ id }: { id: number }) {
 						</Typography>
 					)}
 				</Box>
+				{!establismentEvents.length ? (
+					''
+				) : (
+					<Box width="92%" m="0 auto">
+						<Typography
+							sx={{ fontSize: '26px', fontWeight: '600', m: '24px 0 16px 0' }}
+						>
+							Ближайшие мероприятия
+						</Typography>
+						{establismentEvents.map((event: Event, index: number) => (
+							<EventCard
+								key={index}
+								eventPoster={event.image}
+								eventName={event.name}
+								eventOwner={currentRestaurant.name}
+								eventAddress={currentRestaurant.address}
+								eventType={'Вечеринка'}
+								eventDate={formatDate(event.date_start)}
+								eventTime={formatTime(event.date_start)}
+								eventPrice={event.price}
+								eventId={0}
+							/>
+						))}
+					</Box>
+				)}
 				<Box
 					sx={{
 						maxWidth: '92%',

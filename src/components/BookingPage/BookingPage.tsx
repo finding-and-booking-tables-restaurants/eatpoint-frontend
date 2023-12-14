@@ -253,7 +253,11 @@ const BookingPage: FC<BookingPageProps> = ({ id, userData }) => {
 										label={option.label}
 										defaultValue={userData ? userData[option.id] : ''}
 										sx={{
-											minWidth: 328,
+											minWidth: `${
+												option.id === 'comment' && !isLoggedIn
+													? '100%'
+													: '328px'
+											}`,
 											maxWidth: '100%',
 											display: `${
 												isLoggedIn && option.id === 'email' && 'none'

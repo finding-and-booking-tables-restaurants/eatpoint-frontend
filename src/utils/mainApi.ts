@@ -242,6 +242,17 @@ class MainApi {
 			}
 		);
 	}
+
+	getEstablismnetEvents(establishmentId: number) {
+		return this._sendFetchRequest(
+			`/api/v1/establishments/${establishmentId}/events/`,
+			{
+				headers: {
+					'Content-Type': 'application/json',
+				},
+			}
+		);
+	}
 }
 
 export const mainApi = new MainApi({

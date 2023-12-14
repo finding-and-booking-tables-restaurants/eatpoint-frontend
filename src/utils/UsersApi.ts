@@ -65,6 +65,17 @@ class UsersApi {
 		);
 	}
 
+	confirmRegister = (email: string, code: string) => {
+		return fetch(`${this._baseUrl}/api/v1/auth/confirm-code/`, {
+			method: 'POST',
+			headers: this._headers,
+			body: JSON.stringify({
+				email,
+				confirmation_code: code,
+			}),
+		}).then((res) => this._handleResponse(res));
+	};
+
 	refreshToken(refresh: string) {
 		return fetch(`${this._baseUrl}/api/v1/login/jwt/refresh/`, {
 			method: 'POST',
