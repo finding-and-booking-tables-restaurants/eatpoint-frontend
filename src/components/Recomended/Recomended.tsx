@@ -43,7 +43,11 @@ const Recomended: React.FC<RecomendedProps> = ({
 
 				const result = await response.json();
 
-				setData(result.results);
+				if (result.results && result.results.length > 0) {
+					setData(result.results);
+				} else {
+					throw new Error('По предоставленным координатам нет заведений');
+				}
 			} catch (error) {
 				console.error(
 					'Произошла ошибка в fetchData:',
