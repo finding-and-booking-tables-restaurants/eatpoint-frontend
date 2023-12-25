@@ -36,10 +36,8 @@ const SuccessRegister = ({ userEmail }: { userEmail: string }) => {
 			{!isVerified ? (
 				<>
 					<h2 className="success-register__message">
-						Мы отправиль код на почту
-						<span className="success-register__user-email"> {userEmail}</span>,
-						для подтверждения регистрации, пожалуйста, введите полученный код в
-						окошко ниже:
+						Сообщение с кодом было отправлено вам на почту:
+						<span className="success-register__user-email">{userEmail}</span>
 					</h2>
 					<TextField
 						placeholder="Код"
