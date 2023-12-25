@@ -37,14 +37,14 @@ const Recomended: React.FC<RecomendedProps> = ({
 				const { latitude, longitude } = coordinates;
 				const location = `${latitude},${longitude}`;
 
-				const response = await fetch(
-					`https://eatpoint.site/api/v1/establishments/?location=${location}`
-				);
+				const nearEstablishments =
+					await mainApi.getEstablishmentsByLocation(location);
 
-				const result = await response.json();
-
-				if (result.results && result.results.length > 0) {
-					setData(result.results);
+				if (
+					nearEstablishments.results &&
+					nearEstablishments.results.length > 0
+				) {
+					setData(nearEstablishments.results);
 				} else {
 					throw new Error('По предоставленным координатам нет заведений');
 				}

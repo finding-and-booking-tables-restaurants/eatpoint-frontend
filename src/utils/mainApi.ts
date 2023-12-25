@@ -21,16 +21,13 @@ class MainApi {
 	}
 
 	getEstablishments(pageSize: number) {
-		return this._sendFetchRequest(
-			`/api/v1/establishments/?page_size=${pageSize}`,
-			{
-				headers: this._headers,
-			}
-		);
+		return this._sendFetchRequest(`/establishments/?page_size=${pageSize}`, {
+			headers: this._headers,
+		});
 	}
 
 	getEstablissmentData(id: number) {
-		return this._sendFetchRequest(`/api/v1/establishments/${id}`, {
+		return this._sendFetchRequest(`/establishments/${id}`, {
 			headers: this._headers,
 		});
 	}
@@ -41,13 +38,19 @@ class MainApi {
 		city: string
 	) {
 		return this._sendFetchRequest(
-			`/api/v1/establishments/?cities=${city}&page_size=${pageSize}&search=${query}`,
+			`/establishments/?cities=${city}&page_size=${pageSize}&search=${query}`,
 			{ headers: this._headers }
 		);
 	}
 
+	getEstablishmentsByLocation(location: string) {
+		return this._sendFetchRequest(`/establishments/?location=${location}`, {
+			headers: this._headers,
+		});
+	}
+
 	getAllMyEstablishments() {
-		return this._sendFetchRequest(`/api/v1/business/establishments/`, {
+		return this._sendFetchRequest(`/business/establishments/`, {
 			headers: {
 				authorization: 'Bearer ' + localStorage.getItem('access-token'),
 				'Content-Type': 'application/json',
@@ -56,7 +59,7 @@ class MainApi {
 	}
 
 	createMyEstablishment(data: RestaurantData) {
-		return this._sendFetchRequest(`/api/v1/business/establishments/`, {
+		return this._sendFetchRequest(`/business/establishments/`, {
 			method: 'POST',
 			headers: {
 				authorization: 'Bearer ' + localStorage.getItem('access-token'),
@@ -76,7 +79,7 @@ class MainApi {
 			formData.append(`image`, images[i]);
 		}
 
-		return this._sendFetchRequest(`/api/v1/images/${establishmentId}/`, {
+		return this._sendFetchRequest(`/images/${establishmentId}/`, {
 			method: 'POST',
 			headers: {
 				authorization: 'Bearer ' + localStorage.getItem('access-token'),
@@ -86,7 +89,7 @@ class MainApi {
 	}
 
 	editMyEstablishment(data: RestaurantData, id: number) {
-		return this._sendFetchRequest(`/api/v1/business/establishments/${id}/`, {
+		return this._sendFetchRequest(`/business/establishments/${id}/`, {
 			method: 'PATCH',
 			headers: {
 				authorization: 'Bearer ' + localStorage.getItem('access-token'),
@@ -97,21 +100,12 @@ class MainApi {
 	}
 
 	deleteMyEstablishment(id: number | undefined) {
-		return fetch(
-			`https://eatpoint.sytes.net/api/v1/business/establishments/${id}/`,
-			{
-				method: 'DELETE',
-				headers: {
-					authorization: 'Bearer ' + localStorage.getItem('access-token'),
-					'Content-Type': 'application/json',
-				},
-			}
-		).then((response) => {
-			if (!response.ok) {
-				return Promise.reject(`Error: ${response.status}`);
-			} else {
-				return;
-			}
+		return this._sendFetchRequest(`/business/establishments/${id}/`, {
+			method: 'DELETE',
+			headers: {
+				authorization: 'Bearer ' + localStorage.getItem('access-token'),
+				'Content-Type': 'application/json',
+			},
 		});
 	}
 
@@ -119,26 +113,17 @@ class MainApi {
 		restaurantId: number | string | undefined,
 		imageId: number | undefined
 	) {
-		return fetch(
-			`https://eatpoint.sytes.net/api/v1/images/${restaurantId}/${imageId}/`,
-			{
-				method: 'DELETE',
-				headers: {
-					authorization: 'Bearer ' + localStorage.getItem('access-token'),
-					'Content-Type': 'application/json',
-				},
-			}
-		).then((response) => {
-			if (!response.ok) {
-				return Promise.reject(`Error: ${response.status}`);
-			} else {
-				return;
-			}
+		return this._sendFetchRequest(`/images/${restaurantId}/${imageId}/`, {
+			method: 'DELETE',
+			headers: {
+				authorization: 'Bearer ' + localStorage.getItem('access-token'),
+				'Content-Type': 'application/json',
+			},
 		});
 	}
 
 	getMyEstablishmentById(id: number) {
-		return this._sendFetchRequest(`/api/v1/business/establishments/${id}/`, {
+		return this._sendFetchRequest(`/business/establishments/${id}/`, {
 			method: 'GET',
 			headers: {
 				authorization: 'Bearer ' + localStorage.getItem('access-token'),
@@ -148,7 +133,7 @@ class MainApi {
 	}
 
 	getEstablishmentsReviews(id: number) {
-		return this._sendFetchRequest(`/api/v1/establishments/${id}/reviews/`, {
+		return this._sendFetchRequest(`/establishments/${id}/reviews/`, {
 			headers: this._headers,
 		});
 	}
@@ -167,18 +152,15 @@ class MainApi {
 					'Content-Type': 'application/json',
 			  } as Record<string, string>);
 
-		return this._sendFetchRequest(
-			`/api/v1/establishments/${id}/reservations/`,
-			{
-				method: 'POST',
-				headers,
-				body: JSON.stringify(formData),
-			}
-		);
+		return this._sendFetchRequest(`/establishments/${id}/reservations/`, {
+			method: 'POST',
+			headers,
+			body: JSON.stringify(formData),
+		});
 	};
 
 	getAllCities() {
-		return this._sendFetchRequest(`/api/v1/cities/`, {
+		return this._sendFetchRequest(`/cities/`, {
 			method: 'GET',
 			headers: {
 				'Content-Type': 'application/json',
@@ -187,7 +169,7 @@ class MainApi {
 	}
 
 	getAllBusinessReservation() {
-		return this._sendFetchRequest(`/api/v1/business/reservations/`, {
+		return this._sendFetchRequest(`/business/reservations/`, {
 			headers: {
 				authorization: 'Bearer ' + localStorage.getItem('access-token'),
 				'Content-Type': 'application/json',
@@ -196,7 +178,7 @@ class MainApi {
 	}
 
 	getBusinessReservationById(id: string | undefined) {
-		return this._sendFetchRequest(`/api/v1/business/reservations/${id}/`, {
+		return this._sendFetchRequest(`/business/reservations/${id}/`, {
 			headers: {
 				authorization: 'Bearer ' + localStorage.getItem('access-token'),
 				'Content-Type': 'application/json',
@@ -205,7 +187,7 @@ class MainApi {
 	}
 
 	confirmReservation(id: string) {
-		return this._sendFetchRequest(`/api/v1/business/reservations/${id}/`, {
+		return this._sendFetchRequest(`/business/reservations/${id}/`, {
 			method: 'PATCH',
 			headers: {
 				authorization: 'Bearer ' + localStorage.getItem('access-token'),
@@ -216,7 +198,7 @@ class MainApi {
 	}
 
 	cancelReservation(id: string) {
-		return this._sendFetchRequest(`/api/v1/business/reservations/${id}/`, {
+		return this._sendFetchRequest(`/business/reservations/${id}/`, {
 			method: 'DELETE',
 			headers: {
 				authorization: 'Bearer ' + localStorage.getItem('access-token'),
@@ -226,7 +208,7 @@ class MainApi {
 	}
 
 	getAvailableBookingDates(zoneId: number) {
-		return this._sendFetchRequest(`/api/v1/availability/date/${zoneId}/`, {
+		return this._sendFetchRequest(`/availability/date/${zoneId}/`, {
 			headers: {
 				'Content-Type': 'application/json',
 			},
@@ -234,7 +216,7 @@ class MainApi {
 	}
 	getAvailableBookingTimes(date: string, establishmentId: number) {
 		return this._sendFetchRequest(
-			`/api/v1/availability/time/${date}/${establishmentId}/`,
+			`/availability/time/${date}/${establishmentId}/`,
 			{
 				headers: {
 					'Content-Type': 'application/json',
@@ -245,7 +227,7 @@ class MainApi {
 
 	getEstablismnetEvents(establishmentId: number) {
 		return this._sendFetchRequest(
-			`/api/v1/establishments/${establishmentId}/events/`,
+			`/establishments/${establishmentId}/events/`,
 			{
 				headers: {
 					'Content-Type': 'application/json',

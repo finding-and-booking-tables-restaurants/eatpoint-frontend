@@ -206,7 +206,7 @@ function replaceBackendUrl(data: any): any {
 
 export const fetchRestaurantData = async (id: number) => {
 	try {
-		const response = await fetch(`${API_URL}/api/v1/establishments/${id}`);
+		const response = await fetch(`${API_URL}/establishments/${id}`);
 		const data = await response.json();
 
 		const updatedData = replaceBackendUrl(data);
@@ -422,7 +422,7 @@ export {
 };
 
 export const API_URL =
-	process.env.REACT_APP_API_URL || 'https://eatpoint.sytes.net';
+	process.env.REACT_APP_API_URL || 'https://eatpoint.site/api/v2';
 
 export const helpLinkList = [
 	// Список якорных ссылок на странице помощи
