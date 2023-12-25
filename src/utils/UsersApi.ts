@@ -33,7 +33,7 @@ class UsersApi {
 		is_agreement,
 		confirm_code_send_method,
 	}: IRegisterFormData): Promise<Response> {
-		return fetch(`${this._baseUrl}/api/v1/auth/signup/`, {
+		return fetch(`${this._baseUrl}/auth/signup/`, {
 			method: 'POST',
 			headers: this._headers,
 			body: JSON.stringify({
@@ -53,7 +53,7 @@ class UsersApi {
 		email,
 		password,
 	}: ILoginFormData): Promise<{ access: string; refresh: string }> {
-		return fetch(`${this._baseUrl}/api/v1/login/jwt/create/`, {
+		return fetch(`${this._baseUrl}/login/jwt/create/`, {
 			method: 'POST',
 			headers: this._headers,
 			body: JSON.stringify({
@@ -65,8 +65,19 @@ class UsersApi {
 		);
 	}
 
+	confirmRegister = (email: string, code: string) => {
+		return fetch(`${this._baseUrl}/auth/confirm-code/`, {
+			method: 'POST',
+			headers: this._headers,
+			body: JSON.stringify({
+				email,
+				confirmation_code: code,
+			}),
+		}).then((res) => this._handleResponse(res));
+	};
+
 	refreshToken(refresh: string) {
-		return fetch(`${this._baseUrl}/api/v1/login/jwt/refresh/`, {
+		return fetch(`${this._baseUrl}/login/jwt/refresh/`, {
 			method: 'POST',
 			headers: this._headers,
 			body: JSON.stringify({
@@ -90,7 +101,7 @@ class UsersApi {
 	}): Promise<any> {
 		const token = localStorage.getItem('access-token');
 
-		return fetch(`${this._baseUrl}/api/v1/users/me/`, {
+		return fetch(`${this._baseUrl}/users/me/`, {
 			method: 'PATCH',
 			headers: {
 				authorization: `Bearer ${token}`,
@@ -107,7 +118,7 @@ class UsersApi {
 	}
 
 	getUserInfo(): Promise<any> {
-		return fetch(`${this._baseUrl}/api/v1/users/me/`, {
+		return fetch(`${this._baseUrl}/users/me/`, {
 			headers: {
 				authorization: 'Bearer ' + localStorage.getItem('access-token'),
 				'Content-Type': 'application/json',
@@ -116,7 +127,7 @@ class UsersApi {
 	}
 
 	deleteBooking(id: string): Promise<any> {
-		return fetch(`${this._baseUrl}/api/v1/reservations/${id}/`, {
+		return fetch(`${this._baseUrl}/reservations/${id}/`, {
 			method: 'DELETE',
 			headers: {
 				authorization: 'Bearer ' + localStorage.getItem('access-token'),
@@ -126,7 +137,7 @@ class UsersApi {
 	}
 
 	getUserBookings(): Promise<any> {
-		return fetch(`${this._baseUrl}/api/v1/reservations/`, {
+		return fetch(`${this._baseUrl}/reservations/`, {
 			headers: {
 				authorization: 'Bearer ' + localStorage.getItem('access-token'),
 				'Content-Type': 'application/json',
@@ -135,7 +146,7 @@ class UsersApi {
 	}
 
 	sendReview(id: number, text: string, score: number): Promise<any> {
-		return fetch(`${this._baseUrl}/api/v1/establishments/${id}/reviews/`, {
+		return fetch(`${this._baseUrl}/establishments/${id}/reviews/`, {
 			method: 'POST',
 			headers: {
 				authorization: 'Bearer ' + localStorage.getItem('access-token'),

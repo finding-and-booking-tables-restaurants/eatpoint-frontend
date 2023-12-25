@@ -29,6 +29,7 @@ import { ThemeProvider } from '@emotion/react';
 import { selectTheme } from '../NumberOfPerson/NumberOfPerson';
 import { useForm } from 'react-hook-form';
 import { Box, Button } from '@mui/material';
+import NoBookingSlots from '../NoBookingSlots/NoBookingSlots';
 
 interface BookingPageProps {
 	id: number;
@@ -143,7 +144,7 @@ const BookingPage: FC<BookingPageProps> = ({ id, userData }) => {
 			});
 	};
 	const handleBackBtnClick = () => {
-		navigate(`/establishment/${id}`, { replace: true });
+		navigate('/');
 	};
 
 	useEffect(() => {
@@ -179,7 +180,7 @@ const BookingPage: FC<BookingPageProps> = ({ id, userData }) => {
 					/>
 				) : (
 					<>
-						<>
+						<Box>
 							<div className="booking-page__heading">
 								<button
 									className="booking-page__back-btn"
@@ -204,114 +205,122 @@ const BookingPage: FC<BookingPageProps> = ({ id, userData }) => {
 									address={currentRestaurant.address}
 								/>
 							</div>
-						</>
-						<BookingForm
-							currentDate={setCurrentDate}
-							availableDates={availableDates}
-							availableTimes={availableTimes}
-							onSubmit={handleSubmit(handleBooking)}
-						>
-							<Box
-								display="flex"
-								flexWrap={'wrap'}
-								rowGap={{ xs: '16px', sm: '32px' }}
-								columnGap={{ xs: '16px', sm: '40px' }}
-								justifyContent={'center'}
+						</Box>
+						{!availableDates.length ? (
+							<NoBookingSlots />
+						) : (
+							<BookingForm
+								currentDate={setCurrentDate}
+								availableDates={availableDates}
+								availableTimes={availableTimes}
+								onSubmit={handleSubmit(handleBooking)}
 							>
-								<TextField
-									key={String(currnetZone)}
-									{...register('zone', {
-										required: 'Поле обязательно для заполнения',
-									})}
-									id="outlined-select-currency"
-									select
-									name="zone"
-									label="Зона"
-									required
-									defaultValue={currnetZone}
-									onChange={(event) => {
-										const value = event.target.value;
-										setCurrentZone(Number(value));
-										setValue('zone', value);
-									}}
-									sx={{
-										minWidth: 328,
-									}}
+								<Box
+									display="flex"
+									flexWrap={'wrap'}
+									rowGap={{ xs: '16px', sm: '32px' }}
+									columnGap={{ xs: '16px', sm: '40px' }}
+									justifyContent={'center'}
 								>
-									{currentRestaurant?.zones.map((option, index: number) => (
-										<MenuItem key={index} value={option.id}>
-											{option.zone}
-										</MenuItem>
-									))}
-								</TextField>
-								{inputs.map((option, index) => (
 									<TextField
-										{...register(`${option.id}`, option.validationConfig)}
-										helperText={errors[option.id]?.message || ''}
-										error={!!errors[option.id]}
-										key={index}
-										label={option.label}
-										defaultValue={userData ? userData[option.id] : ''}
+										key={String(currnetZone)}
+										{...register('zone', {
+											required: 'Поле обязательно для заполнения',
+										})}
+										id="outlined-select-currency"
+										select
+										name="zone"
+										label="Зона"
+										required
+										defaultValue={currnetZone}
+										onChange={(event) => {
+											const value = event.target.value;
+											setCurrentZone(Number(value));
+											setValue('zone', value);
+										}}
 										sx={{
 											minWidth: 328,
-											maxWidth: '100%',
-											display: `${
-												isLoggedIn && option.id === 'email' && 'none'
-											}`,
-											'& .Mui-error': {
-												color: '#EC006C',
-											},
-											'& .MuiOutlinedInput-root': {
-												'&.Mui-error .MuiOutlinedInput-notchedOutline': {
-													borderColor: '#EC006C',
+										}}
+									>
+										{currentRestaurant?.zones.map((option, index: number) => (
+											<MenuItem key={index} value={option.id}>
+												{option.zone}
+											</MenuItem>
+										))}
+									</TextField>
+									{inputs.map((option, index) => (
+										<TextField
+											{...register(`${option.id}`, option.validationConfig)}
+											helperText={errors[option.id]?.message || ''}
+											error={!!errors[option.id]}
+											key={index}
+											label={option.label}
+											defaultValue={userData ? userData[option.id] : ''}
+											sx={{
+												minWidth: `${
+													option.id === 'comment' && !isLoggedIn
+														? '100%'
+														: '328px'
+												}`,
+												maxWidth: '100%',
+												display: `${
+													isLoggedIn && option.id === 'email' && 'none'
+												}`,
+												'& .Mui-error': {
+													color: '#EC006C',
 												},
-											},
+												'& .MuiOutlinedInput-root': {
+													'&.Mui-error .MuiOutlinedInput-notchedOutline': {
+														borderColor: '#EC006C',
+													},
+												},
+											}}
+										/>
+									))}
+									<p
+										style={{ flexBasis: '100%' }}
+										className="booking-page__comment"
+									>
+										Введите ваши пожелания
+									</p>
+									<span
+										style={{
+											color: '#EC006C',
+											fontSize: '0.75rem',
+											textAlign: 'center',
+										}}
+									>
+										{errMessage}
+									</span>
+								</Box>
+								<div className="checkbox-container">
+									<Checkbox
+										onChange={(e) => setIsAgreement(e.target.checked)}
+										sx={{
+											'& .MuiSvgIcon-root': { fontSize: 24, color: '#05887B' },
 										}}
 									/>
-								))}
-								<p
-									style={{ flexBasis: '100%' }}
-									className="booking-page__comment"
-								>
-									Введите ваши пожелания
-								</p>
-								<span
-									style={{
-										color: '#EC006C',
-										fontSize: '0.75rem',
-										textAlign: 'center',
-									}}
-								>
-									{errMessage}
-								</span>
-							</Box>
-							<div className="checkbox-container">
-								<Checkbox
-									onChange={(e) => setIsAgreement(e.target.checked)}
+									<p className="checkbox-text">
+										Бронируя столик, вы соглашаетесь с условиями
+										пользовательского соглашения
+									</p>
+								</div>
+								<Button
 									sx={{
-										'& .MuiSvgIcon-root': { fontSize: 24, color: '#05887B' },
+										backgroundColor: '#05887B',
+										textTransform: 'none',
+										borderRadius: '8px',
+										padding: '10px 24px 10px 16px',
+										mb: '24px',
 									}}
-								/>
-								<p className="checkbox-text">
-									Бронируя столик, вы соглашаетесь с условиями пользовательского
-									соглашения
-								</p>
-							</div>
-							<Button
-								sx={{
-									backgroundColor: '#05887B',
-									textTransform: 'none',
-									borderRadius: '8px',
-									padding: '10px 24px 10px 16px',
-									mb: '24px',
-								}}
-								disabled={!isValid || !isAgreement}
-								type="submit"
-								variant="contained"
-							>
-								Забронировать
-							</Button>
-						</BookingForm>
+									disabled={!isValid || !isAgreement}
+									type="submit"
+									variant="contained"
+								>
+									Забронировать
+								</Button>
+							</BookingForm>
+						)}
 					</>
 				)}
 			</Box>

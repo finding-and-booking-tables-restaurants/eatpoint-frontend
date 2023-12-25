@@ -182,7 +182,7 @@ const Profile: React.FC<IUserFormProps> = ({
 							{...register('telephone', {
 								required: 'Введите телефон',
 								pattern: {
-									value: /^\+(?:[0-9] ?){6,14}[0-9]$/,
+									value: /^\+(?:[0-9]){6,14}[0-9]$/,
 									message: 'Введите корректный номер моб. телефона',
 								},
 								minLength: {
@@ -214,8 +214,8 @@ const Profile: React.FC<IUserFormProps> = ({
 								required: 'Введите эл. почту',
 								pattern: {
 									value:
-										/^(?!.*(__|-{2}))[A-Z0-9._%+-]+\S@[A-Z0-9.-]+\.[A-Z]{2,4}$/i,
-									message: 'Электронная почта введена не корректно',
+										/^[a-zA-Z0-9]+([.-]?[a-zA-Z0-9]+)*@[a-zA-Z0-9]+([.-]?[a-zA-Z0-9]+)*\.[a-zA-Z]{2,}$/i,
+									message: 'Адрес электронной почты введен некорректно',
 								},
 								minLength: {
 									value: 5,
