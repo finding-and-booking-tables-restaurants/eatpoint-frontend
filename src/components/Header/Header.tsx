@@ -73,17 +73,18 @@ const Header = () => {
 			})
 			.catch((err) => console.log(err));
 		localStorage.setItem('city', 'Москва');
-
-		const handleResize = () => {
-			setWindowWidth(window.innerWidth);
-		};
-
-		window.addEventListener('resize', handleResize);
-
-		return () => {
-			window.removeEventListener('resize', handleResize);
-		};
 	}, [savedCity]);
+
+	useEffect(() => {
+		const handleResize = () => {
+		  setWindowWidth(window.innerWidth);
+		};
+	
+		window.addEventListener('resize', handleResize);
+		return () => {
+		  window.removeEventListener('resize', handleResize);
+		};
+	  }, []); 
 
 	const [inputValue, setInputValue] = useState('');
 	const history = useNavigate();
@@ -129,7 +130,7 @@ const Header = () => {
 						className="header__srch-btn"
 					></button>
 				)}
-				{windowWidth > 700 && (
+				{location.pathname !== '/' && windowWidth > 700 && (
 					<TextField
 						placeholder="Адрес, кухня, название"
 						type="text"

@@ -1,3 +1,8 @@
+.restaurant__reserve {
+	width: 91%;
+	margin: 0 auto;
+}
+
 .restaurant__reserve-page {
 	width: 100%;
 	margin: 0 auto;
@@ -42,6 +47,11 @@
 	overflow: hidden;
 	text-overflow: ellipsis;
 	white-space: nowrap;
+}
+
+.restaurant__item {
+	width: 65.9%;
+	height: 136px;
 }
 
 .restaurant__editBtn:hover {
@@ -198,4 +208,44 @@
 
 .active-button {
 	background-color: rgba(252, 247, 231, 1);
+}
+
+
+
+@media (min-width: 700px) {
+	.restaurant__reserve {
+		width: 89.5%;
+	}
+}
+
+@media (min-width: 900px) {
+	.restaurant__reserve-group {
+		display: flex;
+		justify-content: space-between;
+	}
+}
+
+@media (min-width: 1200px) {
+
+	.restaurant__reserve {
+		width: 71.6%;
+	}
+	/* .restaurant__reserve-page {
+		width: 648px;
+		padding: 16px;
+		background-color: rgba(255, 254, 249, 1);
+		border-radius: 8px;
+		box-shadow: 0px 4px 4px 0px rgba(73, 69, 79, 0.2);
+	} */
+
+
+	.restaurant__reserve-group {
+		display: flex;
+		gap: 24px;
+	}
+
+	.restaurant__reserve-title {
+		margin-bottom: 25px;
+		margin-top: 40px;		
+	}
 }
