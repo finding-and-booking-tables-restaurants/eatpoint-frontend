@@ -19,6 +19,7 @@ const Header = () => {
 	const navigate = useNavigate();
 	const location = useLocation();
 	const isLoggedIn = useContext(CurrentUserContext).isLoggedIn;
+	const [windowWidth, setWindowWidth] = useState(window.innerWidth);
 
 	const chechLocation = (path: string) => {
 		return location.pathname === path ? true : false;
@@ -74,6 +75,17 @@ const Header = () => {
 		localStorage.setItem('city', 'Москва');
 	}, [savedCity]);
 
+	useEffect(() => {
+		const handleResize = () => {
+		  setWindowWidth(window.innerWidth);
+		};
+	
+		window.addEventListener('resize', handleResize);
+		return () => {
+		  window.removeEventListener('resize', handleResize);
+		};
+	  }, []); 
+
 	const [inputValue, setInputValue] = useState('');
 	const history = useNavigate();
 
@@ -95,8 +107,10 @@ const Header = () => {
 				gap="11px"
 				alignItems="center"
 				justifyContent="space-between"
-				minWidth={maxWidthBoxConfig}
-				maxWidth={minWidthBoxConfig}
+				// minWidth={maxWidthBoxConfig}
+				// maxWidth={minWidthBoxConfig}
+				mr={{ xs: 2, sm: 5, md: 5, lg: 6 }}
+				ml={{ xs: 2, sm: 5, md: 5, lg: 6 }}
 				p="14px 0"
 			>
 				<Link href="/">
@@ -110,11 +124,49 @@ const Header = () => {
 					<SearchCity onClose={() => setAnchorElCity(null)} setSity={setCity} />
 				)}
 
-				{location.pathname !== '/' && (
+				{location.pathname !== '/' && windowWidth < 700 && (
 					<button
 						onClick={handleSearchClick}
 						className="header__srch-btn"
 					></button>
+				)}
+				{location.pathname !== '/' && windowWidth > 700 && (
+					<TextField
+						placeholder="Адрес, кухня, название"
+						type="text"
+						onKeyUp={(e) => {
+							if (e.key === 'Enter' && inputValue) redirectToSearchPage();
+						}}
+						sx={{
+							minWidth: '300px',
+							maxWidth: '346px',
+							height: '48px',
+							backgroundColor: '#FDFAF2',
+							borderRadius: '3px',
+							'& .MuiInputBase-root': {
+								borderRadius: '3px',
+								height: '48px',
+							},
+							'& .MuiOutlinedInput-notchedOutline': {
+								border: 'none',
+							},
+						}}
+						autoComplete="off"
+						value={inputValue}
+						onChange={handleInputChange}
+						InputProps={{
+							endAdornment: (
+								<InputAdornment position="end">
+									<button
+										className="header__button-search"
+										onClick={redirectToSearchPage}
+									>
+										<SearchIcon />
+									</button>
+								</InputAdornment>
+							),
+						}}
+					/>
 				)}
 				<button onClick={handleNavClick} className="header__nav-btn"></button>
 				{!isLoggedIn ? (
