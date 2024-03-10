@@ -11,8 +11,11 @@ import { useNavigate } from 'react-router-dom';
 const UserBookings = () => {
 	const navigate = useNavigate();
 	const [userBookings, setUserBookings] = useState<any[]>([]);
+	const [userVisitedBookings, setUserVisitedBookings] = useState<any[]>([]);
 	const [isBokingsChanged, setIsBookingsChanged] = useState(false);
 	const [bookingIsDeleting, setBookingIsDeleting] = useState(0);
+
+	console.log(userBookings);
 
 	const handleDeleteBooking = (id: number) => {
 		setBookingIsDeleting(id);
@@ -30,20 +33,36 @@ const UserBookings = () => {
 		}, 2000);
 	};
 
-	useEffect(() => {
-		usersApi
-			.getUserBookings()
-			.then((data) => {
-				setUserBookings(data.results);
-			})
-			.catch((err) => console.log(err));
-	}, []);
+	const handleCancelBooking = (id: number) => {
+		setBookingIsDeleting(id);
+		setTimeout(() => {
+			setIsBookingsChanged(true);
+			usersApi
+				.cancelBooking(String(id))
+				.catch((err) => console.log(err))
+				.finally(() => {
+					setIsBookingsChanged(false);
+					setTimeout(() => {
+						setBookingIsDeleting(0);
+					}, 500);
+				});
+		}, 2000);
+	};
 
 	useEffect(() => {
 		usersApi
 			.getUserBookings()
 			.then((data) => {
-				setUserBookings(data.results);
+				setUserBookings(
+					data.results.filter(
+						(el: { is_visited: boolean }) => el.is_visited === false
+					)
+				);
+				setUserVisitedBookings(
+					data.results.filter(
+						(el: { is_visited: boolean }) => el.is_visited === true
+					)
+				);
 			})
 			.catch((err) => console.log(err));
 	}, [isBokingsChanged]);
@@ -108,16 +127,59 @@ const UserBookings = () => {
 									key={index}
 									poster={booking.establishment.poster}
 									name={booking.establishment.name}
-									date={booking.date_reservation}
-									time={booking.start_time_reservation}
-									people={booking.number_guests}
-									zone={booking.zone}
+									date={booking.slots[0]?.date}
+									time={booking.slots[0]?.time}
+									people={booking.slots[0]?.seats}
+									zone={booking.slots[0]?.zone}
 									adress={booking.establishment.address}
 									bookingId={booking.id}
 									establishmentId={booking.establishment.id}
+									handleCancelBooking={handleCancelBooking}
 									handleDeleteBooking={handleDeleteBooking}
-									status={booking.status}
+									status={booking.is_accepted}
 									bookingIsDeleting={bookingIsDeleting}
+									cancelled={booking.is_deleted}
+								/>
+							))}
+					</Box>
+				</Box>
+
+				<Box
+					sx={{
+						background: '#fff',
+						display: 'flex',
+						flexDirection: 'column',
+						gap: '16px',
+						padding: '16px',
+					}}
+				>
+					{userVisitedBookings.length > 0 && (
+						<p className="user-bookings-closest">Уже посетили</p>
+					)}
+					<Box
+						display="flex"
+						flexDirection="row"
+						flexWrap="wrap"
+						justifyContent={'center'}
+						gap={{ xs: '32px', md: '24px' }}
+					>
+						{userVisitedBookings.length > 0 &&
+							userVisitedBookings.map((booking, index) => (
+								<UserBooking
+									key={index}
+									poster={booking.establishment.poster}
+									name={booking.establishment.name}
+									date={booking.slots[0]?.date}
+									time={booking.slots[0]?.time}
+									people={booking.slots[0]?.seats}
+									zone={booking.slots[0]?.zone}
+									adress={booking.establishment.address}
+									bookingId={booking.id}
+									establishmentId={booking.establishment.id}
+									// handleLeaveReview={handleLeaveReview}
+									status={booking.is_accepted}
+									bookingIsDeleting={bookingIsDeleting}
+									isVisited={true}
 								/>
 							))}
 					</Box>

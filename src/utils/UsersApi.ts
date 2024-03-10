@@ -126,6 +126,17 @@ class UsersApi {
 		}).then((res) => this._handleResponse(res));
 	}
 
+	cancelBooking(id: string): Promise<any> {
+		return fetch(`${this._baseUrl}/reservations/${id}/`, {
+			method: 'PATCH',
+			headers: {
+				authorization: 'Bearer ' + localStorage.getItem('access-token'),
+				'Content-Type': 'application/json',
+			},
+			body: JSON.stringify({ action: 'is_deleted' }),
+		});
+	}
+
 	deleteBooking(id: string): Promise<any> {
 		return fetch(`${this._baseUrl}/reservations/${id}/`, {
 			method: 'DELETE',

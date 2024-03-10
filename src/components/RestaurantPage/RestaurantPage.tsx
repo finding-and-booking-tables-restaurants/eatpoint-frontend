@@ -29,7 +29,7 @@ import { styled } from '@mui/material/styles';
 import ChatBubbleOutlineOutlinedIcon from '@mui/icons-material/ChatBubbleOutlineOutlined';
 import DeckOutlinedIcon from '@mui/icons-material/DeckOutlined';
 import AccessTimeOutlinedIcon from '@mui/icons-material/AccessTimeOutlined';
-import { useContext, useEffect, useState } from 'react';
+import { useCallback, useContext, useEffect, useState } from 'react';
 import RatingAndReviews from '../RatingAndReviews/RatingAndReviews';
 import BookingForm from '../BookingForm/BookingForm';
 import { useNavigate } from 'react-router';
@@ -48,6 +48,7 @@ import StarBorderIcon from '@mui/icons-material/StarBorder';
 import EventCard from '../Events/EventCard';
 import { Event } from '../../models/data/Event';
 import { formatDate, formatTime } from '../../utils/formatDateString';
+import transformDate from '../../utils/transformDate';
 
 export default function RestaurantPage({ id }: { id: number }) {
 	const [isModalOpen, setIsModalOpen] = useState(false);
@@ -63,26 +64,59 @@ export default function RestaurantPage({ id }: { id: number }) {
 	const [availableTimes, setAvailableTimes] = useState([]);
 	const [currentDate, setCurrentDate] = useState('');
 	const [establismentEvents, setEstablishmentEvents] = useState([]);
+	const [countOfPeople, setCountOfPeople] = useState<string[]>([]);
+	const [currentTime, setCurrentTime] = useState<string>('');
 
 	const isLoggedIn = useContext(CurrentUserContext).isLoggedIn;
 	const role = useContext(CurrentUserContext).currentRole;
 
-	const updatePageData = () => {
+
+	const updatePageData = useCallback(() => {
 		mainApi
 			.getEstablissmentData(id)
 			.then((restaurantData) => {
 				setcurrentRestaurant(restaurantData);
 				mainApi
-					.getAvailableBookingDates(restaurantData.zones[0].id)
+					.getAvailableBookingDates(id)
 					.then((dates) => {
 						if (!dates) return;
-						setAvailableDates(dates);
-						mainApi
-							.getAvailableBookingTimes(currentDate || dates[0].date, id)
-							.then((times) =>
-								setAvailableTimes(times.map((el: { time: string }) => el.time))
-							)
-							.catch((err) => console.log(err));
+						setAvailableDates(dates.results);
+
+						const availabletime = dates.results
+							.filter((el: any) => {
+								if (currentDate) {
+									return el.date === currentDate;
+								}
+
+								return el.date === dates.results[0].date;
+							})
+							.map((el: any) => el.time);
+
+						if (!currentTime) {
+							setCurrentTime(availabletime[0]);
+						} else {
+							setCurrentTime(currentTime);
+						}
+
+						setAvailableTimes(availabletime);
+
+						setCountOfPeople(
+							availableDates
+								.filter((el: any) => el.date === currentDate)
+								.filter((el: any) => el.time === currentTime)
+								.map((el: any) => el.table)
+								.map((item) => {
+									const match = item.match(/мест: (\d+)/);
+									if (match) {
+										const num_of_seats = parseInt(match[1], 10);
+
+										return num_of_seats === 1
+											? '1 человек'
+											: `${num_of_seats} человека`;
+									}
+									return item;
+								})
+						);
 					})
 					.catch((err) => console.log(err));
 			})
@@ -97,25 +131,60 @@ export default function RestaurantPage({ id }: { id: number }) {
 				setcurrentRestaurantReviews(data);
 			})
 			.catch((err) => console.log(err));
-	};
+	}, [availableDates, currentDate, currentTime]);
+
+	useEffect(() => {
+		if (!currentDate) return;
+
+		mainApi
+			.getAvailableBookingDates(id)
+			.then((dates) => {
+				if (!dates) return;
+
+				setAvailableDates(dates.results);
+
+				const availabletime = dates.results
+					.filter((el: any) => {
+						if (currentDate) {
+							return el.date === currentDate;
+						}
+
+						return el.date === dates.results[0].date;
+					})
+					.map((el: any) => el.time);
+
+				if (!currentTime) {
+					setCurrentTime(availabletime[0]);
+				} else {
+					setCurrentTime(currentTime);
+				}
+
+				setAvailableTimes(availabletime);
+
+				const peoples = availableDates
+					.filter((el: any) => el.date === currentDate)
+					.filter((el: any) => el.time === currentTime)
+					.map((el: any) => el.table)
+					.map((item) => {
+						const match = item.match(/мест: (\d+)/);
+						if (match) {
+							const num_of_seats = parseInt(match[1], 10);
+
+							return num_of_seats === 1
+								? '1 человек'
+								: `${num_of_seats} человека`;
+						}
+						return item;
+					});
+
+				setCountOfPeople(peoples);
+			})
+			.catch((err) => console.log(err));
+	}, [currentDate, currentTime, id]);
 
 	useEffect(() => {
 		updatePageData();
 	}, []);
-
-	useEffect(() => {
-		updatePageData();
-	}, [!isModalOpen]);
-
-	useEffect(() => {
-		if (!currentDate) return;
-		mainApi
-			.getAvailableBookingTimes(currentDate, id)
-			.then((times) =>
-				setAvailableTimes(times.map((el: { time: string }) => el.time))
-			)
-			.catch((err) => console.log(err));
-	}, [currentDate]);
 
 	const toggleDescription = () => {
 		setShowFullDescription(!showFullDescription);
@@ -420,7 +489,7 @@ export default function RestaurantPage({ id }: { id: number }) {
 					}}
 					p="16px 16px 16px 16px"
 				>
-					{availableDates.length && availableTimes.length ? (
+					{availableDates.length > 0 && availableTimes.length ? (
 						<>
 							<Typography
 								variant="h2"
@@ -441,6 +510,8 @@ export default function RestaurantPage({ id }: { id: number }) {
 								availableDates={availableDates}
 								availableTimes={availableTimes}
 								onSubmit={handleBookBtnClick}
+								numOfPeople={countOfPeople}
+								setTime={setCurrentTime || (() => {})}
 								children={
 									<Button
 										variant="contained"
@@ -461,11 +532,13 @@ export default function RestaurantPage({ id }: { id: number }) {
 							/>
 						</>
 					) : (
-						<Typography
-							sx={{ m: 'auto', maxWidth: 'fit-content', color: 'white' }}
-						>
-							{'Пока нет свободных мест :('}
-						</Typography>
+						availableDates.length === 0 && (
+							<Typography
+								sx={{ m: 'auto', maxWidth: 'fit-content', color: 'white' }}
+							>
+								{'Пока нет свободных мест :('}
+							</Typography>
+						)
 					)}
 				</Box>
 				{!establismentEvents.length ? (

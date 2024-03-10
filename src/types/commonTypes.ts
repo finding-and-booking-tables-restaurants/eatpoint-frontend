@@ -48,6 +48,15 @@ interface ICity {
 	name: string;
 }
 
+interface IAvailability {
+	date: string,
+	establishment: string,
+	id: number,
+	table: string,
+	time: string,
+	zone: string,
+}
+
 export type {
 	IRegisterFormData,
 	IRegisterFormUserProps,
@@ -56,4 +65,5 @@ export type {
 	IUserFormData,
 	IUserFormProps,
 	ICity,
+	IAvailability,
 };
