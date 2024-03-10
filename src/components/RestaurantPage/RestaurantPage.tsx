@@ -48,7 +48,6 @@ import StarBorderIcon from '@mui/icons-material/StarBorder';
 import EventCard from '../Events/EventCard';
 import { Event } from '../../models/data/Event';
 import { formatDate, formatTime } from '../../utils/formatDateString';
-import transformDate from '../../utils/transformDate';
 
 export default function RestaurantPage({ id }: { id: number }) {
 	const [isModalOpen, setIsModalOpen] = useState(false);
