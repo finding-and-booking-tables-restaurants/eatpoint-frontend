@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React, { FC, useState } from 'react';
 import './UserBooking.css';
 import Button from '@mui/material/Button';
 import CloseIcon from '@mui/icons-material/Close';
@@ -7,6 +7,8 @@ import notifIcon from '../../images/notification-icon.svg';
 import { pluralizePeople } from '../../utils/pluralizePeople';
 import { useNavigate } from 'react-router-dom';
 import DoneIcon from '@mui/icons-material/Done';
+import AddReview from '../AddReview/AddReview';
+import NoMealsRoundedIcon from '@mui/icons-material/NoMealsRounded';
 
 interface UserBookingProps {
 	poster: string;
@@ -18,9 +20,13 @@ interface UserBookingProps {
 	adress: string;
 	bookingId: number;
 	establishmentId: number;
-	handleDeleteBooking: (id: number) => void;
+	handleDeleteBooking?: (id: number) => void;
+	handleCancelBooking?: (id: number) => void;
 	status: boolean;
 	bookingIsDeleting: number;
+	isVisited?: boolean;
+	cancelled?: boolean;
+	// handleLeaveReview?: (id: number) => void;
 }
 
 const UserBooking: FC<UserBookingProps> = ({
@@ -34,13 +40,31 @@ const UserBooking: FC<UserBookingProps> = ({
 	bookingId,
 	establishmentId,
 	handleDeleteBooking,
+	handleCancelBooking,
 	status,
 	bookingIsDeleting,
+	isVisited,
+	cancelled,
 }) => {
+	const [isAddReviewOpen, setIsAddReviewOpen] = useState(false);
+	const [isModalOpen, setIsModalOpen] = useState(false);
 	const navigate = useNavigate();
 
 	const handleCardClick = () => {
 		navigate(`/establishment/${establishmentId}`);
+	};
+
+	const openModal = () => {
+		setIsModalOpen(true);
+	};
+
+	const handleLeaveReview = () => {
+		setIsAddReviewOpen(true);
+	};
+
+	const closeModal = () => {
+		setIsModalOpen(false);
+		setIsAddReviewOpen(false);
 	};
 
 	return (
@@ -58,7 +82,7 @@ const UserBooking: FC<UserBookingProps> = ({
 			</div>
 			<div className="user-booking__info">
 				<div className="user-booking__info-container" onClick={handleCardClick}>
-					<p className="user-booking__time">{date + ', ' + time}</p>
+					<p className="user-booking__time">{date + ' в ' + time}</p>
 					<p className="user-booking__people">
 						{pluralizePeople(people) + ', ' + zone}
 					</p>
@@ -73,38 +97,75 @@ const UserBooking: FC<UserBookingProps> = ({
 						<p className="user-booking__adress-text">{adress}</p>
 					</div>
 				</div>
-				<div
-					className="user-booking__message-container"
-					onClick={handleCardClick}
-				>
-					<img src={notifIcon} className="user-booking__message-icon" />
-					<p className="user-booking__message-text">
-						{status
-							? 'Бронировнаие подтверждено'
-							: 'Ожидайте подтверждение от ресторана'}
-					</p>
-					{status ? <DoneIcon color="success" /> : ''}
-				</div>
-				<Button
-					onClick={() => {
-						handleDeleteBooking(bookingId);
-					}}
-					sx={{
-						borderColor: '#05887B',
-						color: '#05887B',
-						textTransform: 'none',
-						borderRadius: '100px',
-						padding: '10px 24px 10px 16px',
-					}}
-					variant="outlined"
-					startIcon={<CloseIcon />}
-					disabled={bookingIsDeleting === bookingId}
-				>
-					{bookingIsDeleting === bookingId
-						? 'Бронирование отменено'
-						: 'Отменить бронирование'}
-				</Button>
+
+				{!isVisited && (
+					<div
+						className="user-booking__message-container"
+						onClick={handleCardClick}
+					>
+						{/* <img src={notifIcon} className="user-booking__message-icon" /> */}
+						<p className="user-booking__message-text">
+							{status && !cancelled && 'Бронирование подтверждено'}
+
+							{!status && 'Ожидайте подтверждение от ресторана'}
+							{cancelled && 'Бронирование отменено'}
+						</p>
+						{status && !cancelled ? <DoneIcon color="success" /> : ''}
+						{cancelled && <NoMealsRoundedIcon style={{ color: 'C41A68' }} />}
+					</div>
+				)}
+				{!isVisited && !cancelled && (
+					<Button
+						onClick={() => {
+							if (!status) {
+								handleDeleteBooking!(bookingId);
+							} else {
+								handleCancelBooking!(bookingId);
+							}
+						}}
+						sx={{
+							borderColor: '#05887B',
+							color: '#05887B',
+							textTransform: 'none',
+							borderRadius: '8px',
+							padding: '10px 24px 10px 16px',
+						}}
+						variant="outlined"
+						// startIcon={<CloseIcon />}
+						disabled={bookingIsDeleting === bookingId}
+					>
+						{bookingIsDeleting === bookingId
+							? 'Бронирование отменено'
+							: 'Отменить бронирование'}
+					</Button>
+				)}
+				{isVisited && (
+					<Button
+						onClick={() => {
+							handleLeaveReview!();
+						}}
+						sx={{
+							minWidth: '296px',
+							borderColor: '#05887B',
+							color: '#05887B',
+							textTransform: 'none',
+							borderRadius: '8px',
+							padding: '10px 24px 10px 16px',
+						}}
+						variant="outlined"
+						disabled={bookingIsDeleting === bookingId}
+					>
+						Оставить отзыв
+					</Button>
+				)}
 			</div>
+			<AddReview
+				isOpen={isAddReviewOpen}
+				onClose={closeModal}
+				restaurantId={establishmentId}
+				restaurantName={name}
+				restaurantAddress={adress}
+			/>
 		</div>
 	);
 };

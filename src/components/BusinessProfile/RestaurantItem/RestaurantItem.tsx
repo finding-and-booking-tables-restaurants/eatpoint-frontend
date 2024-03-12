@@ -9,7 +9,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 
 interface RestaurantItemProps {
 	id?: number;
-	name: string;
+	name?: string;
 	cities: string;
 	address: string;
 	poster: string;
@@ -17,6 +17,7 @@ interface RestaurantItemProps {
 	rating: number | undefined;
 	review_count: number | undefined;
 	establishment: Establishment;
+	buttons?: boolean;
 	handleOpenDeleteModal?: (establishment: Establishment) => void;
 }
 
@@ -30,6 +31,7 @@ function RestaurantItem({
 	rating,
 	review_count,
 	establishment,
+	buttons,
 	handleOpenDeleteModal,
 }: RestaurantItemProps) {
 	const navigate = useNavigate();
@@ -48,7 +50,7 @@ function RestaurantItem({
 						<p className="restaurant__place">{`${cities}, ${address}`}</p>
 					</div>
 					<Link
-						to={`edit-restaurant/${id}`}
+						to={`/business-profile/edit-restaurant/${id}`}
 						state={establishment}
 						className="restaurant__editBtn"
 					/>
@@ -75,35 +77,39 @@ function RestaurantItem({
 						onClick={() =>
 							handleOpenDeleteModal && handleOpenDeleteModal(establishment)
 						}
-						sx={{ p: 0, minWidth: 0 }}
+						sx={{ p: 0, minWidth: 0, marginLeft: 'auto' }}
 					>
 						<DeleteIcon sx={{ color: 'black' }} />
 					</Button>
 				</div>
-				<div className="restaurant__box-optionBtn">
-					<button className="restaurant__optionBtn restaurant__optionBtn_reservation">
-						Нет новых
-					</button>
-					<button
-						onClick={() => navigate(`/restaurant-reviews/${id}`)}
-						className="restaurant__optionBtn restaurant__optionBtn_reviews"
-					>
-						Отзывы
-					</button>
-				</div>
-				<div className="restaurant__box-optionBtn">
-					<button
-						onClick={() =>
-							navigate(`/business-profile/reservation-restaurant/${id}`)
-						}
-						className="restaurant__optionBtn restaurant__optionBtn_allReservation"
-					>
-						Все брони
-					</button>
-					<button className="restaurant__optionBtn restaurant__optionBtn_analytics">
-						Аналитика
-					</button>
-				</div>
+				{buttons && (
+					<>
+						<div className="restaurant__box-optionBtn">
+							<button className="restaurant__optionBtn restaurant__optionBtn_reservation">
+								Нет новых
+							</button>
+							<button
+								onClick={() => navigate(`/restaurant-reviews/${id}`)}
+								className="restaurant__optionBtn restaurant__optionBtn_reviews"
+							>
+								Отзывы
+							</button>
+						</div>
+						<div className="restaurant__box-optionBtn">
+							<button
+								onClick={() =>
+									navigate(`/business-profile/reservation-restaurant/${id}`)
+								}
+								className="restaurant__optionBtn restaurant__optionBtn_allReservation"
+							>
+								Все брони
+							</button>
+							<button className="restaurant__optionBtn restaurant__optionBtn_analytics">
+								Аналитика
+							</button>
+						</div>
+					</>
+				)}
 			</div>
 		</li>
 	);

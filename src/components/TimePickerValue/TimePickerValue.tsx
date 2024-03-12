@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useState, ChangeEvent, useEffect } from 'react';
 import TextField from '@mui/material/TextField';
 import { timesForTimePicker as times } from '../../utils/constants';
@@ -5,7 +6,12 @@ import { MenuItem } from '@mui/material';
 import Clocks from '@mui/icons-material/AccessTime';
 import DoneIcon from '@mui/icons-material/Done';
 
-function MyTimePicker({ availableTimes }: { availableTimes: string[] }) {
+interface IMyTimePickerProps {
+	availableTimes: string[];
+	setTimeValue: (time: string) => void;  
+  }
+
+function MyTimePicker({ availableTimes, setTimeValue }: IMyTimePickerProps) {
 	const selectedTime = localStorage.getItem('selected-time') || '';
 
 	const [time, setTime] = useState<string>('');
@@ -14,6 +20,7 @@ function MyTimePicker({ availableTimes }: { availableTimes: string[] }) {
 		const pickedTime = event.target.value;
 		localStorage.setItem('selected-time', pickedTime);
 		setTime(pickedTime);
+		setTimeValue(pickedTime)
 	};
 
 	const isSelectedTimeAvailable = (time: string) => {
@@ -21,17 +28,17 @@ function MyTimePicker({ availableTimes }: { availableTimes: string[] }) {
 		return availableTimes.some((t) => t === time);
 	};
 
-	// console.log('available', isSelectedTimeAvailable(selectedTime));
-
 	useEffect(() => {
 		if (availableTimes.length) {
 			if (isSelectedTimeAvailable(selectedTime)) {
 				setTime(selectedTime);
+				setTimeValue(selectedTime)
 				return;
 			}
 			const firstTimeAvailable = availableTimes[0];
 			localStorage.setItem('selected-time', firstTimeAvailable || times[23]);
 			setTime(firstTimeAvailable || times[23]);
+			setTimeValue(firstTimeAvailable || times[23])
 		}
 	}, [availableTimes.length]);
 

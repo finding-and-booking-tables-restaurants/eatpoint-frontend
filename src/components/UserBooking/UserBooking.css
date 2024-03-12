@@ -1,6 +1,6 @@
 .user-booking {
 	width: 328px;
-	height: 325px;
+	/* height: 325px; */
 	border-radius: 8px;
 	background-color: #fffdf5;
 	box-shadow: 0 4px 4px 0 rgba(0, 108, 96, 0.2);
@@ -65,6 +65,7 @@
 
 .user-booking__info {
 	display: flex;
+	width: calc(100% - 32px);
 	flex-direction: column;
 	gap: 15px;
 	padding: 16px;

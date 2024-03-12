@@ -26,10 +26,11 @@ import SuccessBooking from '../SuccessBooking/SuccessBooking';
 import CurrentUserContext from '../../contexts/CurrentUserContext';
 import { mainApi } from '../../utils/mainApi';
 import { ThemeProvider } from '@emotion/react';
-import { selectTheme } from '../NumberOfPerson/NumberOfPerson';
+import NumberOfPerson, { selectTheme } from '../NumberOfPerson/NumberOfPerson';
 import { useForm } from 'react-hook-form';
 import { Box, Button } from '@mui/material';
 import NoBookingSlots from '../NoBookingSlots/NoBookingSlots';
+import { IAvailability } from '../../types/commonTypes';
 
 interface BookingPageProps {
 	id: number;
@@ -60,11 +61,14 @@ const BookingPage: FC<BookingPageProps> = ({ id, userData }) => {
 		useState<Restaurant>(initRestaurant);
 	const [isAgreement, setIsAgreement] = useState(false);
 	const [bookingId, setBookingId] = useState('');
-	const [availableDates, setAvailableDates] = useState<{ date: string }[]>([]);
+	const [slots, setSlots] = useState<number[]>([]);
+	const [availableDates, setAvailableDates] = useState<IAvailability[]>([]);
 	const [dataToSend, setDataToSend] = useState({
 		comment: '',
-		date_reservation: '',
+		// date_reservation: '',
 		email: '',
+		slots: [],
+		user: '',
 		first_name: '',
 		number_guests: '',
 		reminder_half_on_hour: '',
@@ -75,50 +79,116 @@ const BookingPage: FC<BookingPageProps> = ({ id, userData }) => {
 		zone: '',
 	});
 
-	const [currnetZone, setCurrentZone] = useState(0);
-
 	const [availableTimes, setAvailableTimes] = useState(timesForTimePicker);
 	const [currentDate, setCurrentDate] = useState('');
+	const [zones, setZones] = useState<IAvailability[]>([]);
+	const [currentTime, setCurrentTime] = useState('');
+	const [countOfPeople, setCountOfPeople] = useState<string[]>([]);
+	const [dateBooking, setDateBooking] = useState<string>('');
 
 	useEffect(() => {
 		const fetchData = async () => {
 			try {
 				const data = await fetchRestaurantData(id);
 				setcurrentRestaurant(data);
-				const firstZone = data.zones[0].id;
-				if (!currnetZone) {
-					setCurrentZone(firstZone);
-					setValue('zone', firstZone);
+
+				const dates = await mainApi.getAvailableBookingDates(id);
+
+				const firstAvailableDate = dates.results[0].date;
+
+				setAvailableDates(dates.results);
+
+				const availabletime = dates.results
+					.filter((el: any) => {
+						if (currentDate) {
+							return el.date === currentDate;
+						}
+
+						return el.date === firstAvailableDate;
+					})
+					.map((el: any) => el.time);
+				if (!currentTime) {
+					setCurrentTime(availabletime[0]);
+				} else {
+					setCurrentTime(currentTime);
 				}
 
-				const dates = await mainApi.getAvailableBookingDates(
-					currnetZone || firstZone
-				);
-				const firstAvailableDate = dates[0].date;
+				setAvailableTimes(availabletime);
 
-				const times = await mainApi.getAvailableBookingTimes(
-					currentDate || firstAvailableDate,
-					id
-				);
+				setCountOfPeople(
+					dates.results
+						.filter((el: any) => el.date === currentDate)
+						.filter((el: any) => el.time === currentTime)
+						.map((el: any) => el.table)
+						.map((el: any) => {
+							const match = el.match(/мест: (\d+)/);
+							if (match) {
+								const num_of_seats = parseInt(match[1], 10);
 
-				setAvailableDates(dates);
-				setAvailableTimes(times.map((el: { time: string }) => el.time));
+								return num_of_seats === 1
+									? '1 человек'
+									: `${num_of_seats} человека`;
+							}
+							return el;
+						})
+				);
 			} catch (error) {
 				console.error('Error fetching data:', error);
 			}
 		};
 
 		fetchData();
-	}, [id, setcurrentRestaurant, currnetZone]);
+	}, [id, setcurrentRestaurant, currentDate, setValue]);
+
+	useEffect(() => {
+		if (currentTime) {
+			setCountOfPeople(
+				availableDates
+					.filter((el: any) => el.date === currentDate)
+					.filter((el: any) => el.time === currentTime)
+					.map((el: any) => el.table)
+					.map((el: any) => {
+						const match = el.match(/мест: (\d+)/);
+						if (match) {
+							const num_of_seats = parseInt(match[1], 10);
+
+							return num_of_seats === 1
+								? '1 человек'
+								: `${num_of_seats} человека`;
+						}
+						return el;
+					})
+			);
+
+		}
+	}, [currentTime]);
+
+	useEffect(() => {
+		setZones(
+			availableDates
+				.filter((el: any) => el.date === currentDate)
+				.filter((el: any) => el.time === currentTime)
+		);
+	}, [countOfPeople]);
+
+	useEffect(() => {
+		// setSlots(availableDates
+		// 	.filter((el: any) => el.date === currentDate)
+		// 	.filter((el: any) => el.time === currentTime)
+		// 	.filter((el:any) => el.id === zones[0]?.id)
+		// 	.map((el: any) => el.id))
+		setSlots([zones[0]?.id]);
+	}, [setZones, countOfPeople]);
 
 	const handleBooking = (data: BookingFormValues) => {
 		if (!data) return;
 
 		const mergedFormData = { ...data, ...BookingformValues };
 		const additionalData = {
+			slots: [...slots],
 			number_guests: localStorage.getItem('selected-number-of-people'),
-			date_reservation: localStorage.getItem('selected-date-formated'),
-			start_time_reservation: localStorage.getItem('selected-time'),
+			// date_reservation: localStorage.getItem('selected-date-formated'),
+			// start_time_reservation: localStorage.getItem('selected-time'),
 		};
 
 		const finalFormData = { ...mergedFormData, ...additionalData };
@@ -129,6 +199,7 @@ const BookingPage: FC<BookingPageProps> = ({ id, userData }) => {
 			.then((data) => {
 				setIsSuccessBooking(true);
 				setBookingId(data.id);
+				setDateBooking(data.date_reservation);
 			})
 			.catch((err) => {
 				if (err === ERROR_400) {
@@ -147,16 +218,6 @@ const BookingPage: FC<BookingPageProps> = ({ id, userData }) => {
 		navigate('/');
 	};
 
-	useEffect(() => {
-		if (!currentDate) return;
-		mainApi
-			.getAvailableBookingTimes(currentDate, id)
-			.then((times) =>
-				setAvailableTimes(times.map((el: { time: string }) => el.time))
-			)
-			.catch((err) => console.log(err));
-	}, [currentDate]);
-
 	return (
 		<ThemeProvider theme={selectTheme}>
 			<Box
@@ -173,9 +234,9 @@ const BookingPage: FC<BookingPageProps> = ({ id, userData }) => {
 						}}
 						restName={currentRestaurant?.name}
 						adress={currentRestaurant?.address}
-						date={dataToSend.date_reservation}
-						time={dataToSend.start_time_reservation}
-						numOfPeople={Number(dataToSend.number_guests)}
+						date={dateBooking}
+						time={currentTime}
+						numOfPeople={countOfPeople[0]}
 						id={currentRestaurant?.id}
 					/>
 				) : (
@@ -214,6 +275,8 @@ const BookingPage: FC<BookingPageProps> = ({ id, userData }) => {
 								availableDates={availableDates}
 								availableTimes={availableTimes}
 								onSubmit={handleSubmit(handleBooking)}
+								setTime={setCurrentTime}
+								numOfPeople={countOfPeople}
 							>
 								<Box
 									display="flex"
@@ -223,7 +286,7 @@ const BookingPage: FC<BookingPageProps> = ({ id, userData }) => {
 									justifyContent={'center'}
 								>
 									<TextField
-										key={String(currnetZone)}
+										// key={String(currentZone)}
 										{...register('zone', {
 											required: 'Поле обязательно для заполнения',
 										})}
@@ -232,18 +295,18 @@ const BookingPage: FC<BookingPageProps> = ({ id, userData }) => {
 										name="zone"
 										label="Зона"
 										required
-										defaultValue={currnetZone}
-										onChange={(event) => {
-											const value = event.target.value;
-											setCurrentZone(Number(value));
-											setValue('zone', value);
-										}}
+										defaultValue={''}
+										// onChange={(event) => {
+										// 	const value = event.target.value;
+										// 	setCurrentZone(value);
+										// 	setValue('zone', value);
+										// }}
 										sx={{
 											minWidth: 328,
 										}}
 									>
-										{currentRestaurant?.zones.map((option, index: number) => (
-											<MenuItem key={index} value={option.id}>
+										{zones.map((option: any, index: number) => (
+											<MenuItem key={index} value={option.zone}>
 												{option.zone}
 											</MenuItem>
 										))}

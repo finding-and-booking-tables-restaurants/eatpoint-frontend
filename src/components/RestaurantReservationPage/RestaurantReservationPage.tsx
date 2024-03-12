@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/rules-of-hooks */
 import './RestaurantReservationPage.css';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import RatingIcon from '../../images/star-icon.svg';
@@ -6,10 +7,13 @@ import Footer from '../Footer/Footer';
 import Header from '../Header/Header';
 import { useEffect, useState } from 'react';
 import { mainApi } from '../../utils/mainApi';
-import { Box, Button } from '@mui/material';
+import { Box, Button, FormControl, InputLabel, MenuItem, OutlinedInput, Select, SelectChangeEvent } from '@mui/material';
 import { maxWidthBoxConfig, minWidthBoxConfig } from '../../utils/constants';
 import CheckIcon from '@mui/icons-material/Check';
 import { Establishment } from '../../types/getMyRestaurantTypes';
+import RestaurantItem from '../BusinessProfile/RestaurantItem/RestaurantItem';
+import DeleteCardConfirm from '../DeleteCardConfirm/DeleteCardConfirm';
+import { Theme, useTheme } from '@mui/material/styles';
 
 function RestaurantReservationPage() {
 	const [myEstablishments, setMyEstablishments] = useState<any>({});
@@ -18,9 +22,16 @@ function RestaurantReservationPage() {
 	const [updatedReservation, setUpdatedReservation] = useState('');
 	const [isLoading, setIsLoading] = useState(false);
 	const [activeButton, setActiveButton] = useState('unconfirmed');
-
+	const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+	const [isDeleteModalOpen, setDeleteModalOpen] = useState(false);
+	const [selectedEstablishment, setSelectedEstablishment] =
+		useState<Establishment | null>(null);
+	const [bookingName, setBookingName] = useState('10');
+	// const theme = useTheme();
 	const { id } = useParams();
 	const history = useNavigate();
+	console.log(myEstablishments)
+	console.log(bookingName)
 
 	useEffect(() => {
 		mainApi.getAllMyEstablishments().then((res) => {
@@ -31,9 +42,9 @@ function RestaurantReservationPage() {
 		});
 		mainApi.getAllBusinessReservation().then((res) => {
 			const sortedReservations = res.results.sort((a: any, b: any) => {
-				if (a.status === false && b.status === true) {
+				if (a.is_accepted === false && b.is_accepted === true) {
 					return -1;
-				} else if (a.status === true && b.status === false) {
+				} else if (a.is_accepted === true && b.is_accepted === false) {
 					return 1;
 				} else {
 					const dateA = new Date(a.date_reservation);
@@ -45,11 +56,41 @@ function RestaurantReservationPage() {
 				}
 			});
 			setMyreservations(sortedReservations);
-			setReservations(
-				sortedReservations.filter((item: any) => item.status === false)
-			);
+			if (bookingName === '10') {
+				setReservations(
+					sortedReservations.filter((item: any) => item.is_accepted === false)
+				);
+			} else if (bookingName === '20') {
+				setReservations(myReservations.filter((item: any) => item.is_accepted
+		=== true));
+			} else {
+				setReservations(myReservations.filter((item: any) => item.is_visited
+				=== true));
+			}
+			
 		});
-	}, [id, updatedReservation]);
+	}, [id, updatedReservation,bookingName]);
+
+	useEffect(() => {
+		const handleResize = () => {
+			setWindowWidth(window.innerWidth);
+		};
+
+		window.addEventListener('resize', handleResize);
+		return () => {
+			window.removeEventListener('resize', handleResize);
+		};
+	}, []);
+
+	const handleOpenDeleteModal = (establishment: Establishment) => {
+		setDeleteModalOpen(true);
+		setSelectedEstablishment(establishment);
+	};
+
+	const handleCloseDeleteModal = () => {
+		setSelectedEstablishment(null);
+		setDeleteModalOpen(false);
+	};
 
 	const handleConfirmReservation = (id: string) => {
 		setIsLoading(true);
@@ -62,7 +103,7 @@ function RestaurantReservationPage() {
 			.catch((err) => console.log(err))
 			.finally(() => setIsLoading(false));
 		setReservations(
-			myReservations.filter((item: any) => item.status === false)
+			myReservations.filter((item: any) => item.is_accepted === false)
 		);
 	};
 
@@ -79,20 +120,22 @@ function RestaurantReservationPage() {
 				setIsLoading(false);
 				setUpdatedReservation(id);
 			});
-		setReservations(myReservations.filter((item: any) => item.status === true));
+		setReservations(myReservations.filter((item: any) => item.is_accepted === true));
 	};
 	console.log(myReservations);
 
 	const showUnconfirmed = () => {
 		setActiveButton('unconfirmed');
 		setReservations(
-			myReservations.filter((item: any) => item.status === false)
+			myReservations.filter((item: any) => item.is_accepted
+			=== false)
 		);
 	};
 
 	const showConfirmed = () => {
 		setActiveButton('confirmed');
-		setReservations(myReservations.filter((item: any) => item.status === true));
+		setReservations(myReservations.filter((item: any) => item.is_accepted
+		=== true));
 	};
 
 	const buttonUnconfirmed = [
@@ -111,76 +154,145 @@ function RestaurantReservationPage() {
 		history(`/business-profile/edit-restaurant/${id}`);
 	};
 
+	function deleteEstablishment(establishment: Establishment | null): void {
+		if (establishment && establishment.id) {
+			mainApi
+				.deleteMyEstablishment(establishment.id)
+				.then((res) => {
+					const updateEstablishments = myEstablishments.filter(
+						(item: { id: number | undefined; }) => item.id !== establishment.id
+					);
+					setMyEstablishments(updateEstablishments);
+					handleCloseDeleteModal();
+				})
+				.catch((error) => {
+					console.log(error);
+					console.log('Ушел в catch');
+				});
+		} else {
+			console.log('Establishment or its ID is null or undefined.');
+		}
+	}
+
+	const handleBookingChange = (event: SelectChangeEvent) => {
+		setBookingName(event.target.value as string);
+	  };
+
 	return (
 		<>
 			<Header />
 			<Box
-				maxWidth={maxWidthBoxConfig}
-				minWidth={minWidthBoxConfig}
 				m="auto"
 				minHeight={'calc(100vh - 156px)'}
 				className="restaurant__reserve"
 			>
-				<div className="restaurant__reserve-page">
-					<div className="restaurant__reserve-box-info">
-						<div>
-							<p className="restaurant__reserve-title">
-								{myEstablishments.name}
-							</p>
-						</div>
+				<div className="restaurant__reserve-box-info">
+					<div>
+						<p className="restaurant__reserve-title">{myEstablishments.name}</p>
 					</div>
-					<div className="restaurant__box-addition-info_reservation">
-						<div className="restaurant__flex-box">
-							<img src={RatingIcon} alt="Иконка рейтинга"></img>
-							<span className="restaurant__rating-num">
-								{myEstablishments.rating || 0}
-							</span>
-						</div>
-						<div className="restaurant__flex-box">
-							<img src={ReviewsIcon} alt="Иконка отзывов"></img>
-							<span className="restaurant__reviews-num">
-								{myEstablishments.review_count || 0}
-							</span>
-						</div>
-						<p>{`${myEstablishments.average_check}`} ₽</p>
-
-						<button
-							className="restaurant__edit-btn"
-							onClick={() => redirectToEditRestaurantPage(id!)}
-						></button>
-					</div>
-					<p className="restaurant__place">{`${myEstablishments.cities}, ${myEstablishments.address}`}</p>
 				</div>
-				<Box display="inline-flex" gap="8px" mt="auto" pt="16px">
-					<Button
-						onClick={() => redirectToReviewPage(id!)}
-						variant="outlined"
-						sx={{
-							color: '#006C60',
-							borderColor: '#006C60',
-							textTransform: 'none',
-							borderRadius: '8px',
-							minWidth: '160px',
-						}}
+				<div className="restaurant__reserve-group">
+					{windowWidth < 900 && (
+						<div className="restaurant__reserve-page">
+							<div className="restaurant__box-addition-info_reservation">
+								<div className="restaurant__flex-box">
+									<img src={RatingIcon} alt="Иконка рейтинга"></img>
+									<span className="restaurant__rating-num">
+										{myEstablishments.rating || 0}
+									</span>
+								</div>
+								<div className="restaurant__flex-box">
+									<img src={ReviewsIcon} alt="Иконка отзывов"></img>
+									<span className="restaurant__reviews-num">
+										{myEstablishments.review_count || 0}
+									</span>
+								</div>
+								<p>{`${myEstablishments.average_check}`} ₽</p>
+
+								<button
+									className="restaurant__edit-btn"
+									onClick={() => redirectToEditRestaurantPage(id!)}
+								></button>
+							</div>
+							<p className="restaurant__place">{`${myEstablishments.cities}, ${myEstablishments.address}`}</p>
+						</div>
+					)}
+
+					{windowWidth > 900 && (
+						<div className='restaurant__item'>
+						<RestaurantItem
+							id={myEstablishments.id}
+							// name={myEstablishments.name}
+							cities={myEstablishments.cities}
+							address={myEstablishments.address}
+							poster={myEstablishments.poster}
+							avarage_check={myEstablishments.average_check}
+							rating={myEstablishments.rating}
+							review_count={myEstablishments.review_count}
+							establishment={myEstablishments}
+							handleOpenDeleteModal={handleOpenDeleteModal}
+						/>
+						</div>
+					)}
+					<Box
+						display="flex"
+						flexWrap="wrap"
+						justifyContent="space-between"
+						gap={{ xs: '8px', sm: '8px', md: '2px', lg: '24px' }}
+						mt={{ xs: 'auto', sm: 'auto', md: 0, lg: 0 }}
+						pt={{ xs: '16px', sm: '16px', md: 0, lg: 0 }}
+						width={{ xs: '100%', sm: '100%', md: '31.7%', lg: '328px' }}
 					>
-						Отзывы
-					</Button>
-					<Button
-						onClick={() => redirectToReviewPage(id!)}
-						variant="outlined"
-						sx={{
-							color: '#006C60',
-							borderColor: '#006C60',
-							textTransform: 'none',
-							borderRadius: '8px',
-							minWidth: '160px',
-						}}
-					>
-						События
-					</Button>
-				</Box>
+						<Button
+							onClick={() => redirectToReviewPage(id!)}
+							variant="outlined"
+							sx={{
+								color: '#006C60',
+								borderColor: '#006C60',
+								textTransform: 'none',
+								borderRadius: '8px',
+								width: { xs: '48.7%', sm: '48%', md: '100%', lg: '100%' },
+								height: { md: '48px', lg: '56px' },
+							}}
+						>
+							Отзывы
+						</Button>
+						<Button
+							onClick={() => redirectToReviewPage(id!)}
+							variant="outlined"
+							sx={{
+								color: '#006C60',
+								borderColor: '#006C60',
+								textTransform: 'none',
+								borderRadius: '8px',
+								width: { xs: '48.7%', sm: '48%', md: '100%', lg: '100%' },
+								height: { md: '48px', lg: '56px' },
+							}}
+						>
+							События
+						</Button>
+					</Box>
+				</div>
 				<p className="restaurant__reservation-heading">Бронирования</p>
-				<div className="restaurant__reservation-buttons-reserve">
+				<div>
+				<Box sx={{ width: 328 }}>
+      <FormControl fullWidth>
+        {/* <InputLabel id="demo-simple-select-label">Age</InputLabel> */}
+        <Select
+          labelId="demo-simple-select-label"
+          id="demo-simple-select"
+        //   value={'10'}
+		  defaultValue={'10'}
+        //   label="Age"
+          onChange={handleBookingChange}
+        >
+          <MenuItem value={'10'}>Неподтвержденные</MenuItem>
+          <MenuItem value={'20'}>Ожидает посещения</MenuItem>
+          <MenuItem value={'30'}>Завершенные</MenuItem>
+        </Select>
+      </FormControl>
+    </Box>
+				{/* <div className="restaurant__reservation-buttons-reserve">
 					<button
 						id="unconfirmed"
 						onClick={showUnconfirmed}
@@ -216,8 +328,8 @@ function RestaurantReservationPage() {
 						<p className="restaurant__reservation-button-text">
 							Подтвержденные
 						</p>
-					</button>
-				</div>
+					</button> */}
+				</div> 
 				<ul className="restaurant__reservations">
 					{reservations.length
 						? reservations.map((item: any, index: number) => (
@@ -226,7 +338,7 @@ function RestaurantReservationPage() {
 										{item.date_reservation} • {item.start_time_reservation}
 									</p>
 									<p className="restaurant__reservation-guests">
-										{item.number_guests} человека •{' '}
+										{item.slots[0]?.seats} человека •{' '}{item.slots[0]?.zone}
 									</p>
 									<p className="restaurant__reservation-name">
 										{item.first_name}
@@ -268,17 +380,22 @@ function RestaurantReservationPage() {
 												borderRadius: '8px',
 												minWidth: '139px',
 											}}
-											disabled={item.status || isLoading}
+											disabled={item.is_accepted || isLoading}
 										>
-											{!item.status ? 'Подтвердить' : 'Подтверждено'}
+											{!item.is_accepted ? 'Подтвердить' : 'Подтверждено'}
 										</Button>
 									</Box>
 								</li>
 						  ))
 						: 'У вас пока нет бронирований'}
-					{}
 				</ul>
 			</Box>
+			<DeleteCardConfirm
+				isDeleteModalOpen={isDeleteModalOpen}
+				handleCloseDeleteModal={handleCloseDeleteModal}
+				deleteEstablishment={() => deleteEstablishment(selectedEstablishment)}
+				selectedEstablishment={selectedEstablishment}
+			/>
 			<Footer />
 		</>
 	);

@@ -111,6 +111,7 @@ function BusinessProfile() {
 									review_count={establishment.review_count}
 									establishment={establishment}
 									handleOpenDeleteModal={handleOpenDeleteModal}
+									buttons
 								/>
 						  ))
 						: 'У вас пока нет ресторанов'}
