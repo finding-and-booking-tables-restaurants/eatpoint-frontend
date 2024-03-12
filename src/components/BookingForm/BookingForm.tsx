@@ -15,6 +15,8 @@ interface BookingFormProps {
 	availableDates: { date: string }[];
 	availableTimes: string[];
 	currentDate: (date: string) => void;
+	setTime?: (time: string) => void;
+	numOfPeople?: string[];
 }
 
 const BookingForm: FC<BookingFormProps> = ({
@@ -23,6 +25,8 @@ const BookingForm: FC<BookingFormProps> = ({
 	availableDates,
 	availableTimes,
 	currentDate,
+	setTime,
+	numOfPeople,
 }) => {
 	const location = useLocation();
 	const chechLocation = (path: string) => {
@@ -60,13 +64,16 @@ const BookingForm: FC<BookingFormProps> = ({
 						gap: { xs: '8px' },
 					}}
 				>
-					<TimePickerValue availableTimes={availableTimes} />
 					<DatePickerValue
 						currentDate={currentDate}
 						availableDates={availableDates}
 					/>
+					<TimePickerValue
+						availableTimes={availableTimes}
+						setTimeValue={setTime || (() => {})}
+					/>
 				</Box>
-				<NumberOfPerson />
+				<NumberOfPerson numOfPeople={numOfPeople!} />
 			</Box>
 			{children}
 		</Box>

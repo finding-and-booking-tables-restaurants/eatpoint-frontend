@@ -193,22 +193,24 @@ class MainApi {
 				authorization: 'Bearer ' + localStorage.getItem('access-token'),
 				'Content-Type': 'application/json',
 			},
-			body: JSON.stringify({ status: true }),
+			body: JSON.stringify({ is_accepted: true }),
 		});
 	}
 
 	cancelReservation(id: string) {
 		return this._sendFetchRequest(`/business/reservations/${id}/`, {
-			method: 'DELETE',
+			method: 'PATCH',
 			headers: {
 				authorization: 'Bearer ' + localStorage.getItem('access-token'),
 				'Content-Type': 'application/json',
 			},
+			body: JSON.stringify({ action: "is_accepted" }),
 		});
 	}
 
-	getAvailableBookingDates(zoneId: number) {
-		return this._sendFetchRequest(`/availability/date/${zoneId}/`, {
+	getAvailableBookingDates(id: number) {
+		// return this._sendFetchRequest(`/availability/date/${zoneId}/`, {
+			return this._sendFetchRequest(`/establishments/${id}/availability/`, {
 			headers: {
 				'Content-Type': 'application/json',
 			},

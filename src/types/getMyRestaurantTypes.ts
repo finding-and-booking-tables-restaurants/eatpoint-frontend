@@ -35,7 +35,7 @@ interface Zone {
 
 interface Establishment {
 	id?: number | undefined;
-	name: string;
+	name?: string;
 	cities: string;
 	address: string;
 	average_check: string;

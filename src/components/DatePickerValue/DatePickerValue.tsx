@@ -12,7 +12,8 @@ import { TextField } from '@mui/material';
 
 interface DatePickerValueProps {
 	availableDates: { date: string }[];
-	currentDate: (date: string) => void;
+	currentDate: any;
+
 }
 
 const DatePickerValue: FC<DatePickerValueProps> = ({
@@ -35,7 +36,10 @@ const DatePickerValue: FC<DatePickerValueProps> = ({
 			String(value.format('YYYY-MM-DD'))
 		);
 		setValue(value);
+		currentDate(String(value?.format('YYYY-MM-DD')));
 	};
+
+
 
 	const isDateAvailable = (date: string) => {
 		if (!date) return false;
@@ -51,6 +55,7 @@ const DatePickerValue: FC<DatePickerValueProps> = ({
 		if (availableDates.length) {
 			if (isDateAvailable(formatedSelectedDate)) {
 				setValue(dayjs(formatedSelectedDate));
+				currentDate(formatedSelectedDate)
 				return;
 			}
 			const firstAvailableDate = availableDates[0]?.date || '';
@@ -64,9 +69,9 @@ const DatePickerValue: FC<DatePickerValueProps> = ({
 		handleInitDateSelect();
 	}, [availableDates.length]);
 
-	useEffect(() => {
-		currentDate(String(value?.format('YYYY-MM-DD')));
-	}, [value]);
+	// useEffect(() => {
+	// 	currentDate(String(value?.format('YYYY-MM-DD')));
+	// }, []);
 
 	return (
 		<LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="ru">
@@ -97,7 +102,7 @@ const DatePickerValue: FC<DatePickerValueProps> = ({
 						backgroundColor: 'white',
 					},
 					'.MuiOutlinedInput-input': {
-						paddingLeft: { xs: 2, sm: 0 },
+						paddingLeft: 2,
 					},
 					'.MuiTextField-root': {
 						width: 50,

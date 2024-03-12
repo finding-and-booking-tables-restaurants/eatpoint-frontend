@@ -7,12 +7,13 @@ import Footer from '../Footer/Footer';
 import Header from '../Header/Header';
 import { useEffect, useState } from 'react';
 import { mainApi } from '../../utils/mainApi';
-import { Box, Button } from '@mui/material';
+import { Box, Button, FormControl, InputLabel, MenuItem, OutlinedInput, Select, SelectChangeEvent } from '@mui/material';
 import { maxWidthBoxConfig, minWidthBoxConfig } from '../../utils/constants';
 import CheckIcon from '@mui/icons-material/Check';
 import { Establishment } from '../../types/getMyRestaurantTypes';
 import RestaurantItem from '../BusinessProfile/RestaurantItem/RestaurantItem';
 import DeleteCardConfirm from '../DeleteCardConfirm/DeleteCardConfirm';
+import { Theme, useTheme } from '@mui/material/styles';
 
 function RestaurantReservationPage() {
 	const [myEstablishments, setMyEstablishments] = useState<any>({});
@@ -25,9 +26,12 @@ function RestaurantReservationPage() {
 	const [isDeleteModalOpen, setDeleteModalOpen] = useState(false);
 	const [selectedEstablishment, setSelectedEstablishment] =
 		useState<Establishment | null>(null);
-
+	const [bookingName, setBookingName] = useState('10');
+	// const theme = useTheme();
 	const { id } = useParams();
 	const history = useNavigate();
+	console.log(myEstablishments)
+	console.log(bookingName)
 
 	useEffect(() => {
 		mainApi.getAllMyEstablishments().then((res) => {
@@ -38,9 +42,9 @@ function RestaurantReservationPage() {
 		});
 		mainApi.getAllBusinessReservation().then((res) => {
 			const sortedReservations = res.results.sort((a: any, b: any) => {
-				if (a.status === false && b.status === true) {
+				if (a.is_accepted === false && b.is_accepted === true) {
 					return -1;
-				} else if (a.status === true && b.status === false) {
+				} else if (a.is_accepted === true && b.is_accepted === false) {
 					return 1;
 				} else {
 					const dateA = new Date(a.date_reservation);
@@ -52,11 +56,20 @@ function RestaurantReservationPage() {
 				}
 			});
 			setMyreservations(sortedReservations);
-			setReservations(
-				sortedReservations.filter((item: any) => item.status === false)
-			);
+			if (bookingName === '10') {
+				setReservations(
+					sortedReservations.filter((item: any) => item.is_accepted === false)
+				);
+			} else if (bookingName === '20') {
+				setReservations(myReservations.filter((item: any) => item.is_accepted
+		=== true));
+			} else {
+				setReservations(myReservations.filter((item: any) => item.is_visited
+				=== true));
+			}
+			
 		});
-	}, [id, updatedReservation]);
+	}, [id, updatedReservation,bookingName]);
 
 	useEffect(() => {
 		const handleResize = () => {
@@ -90,7 +103,7 @@ function RestaurantReservationPage() {
 			.catch((err) => console.log(err))
 			.finally(() => setIsLoading(false));
 		setReservations(
-			myReservations.filter((item: any) => item.status === false)
+			myReservations.filter((item: any) => item.is_accepted === false)
 		);
 	};
 
@@ -107,20 +120,22 @@ function RestaurantReservationPage() {
 				setIsLoading(false);
 				setUpdatedReservation(id);
 			});
-		setReservations(myReservations.filter((item: any) => item.status === true));
+		setReservations(myReservations.filter((item: any) => item.is_accepted === true));
 	};
 	console.log(myReservations);
 
 	const showUnconfirmed = () => {
 		setActiveButton('unconfirmed');
 		setReservations(
-			myReservations.filter((item: any) => item.status === false)
+			myReservations.filter((item: any) => item.is_accepted
+			=== false)
 		);
 	};
 
 	const showConfirmed = () => {
 		setActiveButton('confirmed');
-		setReservations(myReservations.filter((item: any) => item.status === true));
+		setReservations(myReservations.filter((item: any) => item.is_accepted
+		=== true));
 	};
 
 	const buttonUnconfirmed = [
@@ -158,6 +173,10 @@ function RestaurantReservationPage() {
 			console.log('Establishment or its ID is null or undefined.');
 		}
 	}
+
+	const handleBookingChange = (event: SelectChangeEvent) => {
+		setBookingName(event.target.value as string);
+	  };
 
 	return (
 		<>
@@ -255,7 +274,25 @@ function RestaurantReservationPage() {
 					</Box>
 				</div>
 				<p className="restaurant__reservation-heading">Бронирования</p>
-				<div className="restaurant__reservation-buttons-reserve">
+				<div>
+				<Box sx={{ width: 328 }}>
+      <FormControl fullWidth>
+        {/* <InputLabel id="demo-simple-select-label">Age</InputLabel> */}
+        <Select
+          labelId="demo-simple-select-label"
+          id="demo-simple-select"
+        //   value={'10'}
+		  defaultValue={'10'}
+        //   label="Age"
+          onChange={handleBookingChange}
+        >
+          <MenuItem value={'10'}>Неподтвержденные</MenuItem>
+          <MenuItem value={'20'}>Ожидает посещения</MenuItem>
+          <MenuItem value={'30'}>Завершенные</MenuItem>
+        </Select>
+      </FormControl>
+    </Box>
+				{/* <div className="restaurant__reservation-buttons-reserve">
 					<button
 						id="unconfirmed"
 						onClick={showUnconfirmed}
@@ -291,8 +328,8 @@ function RestaurantReservationPage() {
 						<p className="restaurant__reservation-button-text">
 							Подтвержденные
 						</p>
-					</button>
-				</div>
+					</button> */}
+				</div> 
 				<ul className="restaurant__reservations">
 					{reservations.length
 						? reservations.map((item: any, index: number) => (
@@ -301,7 +338,7 @@ function RestaurantReservationPage() {
 										{item.date_reservation} • {item.start_time_reservation}
 									</p>
 									<p className="restaurant__reservation-guests">
-										{item.number_guests} человека •{' '}
+										{item.slots[0]?.seats} человека •{' '}{item.slots[0]?.zone}
 									</p>
 									<p className="restaurant__reservation-name">
 										{item.first_name}
@@ -343,9 +380,9 @@ function RestaurantReservationPage() {
 												borderRadius: '8px',
 												minWidth: '139px',
 											}}
-											disabled={item.status || isLoading}
+											disabled={item.is_accepted || isLoading}
 										>
-											{!item.status ? 'Подтвердить' : 'Подтверждено'}
+											{!item.is_accepted ? 'Подтвердить' : 'Подтверждено'}
 										</Button>
 									</Box>
 								</li>
