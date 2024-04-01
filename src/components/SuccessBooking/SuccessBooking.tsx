@@ -12,7 +12,7 @@ interface SuccessBookingProps {
 	restName?: string;
 	adress?: string;
 	date?: string;
-	time?: string;
+	time?: string[];
 	numOfPeople: string;
 	id?: number;
 	unBook: (value: boolean) => void;
@@ -74,7 +74,7 @@ const SuccessBooking: FC<SuccessBookingProps> = ({
 				<p className="success-booking__adress">{adress}</p>
 			</div>
 			<p className="success-booking__time-info">
-				{date} в {time}, {numOfPeople}
+				{date} в {time ? time[0] : ''}, {numOfPeople} человека
 			</p>
 			{isBooked ? (
 				<Button
