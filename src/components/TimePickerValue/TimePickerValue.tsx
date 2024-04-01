@@ -2,25 +2,30 @@
 import { useState, ChangeEvent, useEffect } from 'react';
 import TextField from '@mui/material/TextField';
 import { timesForTimePicker as times } from '../../utils/constants';
-import { MenuItem } from '@mui/material';
+import { MenuItem, Select, SelectChangeEvent } from '@mui/material';
 import Clocks from '@mui/icons-material/AccessTime';
 import DoneIcon from '@mui/icons-material/Done';
 
 interface IMyTimePickerProps {
 	availableTimes: string[];
-	setTimeValue: (time: string) => void;  
+	setTimeValue: (time: string[]) => void;  
   }
 
 function MyTimePicker({ availableTimes, setTimeValue }: IMyTimePickerProps) {
-	const selectedTime = localStorage.getItem('selected-time') || '';
 
-	const [time, setTime] = useState<string>('');
 
-	const handleTimeChange = (event: ChangeEvent<HTMLInputElement>) => {
-		const pickedTime = event.target.value;
-		localStorage.setItem('selected-time', pickedTime);
-		setTime(pickedTime);
-		setTimeValue(pickedTime)
+	// const selectedTime = JSON.parse(localStorage.getItem('selected-time'));
+
+	const [time, setTime] = useState<string[]>([]);
+
+	const handleTimeChange = (event: SelectChangeEvent<typeof time>) => {
+		const {
+			target: { value },
+		  } = event;
+		  const firstAvailableTime = Array.from(availableTimes[0]);
+		localStorage.setItem('selected-time', JSON.stringify(firstAvailableTime || []));
+		setTime(typeof value === 'string' ? value.split(',') : value);
+		setTimeValue(typeof value === 'string' ? value.split(',') : value)
 	};
 
 	const isSelectedTimeAvailable = (time: string) => {
@@ -30,24 +35,24 @@ function MyTimePicker({ availableTimes, setTimeValue }: IMyTimePickerProps) {
 
 	useEffect(() => {
 		if (availableTimes.length) {
-			if (isSelectedTimeAvailable(selectedTime)) {
-				setTime(selectedTime);
-				setTimeValue(selectedTime)
-				return;
-			}
-			const firstTimeAvailable = availableTimes[0];
-			localStorage.setItem('selected-time', firstTimeAvailable || times[23]);
-			setTime(firstTimeAvailable || times[23]);
-			setTimeValue(firstTimeAvailable || times[23])
+			// if (isSelectedTimeAvailable(selectedTime)) {
+			// 	setTime(selectedTime);
+			// 	setTimeValue(selectedTime)
+			// 	return;
+			// }
+			// const firstTimeAvailable = Array.from(availableTimes[0]);
+			// localStorage.setItem('selected-time', JSON.stringify(firstTimeAvailable || []));
+			// setTime(firstTimeAvailable);
+			// setTimeValue(firstTimeAvailable)
 		}
 	}, [availableTimes.length]);
 
 	return (
-		<TextField
+		<Select
 			id="outlined-select-currency"
-			select
 			name="start_time_reservation"
 			value={time}
+			multiple
 			onChange={handleTimeChange}
 			sx={{
 				maxWidth: 328,
@@ -55,7 +60,7 @@ function MyTimePicker({ availableTimes, setTimeValue }: IMyTimePickerProps) {
 				borderRadius: '8px',
 				backgroundColor: 'white',
 			}}
-			SelectProps={{
+			inputProps={{
 				IconComponent: () => null,
 				startAdornment: (
 					<Clocks
@@ -79,7 +84,7 @@ function MyTimePicker({ availableTimes, setTimeValue }: IMyTimePickerProps) {
 					{time}
 				</MenuItem>
 			))}
-		</TextField>
+		</Select>
 	);
 }
 

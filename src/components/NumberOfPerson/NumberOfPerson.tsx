@@ -20,19 +20,16 @@ export const selectTheme = (theme: any) =>
 
 	interface SelectTextFieldsProps {
 		numOfPeople: string[];
+		numberPerson: (value: string) => void;
 	}
 
-const SelectTextFields: FC<SelectTextFieldsProps> = ({numOfPeople}) => {
+const SelectTextFields: FC<SelectTextFieldsProps> = ({numOfPeople, numberPerson}) => {
 	// const numberOfPeople = localStorage.getItem('selected-number-of-people');
 
 	const handleSelectPeople = (event: React.ChangeEvent<HTMLInputElement>) => {
-		localStorage.setItem('selected-number-of-people', event.target.value);
+		// localStorage.setItem('selected-number-of-people', event.target.value);
+		numberPerson(event.target.value)
 	};
-
-	// useEffect(() => {
-	// 	if (numberOfPeople) return;
-	// 	localStorage.setItem('selected-number-of-people', '2');
-	// }, []);
 
 	return (
 		<ThemeProvider theme={selectTheme}>

@@ -4,9 +4,7 @@ import {
 	zoneLang,
 	Restaurant,
 	getDayAbbreviation,
-	fetchRestaurantData,
 	initRestaurant,
-	timesForTimePicker,
 } from '../../utils/constants';
 import {
 	Checkbox,
@@ -15,10 +13,8 @@ import {
 	Dialog,
 	DialogContent,
 	IconButton,
-	Backdrop,
 	Box,
 	Typography,
-	TextField,
 } from '@mui/material';
 import ModeEditOutlineOutlinedIcon from '@mui/icons-material/ModeEditOutlineOutlined';
 import CloseIcon from '@mui/icons-material/Close';
@@ -48,6 +44,7 @@ import StarBorderIcon from '@mui/icons-material/StarBorder';
 import EventCard from '../Events/EventCard';
 import { Event } from '../../models/data/Event';
 import { formatDate, formatTime } from '../../utils/formatDateString';
+import { IAvailability } from '../../types/commonTypes';
 
 export default function RestaurantPage({ id }: { id: number }) {
 	const [isModalOpen, setIsModalOpen] = useState(false);
@@ -59,12 +56,14 @@ export default function RestaurantPage({ id }: { id: number }) {
 		ReviewType[]
 	>([]);
 	const [currentImageIndex, setCurrentImageIndex] = useState(0);
-	const [availableDates, setAvailableDates] = useState([]);
+	const [availableDates, setAvailableDates] = useState<IAvailability[]>([]);
 	const [availableTimes, setAvailableTimes] = useState([]);
 	const [currentDate, setCurrentDate] = useState('');
 	const [establismentEvents, setEstablishmentEvents] = useState([]);
 	const [countOfPeople, setCountOfPeople] = useState<string[]>([]);
-	const [currentTime, setCurrentTime] = useState<string>('');
+	const [currentTime, setCurrentTime] = useState<string[]>([]);
+	const [page, setPage] = useState(1);
+	const [currentCountPeople, setcurrentCountPeople] = useState<string>()
 
 	const isLoggedIn = useContext(CurrentUserContext).isLoggedIn;
 	const role = useContext(CurrentUserContext).currentRole;
@@ -76,46 +75,24 @@ export default function RestaurantPage({ id }: { id: number }) {
 			.then((restaurantData) => {
 				setcurrentRestaurant(restaurantData);
 				mainApi
-					.getAvailableBookingDates(id)
+					.getAvailableBookingDates(id, page)
 					.then((dates) => {
 						if (!dates) return;
-						setAvailableDates(dates.results);
+						setAvailableDates(prevData => [...prevData, ...dates.results]);
+						const availabletime = availableDates
+						.filter((el: any) => el.date === currentDate)
+						.map((el: any) => el.time)
+						.reduce((acc, current) => {
+							if (acc.indexOf(current) === -1) {
+								acc.push(current);
+							}
+							return acc;
+						}, []);
 
-						const availabletime = dates.results
-							.filter((el: any) => {
-								if (currentDate) {
-									return el.date === currentDate;
-								}
-
-								return el.date === dates.results[0].date;
-							})
-							.map((el: any) => el.time);
-
-						if (!currentTime) {
-							setCurrentTime(availabletime[0]);
-						} else {
 							setCurrentTime(currentTime);
-						}
 
 						setAvailableTimes(availabletime);
 
-						setCountOfPeople(
-							availableDates
-								.filter((el: any) => el.date === currentDate)
-								.filter((el: any) => el.time === currentTime)
-								.map((el: any) => el.table)
-								.map((item) => {
-									const match = item.match(/мест: (\d+)/);
-									if (match) {
-										const num_of_seats = parseInt(match[1], 10);
-
-										return num_of_seats === 1
-											? '1 человек'
-											: `${num_of_seats} человека`;
-									}
-									return item;
-								})
-						);
 					})
 					.catch((err) => console.log(err));
 			})
@@ -130,56 +107,62 @@ export default function RestaurantPage({ id }: { id: number }) {
 				setcurrentRestaurantReviews(data);
 			})
 			.catch((err) => console.log(err));
-	}, [availableDates, currentDate, currentTime]);
+	}, [availableDates, currentDate, currentTime, page]);
 
 	useEffect(() => {
 		if (!currentDate) return;
 
 		mainApi
-			.getAvailableBookingDates(id)
+			.getAvailableBookingDates(id, page)
 			.then((dates) => {
 				if (!dates) return;
 
-				setAvailableDates(dates.results);
+				setAvailableDates(prevData => [...prevData, ...dates.results]);
 
-				const availabletime = dates.results
-					.filter((el: any) => {
-						if (currentDate) {
-							return el.date === currentDate;
-						}
+				if (dates.next && page < 40) {
+					setPage(page + 1);
+				  }
 
-						return el.date === dates.results[0].date;
-					})
-					.map((el: any) => el.time);
+				  const availabletime = availableDates
+				  .filter((el: any) => el.date === currentDate)
+				  .map((el: any) => el.time)
+				  .reduce((acc, current) => {
+					  if (acc.indexOf(current) === -1) {
+						  acc.push(current);
+					  }
+					  return acc;
+				  }, []);
 
-				if (!currentTime) {
-					setCurrentTime(availabletime[0]);
-				} else {
 					setCurrentTime(currentTime);
-				}
 
 				setAvailableTimes(availabletime);
 
 				const peoples = availableDates
-					.filter((el: any) => el.date === currentDate)
-					.filter((el: any) => el.time === currentTime)
-					.map((el: any) => el.table)
-					.map((item) => {
-						const match = item.match(/мест: (\d+)/);
-						if (match) {
-							const num_of_seats = parseInt(match[1], 10);
+				.filter((el: any) => el.date === currentDate)
+				.filter((el: any) => currentTime.includes(el.time))
+				.map((el: any) => el.seats)
+				.map((el: any) => {
+					const match = el.match(/мест: (\d+)/);
+					if (match) {
+						const num_of_seats = parseInt(match[1], 10);
 
-							return num_of_seats === 1
-								? '1 человек'
-								: `${num_of_seats} человека`;
-						}
-						return item;
-					});
+						return num_of_seats === 1
+							? '1 человек'
+							: `${num_of_seats} человека`;
+					}
+					return el;
+				})
+				.reduce((acc, current) => {
+					if (acc.indexOf(current) === -1) {
+						acc.push(current);
+					}
+					return acc;
+				}, [])
 
 				setCountOfPeople(peoples);
 			})
 			.catch((err) => console.log(err));
-	}, [currentDate, currentTime, id]);
+	}, [currentDate, currentTime, id, page]);
 
 	useEffect(() => {
 		updatePageData();
@@ -488,7 +471,7 @@ export default function RestaurantPage({ id }: { id: number }) {
 					}}
 					p="16px 16px 16px 16px"
 				>
-					{availableDates.length > 0 && availableTimes.length ? (
+					{availableDates.length > 0 ? (
 						<>
 							<Typography
 								variant="h2"
@@ -510,6 +493,7 @@ export default function RestaurantPage({ id }: { id: number }) {
 								availableTimes={availableTimes}
 								onSubmit={handleBookBtnClick}
 								numOfPeople={countOfPeople}
+								numberPerson={setcurrentCountPeople}
 								setTime={setCurrentTime || (() => {})}
 								children={
 									<Button
