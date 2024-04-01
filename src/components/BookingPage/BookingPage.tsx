@@ -61,11 +61,10 @@ const BookingPage: FC<BookingPageProps> = ({ id, userData }) => {
 		useState<Restaurant>(initRestaurant);
 	const [isAgreement, setIsAgreement] = useState(false);
 	const [bookingId, setBookingId] = useState('');
-	const [slots, setSlots] = useState<number[]>([]);
+	const [slots, setSlots] = useState<any>([]);
 	const [availableDates, setAvailableDates] = useState<IAvailability[]>([]);
 	const [dataToSend, setDataToSend] = useState({
 		comment: '',
-		// date_reservation: '',
 		email: '',
 		slots: [],
 		user: '',
@@ -82,71 +81,68 @@ const BookingPage: FC<BookingPageProps> = ({ id, userData }) => {
 	const [availableTimes, setAvailableTimes] = useState(timesForTimePicker);
 	const [currentDate, setCurrentDate] = useState('');
 	const [zones, setZones] = useState<IAvailability[]>([]);
-	const [currentTime, setCurrentTime] = useState('');
+	const [currentZone, setCurrentZone] = useState('');
+	const [currentTime, setCurrentTime] = useState<string[]>([]);
 	const [countOfPeople, setCountOfPeople] = useState<string[]>([]);
+	const [currentCountPeople, setcurrentCountPeople] = useState<string>()
 	const [dateBooking, setDateBooking] = useState<string>('');
+	const [page, setPage] = useState(1);
+
 
 	useEffect(() => {
 		const fetchData = async () => {
 			try {
 				const data = await fetchRestaurantData(id);
 				setcurrentRestaurant(data);
-
-				const dates = await mainApi.getAvailableBookingDates(id);
-
-				const firstAvailableDate = dates.results[0].date;
-
-				setAvailableDates(dates.results);
-
-				const availabletime = dates.results
-					.filter((el: any) => {
-						if (currentDate) {
-							return el.date === currentDate;
-						}
-
-						return el.date === firstAvailableDate;
-					})
-					.map((el: any) => el.time);
-				if (!currentTime) {
-					setCurrentTime(availabletime[0]);
-				} else {
-					setCurrentTime(currentTime);
-				}
-
-				setAvailableTimes(availabletime);
-
-				setCountOfPeople(
-					dates.results
-						.filter((el: any) => el.date === currentDate)
-						.filter((el: any) => el.time === currentTime)
-						.map((el: any) => el.table)
-						.map((el: any) => {
-							const match = el.match(/мест: (\d+)/);
-							if (match) {
-								const num_of_seats = parseInt(match[1], 10);
-
-								return num_of_seats === 1
-									? '1 человек'
-									: `${num_of_seats} человека`;
-							}
-							return el;
-						})
-				);
 			} catch (error) {
 				console.error('Error fetching data:', error);
 			}
 		};
 
 		fetchData();
-	}, [id, setcurrentRestaurant, currentDate, setValue]);
+	}, [id]);
+
+	useEffect(() => {
+		const fetchData = async () => {
+			try {
+				const dates = await mainApi.getAvailableBookingDates(id, page);
+
+				setAvailableDates((prevData) => [...prevData, ...dates.results]);
+
+				if (dates.next && page < 50) {
+					setPage(page + 1);
+				}
+			} catch (error) {
+				console.error('Error fetching data:', error);
+			}
+		};
+
+		fetchData();
+	}, [id, setcurrentRestaurant, currentDate, setValue, page]);
+
+	useEffect(() => {
+		const availabletime = availableDates
+			.filter((el: any) => el.date === currentDate)
+			.map((el: any) => el.time)
+			.reduce((acc, current) => {
+				if (acc.indexOf(current) === -1) {
+					acc.push(current);
+				}
+				return acc;
+			}, []);
+
+		setCurrentTime(currentTime);
+
+		setAvailableTimes(availabletime);
+	}, [availableDates]);
 
 	useEffect(() => {
 		if (currentTime) {
 			setCountOfPeople(
 				availableDates
 					.filter((el: any) => el.date === currentDate)
-					.filter((el: any) => el.time === currentTime)
-					.map((el: any) => el.table)
+					.filter((el: any) => currentTime.includes(el.time))
+					.map((el: any) => el.seats)
 					.map((el: any) => {
 						const match = el.match(/мест: (\d+)/);
 						if (match) {
@@ -158,8 +154,13 @@ const BookingPage: FC<BookingPageProps> = ({ id, userData }) => {
 						}
 						return el;
 					})
+					.reduce((acc, current) => {
+						if (acc.indexOf(current) === -1) {
+							acc.push(current);
+						}
+						return acc;
+					}, [])
 			);
-
 		}
 	}, [currentTime]);
 
@@ -167,18 +168,34 @@ const BookingPage: FC<BookingPageProps> = ({ id, userData }) => {
 		setZones(
 			availableDates
 				.filter((el: any) => el.date === currentDate)
-				.filter((el: any) => el.time === currentTime)
+				.filter((el: any) => currentTime.includes(el.time))
+				.map((el: any) => el.zone)
+				.reduce((acc, current) => {
+					if (acc.indexOf(current) === -1) {
+						acc.push(current);
+					}
+					return acc;
+				}, [])
 		);
-	}, [countOfPeople]);
+	}, [countOfPeople, currentCountPeople]);
 
 	useEffect(() => {
-		// setSlots(availableDates
-		// 	.filter((el: any) => el.date === currentDate)
-		// 	.filter((el: any) => el.time === currentTime)
-		// 	.filter((el:any) => el.id === zones[0]?.id)
-		// 	.map((el: any) => el.id))
-		setSlots([zones[0]?.id]);
-	}, [setZones, countOfPeople]);
+		console.log('xa xa');
+		// if (currentZone) {
+			setSlots(
+				availableDates
+					.filter((el: any) => el.date === currentDate)
+					.filter((el: any) => currentTime.includes(el.time))
+					.filter((el: any) => el.zone === currentZone)
+					.filter(
+						(obj, index, self) =>
+							index === self.findIndex((t) => t.time === obj.time)
+					)
+	
+					.map((el: any) => el.id)
+			);
+
+	}, [currentZone, currentTime, currentCountPeople]);
 
 	const handleBooking = (data: BookingFormValues) => {
 		if (!data) return;
@@ -187,8 +204,6 @@ const BookingPage: FC<BookingPageProps> = ({ id, userData }) => {
 		const additionalData = {
 			slots: [...slots],
 			number_guests: localStorage.getItem('selected-number-of-people'),
-			// date_reservation: localStorage.getItem('selected-date-formated'),
-			// start_time_reservation: localStorage.getItem('selected-time'),
 		};
 
 		const finalFormData = { ...mergedFormData, ...additionalData };
@@ -277,6 +292,7 @@ const BookingPage: FC<BookingPageProps> = ({ id, userData }) => {
 								onSubmit={handleSubmit(handleBooking)}
 								setTime={setCurrentTime}
 								numOfPeople={countOfPeople}
+								numberPerson={setcurrentCountPeople}
 							>
 								<Box
 									display="flex"
@@ -296,18 +312,18 @@ const BookingPage: FC<BookingPageProps> = ({ id, userData }) => {
 										label="Зона"
 										required
 										defaultValue={''}
-										// onChange={(event) => {
-										// 	const value = event.target.value;
-										// 	setCurrentZone(value);
-										// 	setValue('zone', value);
-										// }}
+										onChange={(event) => {
+											const value = event.target.value;
+											setCurrentZone(value);
+											// setValue('zone', value);
+										}}
 										sx={{
 											minWidth: 328,
 										}}
 									>
 										{zones.map((option: any, index: number) => (
-											<MenuItem key={index} value={option.zone}>
-												{option.zone}
+											<MenuItem key={index} value={option}>
+												{option}
 											</MenuItem>
 										))}
 									</TextField>

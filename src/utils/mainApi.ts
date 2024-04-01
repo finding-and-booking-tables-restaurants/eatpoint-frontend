@@ -208,9 +208,8 @@ class MainApi {
 		});
 	}
 
-	getAvailableBookingDates(id: number) {
-		// return this._sendFetchRequest(`/availability/date/${zoneId}/`, {
-			return this._sendFetchRequest(`/establishments/${id}/availability/`, {
+	getAvailableBookingDates(id: number, page: number) {
+			return this._sendFetchRequest(`/establishments/${id}/availability/?page=${page}`, {
 			headers: {
 				'Content-Type': 'application/json',
 			},
