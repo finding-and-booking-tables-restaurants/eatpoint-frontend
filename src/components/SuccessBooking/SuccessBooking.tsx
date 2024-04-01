@@ -6,7 +6,6 @@ import '../BookingPage/BookingPage.css';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { useNavigate } from 'react-router-dom';
 import usersApi from '../../utils/UsersApi';
-import { pluralizePeople } from '../../utils/pluralizePeople';
 
 interface SuccessBookingProps {
 	restName?: string;

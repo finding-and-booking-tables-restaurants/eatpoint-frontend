@@ -133,11 +133,7 @@ export default function RestaurantPage({ id }: { id: number }) {
 					  return acc;
 				  }, []);
 
-				// if (!currentTime) {
-				// 	setCurrentTime(availabletime[0]);
-				// } else {
 					setCurrentTime(currentTime);
-				// }
 
 				setAvailableTimes(availabletime);
 

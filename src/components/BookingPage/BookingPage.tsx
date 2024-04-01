@@ -65,7 +65,6 @@ const BookingPage: FC<BookingPageProps> = ({ id, userData }) => {
 	const [availableDates, setAvailableDates] = useState<IAvailability[]>([]);
 	const [dataToSend, setDataToSend] = useState({
 		comment: '',
-		// date_reservation: '',
 		email: '',
 		slots: [],
 		user: '',
@@ -89,13 +88,6 @@ const BookingPage: FC<BookingPageProps> = ({ id, userData }) => {
 	const [dateBooking, setDateBooking] = useState<string>('');
 	const [page, setPage] = useState(1);
 
-	console.log(availableDates);
-	console.log(currentTime);
-	console.log(slots);
-	console.log(currentZone);
-
-
-	console.log(currentCountPeople);
 
 	useEffect(() => {
 		const fetchData = async () => {
